@@ -1,5 +1,6 @@
-import { NavLink } from "react-router-dom";
-import { Terminal, Shield, Settings, Plus, Server } from "lucide-react";
+import { useEffect } from "react";
+import { NavLink, useParams, useNavigate } from "react-router-dom";
+import { Shield, Settings, Plus, Server } from "lucide-react";
 import clsx from "clsx";
 import { useNodes } from "../api/client";
 
@@ -14,6 +15,15 @@ function linkClass({ isActive }: { isActive: boolean }) {
 
 export default function Sidebar() {
   const { data: nodes } = useNodes();
+  const { nodeId } = useParams<{ nodeId?: string }>();
+  const navigate = useNavigate();
+
+  // Auto-select first node when no node is selected and nodes are loaded
+  useEffect(() => {
+    if (!nodeId && nodes && nodes.length > 0) {
+      navigate(`/activity/${nodes[0].id}`, { replace: true });
+    }
+  }, [nodeId, nodes, navigate]);
 
   return (
     <aside className="flex w-52 flex-col border-r border-zinc-800/80 bg-zinc-900">
@@ -28,14 +38,7 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex-1 space-y-0.5 px-2">
-        {/* All Activity */}
-        <NavLink to="/activity" end className={linkClass}>
-          <Terminal size={14} strokeWidth={1.8} />
-          All Activity
-        </NavLink>
-
         {/* Nodes section */}
-        <div className="my-3 border-t border-zinc-800/60" />
         <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-widest text-zinc-600">
           Nodes
         </p>

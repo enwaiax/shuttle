@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { RefreshCw, Download, Terminal } from "lucide-react";
-import { useLogs, useStats } from "../api/client";
+import { useLogs, useNode } from "../api/client";
 import type { CommandLogResponse } from "../api/client";
 import EmptyState from "../components/EmptyState";
 
@@ -11,9 +11,7 @@ const OUTPUT_PREVIEW_LINES = 15;
 // ── Helpers ──────────────────────────────────────────
 
 function formatTime(iso: string): string {
-  return new Date(iso).toLocaleString(undefined, {
-    month: "short",
-    day: "numeric",
+  return new Date(iso).toLocaleTimeString(undefined, {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
@@ -30,13 +28,8 @@ function formatDuration(ms: number | null): string {
 
 function truncateOutput(text: string): { preview: string; isTruncated: boolean } {
   const lines = text.split("\n");
-  if (lines.length <= OUTPUT_PREVIEW_LINES) {
-    return { preview: text, isTruncated: false };
-  }
-  return {
-    preview: lines.slice(0, OUTPUT_PREVIEW_LINES).join("\n"),
-    isTruncated: true,
-  };
+  if (lines.length <= OUTPUT_PREVIEW_LINES) return { preview: text, isTruncated: false };
+  return { preview: lines.slice(0, OUTPUT_PREVIEW_LINES).join("\n"), isTruncated: true };
 }
 
 type TimeRange = "today" | "7d" | "30d" | "all";
@@ -50,7 +43,6 @@ function CommandEntry({ log }: { log: CommandLogResponse }) {
   const secLevel = log.security_level;
   const hasSecEvent = secLevel && secLevel !== "allow";
 
-  // Output handling
   const stdout = log.stdout || "";
   const stderr = log.stderr || "";
   const { preview: stdoutPreview, isTruncated: stdoutTruncated } = truncateOutput(stdout);
@@ -59,7 +51,7 @@ function CommandEntry({ log }: { log: CommandLogResponse }) {
 
   return (
     <div
-      className={`border-l-2 py-1 pl-4 pr-4 ${
+      className={`border-l-2 py-1.5 pl-4 pr-4 ${
         hasFailed
           ? "border-l-red-500/60"
           : hasSecEvent
@@ -69,19 +61,10 @@ function CommandEntry({ log }: { log: CommandLogResponse }) {
     >
       {/* Command line */}
       <div className="flex items-baseline gap-0 font-mono text-[13px] leading-relaxed">
-        {/* Timestamp */}
         <span className="mr-3 shrink-0 text-zinc-600">{formatTime(log.executed_at)}</span>
-
-        {/* Node */}
-        {log.node_name && (
-          <span className="mr-2 shrink-0 text-cyan-600/60">{log.node_name}</span>
-        )}
-
-        {/* Prompt + command */}
         <span className="mr-1.5 text-zinc-500">$</span>
         <span className="flex-1 text-zinc-200">{log.command}</span>
 
-        {/* Security indicator */}
         {hasSecEvent && (
           <span
             className={`mx-2 shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium ${
@@ -96,17 +79,12 @@ function CommandEntry({ log }: { log: CommandLogResponse }) {
           </span>
         )}
 
-        {/* Exit + duration */}
         <span
           className={`ml-2 shrink-0 text-xs ${
             hasFailed ? "text-red-400" : log.exit_code === 0 ? "text-emerald-500/70" : "text-zinc-600"
           }`}
         >
-          {log.exit_code !== null
-            ? log.exit_code === 0
-              ? "✓"
-              : `✗ ${log.exit_code}`
-            : "…"}
+          {log.exit_code !== null ? (log.exit_code === 0 ? "✓" : `✗ ${log.exit_code}`) : "…"}
         </span>
         {log.duration_ms != null && (
           <span className="ml-2 shrink-0 text-xs text-zinc-600">
@@ -117,7 +95,7 @@ function CommandEntry({ log }: { log: CommandLogResponse }) {
 
       {/* Output — shown by default */}
       {(stdout || stderr) && (
-        <div className="ml-[5.5rem] mt-1">
+        <div className="ml-16 mt-1">
           {stdout && (
             <pre className="whitespace-pre-wrap text-[12px] leading-relaxed text-zinc-500">
               {showFull ? stdout : stdoutPreview}
@@ -142,7 +120,7 @@ function CommandEntry({ log }: { log: CommandLogResponse }) {
   );
 }
 
-// ── Main Activity view ──────────────────────────────
+// ── Main view ───────────────────────────────────────
 
 export default function Activity() {
   const { nodeId } = useParams<{ nodeId?: string }>();
@@ -150,10 +128,10 @@ export default function Activity() {
   const [page, setPage] = useState(1);
   const [allItems, setAllItems] = useState<CommandLogResponse[]>([]);
   const [autoRefresh, setAutoRefresh] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  // Reset on node/time change
+  const { data: node } = useNode(nodeId ?? "");
+
   useEffect(() => {
     setPage(1);
     setAllItems([]);
@@ -164,7 +142,6 @@ export default function Activity() {
     page,
     page_size: PAGE_SIZE,
   });
-  const { data: stats } = useStats();
 
   // Accumulate pages for infinite scroll
   useEffect(() => {
@@ -173,18 +150,14 @@ export default function Activity() {
         setAllItems(data.items);
       } else {
         setAllItems((prev) => {
-          const existingIds = new Set(prev.map((i) => i.id));
-          const newItems = data.items.filter((i) => !existingIds.has(i.id));
-          return [...prev, ...newItems];
+          const ids = new Set(prev.map((i) => i.id));
+          return [...prev, ...data.items.filter((i) => !ids.has(i.id))];
         });
       }
     }
   }, [data, page]);
 
-  // Auto-refresh
-  const doRefetch = useCallback(() => {
-    void refetch();
-  }, [refetch]);
+  const doRefetch = useCallback(() => void refetch(), [refetch]);
 
   useEffect(() => {
     if (!autoRefresh) return;
@@ -192,53 +165,60 @@ export default function Activity() {
     return () => clearInterval(id);
   }, [autoRefresh, doRefetch]);
 
-  // Infinite scroll — observe bottom sentinel
+  // Infinite scroll
   useEffect(() => {
     const el = bottomRef.current;
     if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && data && allItems.length < data.total && !isFetching) {
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && data && allItems.length < data.total && !isFetching) {
           setPage((p) => p + 1);
         }
       },
       { threshold: 0.1 },
     );
-    observer.observe(el);
-    return () => observer.disconnect();
+    obs.observe(el);
+    return () => obs.disconnect();
   }, [data, allItems.length, isFetching]);
 
   const total = data?.total ?? 0;
-
-  // Export URL
   const exportUrl = `/api/logs/export?format=csv${nodeId ? `&node_id=${nodeId}` : ""}`;
 
   const ranges: { label: string; value: TimeRange }[] = [
     { label: "Today", value: "today" },
-    { label: "7 days", value: "7d" },
-    { label: "30 days", value: "30d" },
+    { label: "7d", value: "7d" },
+    { label: "30d", value: "30d" },
     { label: "All", value: "all" },
   ];
+
+  // No node selected yet (sidebar will auto-redirect)
+  if (!nodeId) {
+    return (
+      <div className="flex h-full items-center justify-center bg-zinc-900">
+        <p className="text-sm text-zinc-600">Select a node from the sidebar</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex items-center justify-between border-b border-zinc-800/60 bg-zinc-900/90 px-4 py-2">
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Terminal size={14} className="text-zinc-500" />
-            <span className="text-sm font-medium text-zinc-300">
-              {nodeId ? "Node Activity" : "All Activity"}
-            </span>
-          </div>
+          <span className="text-sm font-medium text-zinc-300">
+            {node?.name ?? "…"}
+          </span>
+          <span className="text-[11px] text-zinc-600">
+            {node ? `${node.host}:${node.port}` : ""}
+          </span>
 
-          {/* Time range pills */}
+          {/* Time range */}
           <div className="flex items-center gap-0.5 rounded-md bg-zinc-800/60 p-0.5">
             {ranges.map((r) => (
               <button
                 key={r.value}
                 onClick={() => setTimeRange(r.value)}
-                className={`rounded px-2.5 py-1 text-[11px] font-medium transition-colors ${
+                className={`rounded px-2 py-0.5 text-[11px] font-medium transition-colors ${
                   timeRange === r.value
                     ? "bg-zinc-700 text-zinc-200"
                     : "text-zinc-500 hover:text-zinc-300"
@@ -249,27 +229,20 @@ export default function Activity() {
             ))}
           </div>
 
-          {stats && (
-            <span className="text-[11px] text-zinc-600">
-              {total} commands
-            </span>
-          )}
+          <span className="text-[11px] text-zinc-600">{total} commands</span>
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Export */}
           <a
             href={exportUrl}
-            className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs text-zinc-500 hover:bg-zinc-800 hover:text-zinc-300"
+            className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-zinc-500 hover:bg-zinc-800 hover:text-zinc-300"
           >
             <Download size={11} />
-            Export
+            CSV
           </a>
-
-          {/* Auto-refresh */}
           <button
             onClick={() => setAutoRefresh((v) => !v)}
-            className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+            className={`inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-colors ${
               autoRefresh
                 ? "bg-emerald-500/10 text-emerald-400"
                 : "text-zinc-500 hover:bg-zinc-800 hover:text-zinc-300"
@@ -281,41 +254,28 @@ export default function Activity() {
         </div>
       </div>
 
-      {/* Console body */}
-      <div
-        ref={scrollRef}
-        className="flex-1 overflow-y-auto bg-zinc-900"
-      >
+      {/* Console */}
+      <div className="flex-1 overflow-y-auto bg-zinc-900">
         {allItems.length === 0 && !isFetching ? (
           <div className="flex h-full items-center justify-center">
             <EmptyState
               icon={Terminal}
-              title="No activity yet"
-              description={
-                nodeId
-                  ? "No commands have been executed on this node."
-                  : "Commands will appear here as AI executes them."
-              }
+              title="No commands yet"
+              description="Commands executed on this node will appear here."
             />
           </div>
         ) : (
-          <div className="divide-y divide-zinc-800/40 py-2">
+          <div className="divide-y divide-zinc-800/40 py-1">
             {allItems.map((log) => (
               <CommandEntry key={log.id} log={log} />
             ))}
-
-            {/* Bottom sentinel for infinite scroll */}
-            <div ref={bottomRef} className="h-8" />
-
+            <div ref={bottomRef} className="h-4" />
             {isFetching && (
-              <div className="py-3 text-center text-xs text-zinc-600">
-                Loading...
-              </div>
+              <div className="py-3 text-center text-xs text-zinc-600">Loading…</div>
             )}
-
             {!isFetching && allItems.length >= total && total > 0 && (
               <div className="py-3 text-center text-xs text-zinc-700">
-                End of history — {total} commands
+                — {total} commands —
               </div>
             )}
           </div>
