@@ -57,6 +57,10 @@ async def _noop_db_session():
 def _noop_node_repo_factory(db_sess):
     repo = MagicMock()
     repo.list_all = AsyncMock(return_value=[])
+    # get_by_name returns a mock node with an id attribute for UUID resolution
+    _node = MagicMock()
+    _node.id = "fake-uuid-0001"
+    repo.get_by_name = AsyncMock(return_value=_node)
     return repo
 
 
@@ -64,12 +68,14 @@ def _single_node_repo_factory(db_sess):
     """Returns a repo mock with exactly one node named 'mynode'."""
     node = MagicMock()
     node.name = "mynode"
+    node.id = "fake-uuid-mynode"
     node.host = "10.0.0.1"
     node.port = 22
     node.username = "root"
     node.status = "active"
     repo = MagicMock()
     repo.list_all = AsyncMock(return_value=[node])
+    repo.get_by_name = AsyncMock(return_value=node)
     return repo
 
 

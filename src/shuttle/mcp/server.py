@@ -156,6 +156,7 @@ async def create_mcp_server(
         session_mgr=session_mgr,
         db_session_ctx=db_session_ctx,
         node_repo_factory=NodeRepo,
+        cred_mgr=cred_mgr,
     )
 
     # ── 12. Return ──────────────────────────────────────────────────

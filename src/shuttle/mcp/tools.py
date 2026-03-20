@@ -85,6 +85,7 @@ async def _execute_command_logic(
 
     # ── 1. Resolve target node ──────────────────────────────────────
     resolved_node: Optional[str] = node
+    resolved_node_id: Optional[str] = None  # UUID for DB foreign key
     session_obj = None
 
     if session_id:
@@ -100,12 +101,23 @@ async def _execute_command_logic(
             all_nodes = await repo.list_all()
         if len(all_nodes) == 1:
             resolved_node = all_nodes[0].name
+            resolved_node_id = all_nodes[0].id
         else:
             return (
                 "Error: no node specified and cannot auto-select "
                 f"(found {len(all_nodes)} nodes). "
                 "Provide 'node' or 'session_id'."
             )
+
+    # Look up the node UUID if not already resolved
+    if resolved_node_id is None:
+        async with db_session_ctx() as db_sess:
+            repo = node_repo_factory(db_sess)
+            node_obj = await repo.get_by_name(resolved_node)
+        if node_obj is not None:
+            resolved_node_id = node_obj.id
+        else:
+            resolved_node_id = resolved_node  # fallback to name if not found
 
     # ── 2. Security check ───────────────────────────────────────────
     bypass_patterns = list(session_obj.bypass_patterns) if session_obj else []
@@ -175,7 +187,7 @@ async def _execute_command_logic(
             async with db_session_ctx() as db_sess:
                 log_repo = LogRepo(db_sess)
                 await log_repo.create(
-                    node_id=resolved_node,
+                    node_id=resolved_node_id,
                     command=command,
                     session_id=None,
                     exit_code=exit_code,
@@ -203,6 +215,7 @@ def register_tools(
     session_mgr: SessionManager,
     db_session_ctx: Callable,
     node_repo_factory: Callable,
+    cred_mgr: Any = None,
 ) -> None:
     """Register all Shuttle MCP tools on the given FastMCP instance.
 
@@ -222,6 +235,8 @@ def register_tools(
         Async context manager factory yielding a DB AsyncSession.
     node_repo_factory : callable
         Factory accepting a DB session and returning a NodeRepo.
+    cred_mgr : CredentialManager | None
+        Credential manager for encrypting node credentials.
     """
 
     # ── ssh_execute ─────────────────────────────────────────────────
@@ -343,3 +358,101 @@ def register_tools(
             return f"Downloaded {node}:{remote_path} -> {local_path}"
         except Exception as exc:
             return f"Error: download failed — {exc}"
+
+    # ── ssh_add_node ───────────────────────────────────────────────
+    @mcp.tool()
+    async def ssh_add_node(
+        name: str,
+        host: str,
+        port: int = 22,
+        username: str = "",
+        password: str | None = None,
+        private_key: str | None = None,
+        jump_host: str | None = None,
+        tags: list[str] | None = None,
+    ) -> str:
+        """Add a new SSH node to the Shuttle configuration."""
+        from shuttle.core.proxy import NodeConnectInfo
+
+        # Validate credentials
+        if not password and not private_key:
+            return "Error: either 'password' or 'private_key' must be provided."
+
+        if cred_mgr is None:
+            return "Error: credential manager not available — cannot encrypt credentials."
+
+        # Determine auth type and encrypt credential
+        if private_key:
+            auth_type = "key"
+            encrypted = cred_mgr.encrypt(private_key)
+        else:
+            auth_type = "password"
+            encrypted = cred_mgr.encrypt(password)
+
+        # Resolve jump_host name to UUID if provided
+        jump_host_id: str | None = None
+        if jump_host is not None:
+            async with db_session_ctx() as db_sess:
+                repo = node_repo_factory(db_sess)
+                jh = await repo.get_by_name(jump_host)
+            if jh is None:
+                return f"Error: jump host '{jump_host}' not found."
+            jump_host_id = jh.id
+
+        # Check for duplicate name
+        async with db_session_ctx() as db_sess:
+            repo = node_repo_factory(db_sess)
+            existing = await repo.get_by_name(name)
+        if existing is not None:
+            return f"Error: node '{name}' already exists."
+
+        # Create node in DB
+        async with db_session_ctx() as db_sess:
+            repo = node_repo_factory(db_sess)
+            node_obj = await repo.create(
+                name=name,
+                host=host,
+                port=port,
+                username=username,
+                auth_type=auth_type,
+                encrypted_credential=encrypted,
+                jump_host_id=jump_host_id,
+                tags=tags,
+            )
+
+        # Register in connection pool
+        info = NodeConnectInfo(
+            node_id=name,
+            hostname=host,
+            port=port,
+            username=username,
+            password=password if auth_type == "password" else None,
+            private_key=private_key if auth_type == "key" else None,
+        )
+        pool.register_node(info)
+
+        return f"Node '{name}' added (id={node_obj.id})."
+
+    # ── ssh_remove_node ────────────────────────────────────────────
+    @mcp.tool()
+    async def ssh_remove_node(name: str) -> str:
+        """Remove an SSH node from the Shuttle configuration."""
+        # Look up node by name
+        async with db_session_ctx() as db_sess:
+            repo = node_repo_factory(db_sess)
+            node_obj = await repo.get_by_name(name)
+        if node_obj is None:
+            return f"Error: node '{name}' not found."
+
+        # Delete from DB
+        async with db_session_ctx() as db_sess:
+            repo = node_repo_factory(db_sess)
+            await repo.delete(node_obj.id)
+
+        # Close idle connections
+        try:
+            await pool.close_node(name)
+        except Exception:
+            logger.warning("Failed to close pool connections for node '{name}'", name=name)
+
+        return f"Node '{name}' removed."
