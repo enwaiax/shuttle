@@ -157,13 +157,24 @@ Manages SSH connections with pooling, health checks, and automatic eviction.
 
 ```python
 class ConnectionPool:
-    async def acquire(node_id: str) -> PooledConnection
-    async def release(conn: PooledConnection)
-    async def health_check()
-    async def evict_expired()
-    async def close_all()
-    async def close_node(node_id: str)
+    @asynccontextmanager
+    async def connection(self, node_id: str) -> AsyncIterator[PooledConnection]:
+        """Primary API — context manager guarantees release on exception."""
+        conn = await self.acquire(node_id)
+        try:
+            yield conn
+        finally:
+            await self.release(conn)
+
+    async def acquire(self, node_id: str) -> PooledConnection
+    async def release(self, conn: PooledConnection)
+    async def health_check(self)
+    async def evict_expired(self)
+    async def close_all(self)
+    async def close_node(self, node_id: str)
 ```
+
+**Usage:** Always use `async with pool.connection(node_id) as conn:` to prevent connection leaks on exceptions.
 
 ### 4.2 Session Management (`core/session.py`)
 
@@ -175,6 +186,7 @@ class SSHSession:
     node_id: str
     working_directory: str       # Tracked via cd commands
     env_vars: dict[str, str]     # Session-scoped env vars
+    bypass_patterns: set[str]    # Session-level security bypass (in-memory only, not persisted)
     status: SessionStatus        # active / idle / closed
     created_at: datetime
     last_active_at: datetime
@@ -186,7 +198,15 @@ class SessionManager:
     async def close_idle(timeout: int)
 ```
 
-**Working directory tracking:** Commands are wrapped as `cd {working_directory} && {command}`. If the command itself is `cd xxx`, the session's `working_directory` is updated. This makes multi-turn AI conversations feel like a persistent shell.
+**Working directory tracking:**
+
+Commands are wrapped as `cd {working_directory} && {command}`. The working directory is maintained with these rules:
+
+- **Initialization:** On `ssh_session_start`, execute `pwd` on the remote to get the SSH login directory. Store as `working_directory`.
+- **Update logic:** After each command, execute `pwd` and update `working_directory` to the result. This handles all cases (`cd`, `pushd`, `popd`, tilde expansion, env vars) without fragile command parsing.
+- **Failed commands:** `working_directory` is still updated via `pwd` after execution, since `cd` failures leave the directory unchanged.
+- **Known limitation:** Compound commands that change directory mid-pipe (e.g., `cd /tmp && ls && cd /var`) — the final `pwd` captures the end state, which is correct.
+- **Performance:** The extra `pwd` call adds ~5ms per command (same SSH channel, no new connection). Acceptable for the correctness guarantee.
 
 ### 4.3 Command Security (`core/security.py`)
 
@@ -201,10 +221,17 @@ class SessionManager:
 
 **Rule evaluation order:** Rules are matched by priority (lower number = higher priority). First match wins. Node-specific rules take precedence over global rules.
 
+**Regex matching semantics:**
+- Patterns are matched against the **full command string** using `re.search()` (substring match).
+- Patterns are compiled at rule creation time; invalid regex is rejected.
+- To anchor a match, use `^` and `$` explicitly (e.g., `^rm -rf /$` for exact match).
+- Rule creation validates regex and rejects patterns with known ReDoS risks (nested quantifiers). A 100ms execution timeout is enforced per pattern match as a safety net.
+
 **Bypass levels:**
-- Single-use: confirm once for this exact command
-- Session-level: allow this pattern for the remainder of the session
-- Permanent: downgrade rule level via Web panel
+- **Single-use:** confirm once for this exact command invocation
+- **Session-level:** allow this pattern for the remainder of the session (requested via `bypass_scope="session"` parameter on `ssh_execute`)
+- **Permanent:** downgrade rule level via Web panel
+- **Block-level commands CANNOT be bypassed.** Any `confirm_token` or `bypass_scope` is ignored for `block`-level rules; the command is always rejected with an error message.
 
 ### 4.4 Jump Host Support (`core/proxy.py`)
 
@@ -225,6 +252,8 @@ async def connect_with_proxy(node: NodeConfig) -> SSHClientConnection:
 ```
 
 Jump hosts are themselves nodes in the DB (with a `jump_host_id` foreign key), so they share the same connection pool and configuration UI.
+
+**Tunnel lifecycle:** Jump host connections are managed as separate entries in the connection pool, keyed by the jump host's `node_id`. They are reference-counted: the pool tracks how many child connections depend on each tunnel. When the last child connection is released/evicted, the tunnel connection is also eligible for eviction (subject to normal idle timeout). If a jump host connection drops, all child connections tunneled through it are cascade-closed and evicted from the pool.
 
 ---
 
@@ -248,6 +277,10 @@ class Node(Base):
     status: str                 # online / offline / unknown
     created_at: datetime
     updated_at: datetime
+    # status is updated: (a) on POST /api/nodes/:id/test,
+    # (b) on connection failure during pool.acquire(),
+    # (c) by background eviction scan every 60s,
+    # (d) on successful connection establishment.
 
 class SecurityRule(Base):
     __tablename__ = "security_rules"
@@ -316,13 +349,23 @@ Configurable: `postgresql+asyncpg://...`, `mysql+aiomysql://...`
 ```
 ~/.shuttle/
 ├── shuttle.db          # SQLite database
+├── keyfile             # Fernet encryption key (chmod 600)
+├── web_token           # Web API bearer token (chmod 600)
+├── mcp.pid             # MCP process PID (for orphan detection)
 ├── shuttle.yaml        # Optional config overrides
 └── keys/               # Optional key file storage
 ```
 
 ### 5.4 Credential Security
 
-Passwords and key contents encrypted with `cryptography.fernet`. Key derived from machine fingerprint (hostname + MAC hash). Adequate for local single-user scenarios. Users connecting to external databases should use their own secrets management.
+Passwords and key contents encrypted with `cryptography.fernet`.
+
+**Key management:**
+- On first run, a random Fernet key is generated and stored in `~/.shuttle/keyfile` with `chmod 600` permissions.
+- The keyfile is never derived from hardware fingerprints (which are mutable and unreliable).
+- If the keyfile is lost or corrupted, all encrypted credentials become unrecoverable. Shuttle detects this on startup and logs a clear error message directing the user to re-add credentials via `shuttle node add` or the Web panel.
+- For machine migration: export config via `POST /api/data/export` (credentials excluded), copy `keyfile` to the new machine, then import.
+- Users connecting to external databases should use their own secrets management (e.g., HashiCorp Vault).
 
 ---
 
@@ -332,7 +375,7 @@ Passwords and key contents encrypted with `cryptography.fernet`. Key derived fro
 
 | Tool | Parameters | Description |
 |------|-----------|-------------|
-| `ssh_execute` | `command`, `node?`, `session_id?`, `timeout?`, `confirm_token?` | Execute command on remote node |
+| `ssh_execute` | `command`, `node?`, `session_id?`, `timeout?`, `confirm_token?`, `bypass_scope?` | Execute command on remote node |
 | `ssh_upload` | `local_path`, `remote_path`, `node` | Upload file via SFTP |
 | `ssh_download` | `remote_path`, `local_path`, `node` | Download file via SFTP |
 | `ssh_list_nodes` | — | List all nodes with status |
@@ -355,6 +398,16 @@ To execute, call again with:
 ```
 
 The AI client displays this to the user. Upon user approval, the AI re-calls with the one-time `confirm_token` (60s TTL, bound to specific command + node).
+
+**Token storage:** Tokens are stored in an in-memory `dict[str, ConfirmToken]` within the MCP process. Each token records the command, node_id, created_at, and is deleted immediately on first use (one-time enforcement). Tokens are not persisted to DB — if the MCP process restarts, all pending tokens are invalidated and the user must re-confirm. **TTL enforcement:** Expiry is checked eagerly at token lookup time (`created_at + 60s < now` → reject). No background sweeper; stale tokens are lazily cleaned on next lookup or when the dict exceeds 100 entries.
+
+**`bypass_scope` parameter:** Optional, values `"once"` (default) or `"session"`. When `"session"` is used with a valid `confirm_token`, the matched rule's regex pattern string is added to `SSHSession.bypass_patterns` (an in-memory `set[str]`). During security evaluation, `bypass_patterns` is checked before the rule table — if the command matches any bypassed pattern, it is treated as `allow` regardless of the rule level. Session-level bypasses are not persisted to DB; they are lost when the session ends or the MCP process restarts.
+
+**Node resolution order for `ssh_execute`:**
+1. If `session_id` provided → use the session's bound node
+2. If `node` provided → use that node by name
+3. If neither provided and exactly one node exists → auto-select it
+4. Otherwise → return error listing available nodes
 
 ### 6.3 Startup Flow
 
@@ -389,7 +442,7 @@ GET    /api/rules              List security rules
 POST   /api/rules              Create rule
 PUT    /api/rules/:id          Update rule
 DELETE /api/rules/:id          Delete rule
-POST   /api/rules/reorder      Reorder priorities
+POST   /api/rules/reorder      Reorder priorities (body: `{"ids": ["id1","id2",...]}` — ordered list, priority assigned by position)
 
 GET    /api/sessions           List sessions (?status= filter)
 GET    /api/sessions/:id       Session detail + command history
@@ -404,10 +457,12 @@ PUT    /api/settings           Update settings
 GET    /api/stats              Dashboard stats
 
 POST   /api/data/export        Full export (nodes + rules + settings)
-POST   /api/data/import        Full import
+POST   /api/data/import        Full import (conflict: `?mode=merge` keeps existing, `?mode=overwrite` replaces by name; default: merge)
 ```
 
 SPA fallback: all non-`/api` requests serve `index.html`.
+
+**Authentication (v1):** The Web server binds to `127.0.0.1` only (not `0.0.0.0`) by default. On first startup, a random bearer token is generated and stored in `~/.shuttle/web_token`. All `/api/*` requests require `Authorization: Bearer <token>`. The token is displayed in the CLI output of `shuttle web` for the user to copy. The React SPA stores the token in `localStorage` after the user enters it on first visit. To expose the Web panel on a non-loopback interface, the user must explicitly pass `--host 0.0.0.0` (with a warning about security implications).
 
 ### 7.2 Frontend (React SPA)
 
@@ -454,6 +509,8 @@ SPA fallback: all non-`/api` requests serve `index.html`.
 | `uvx shuttle web --port 8080` | Custom Web port |
 | `uvx shuttle node add` | Add SSH node (interactive) |
 | `uvx shuttle node list` | List all nodes |
+| `uvx shuttle node edit <name>` | Edit node (interactive) |
+| `uvx shuttle node test <name>` | Test node connectivity |
 | `uvx shuttle node remove <name>` | Remove node |
 | `uvx shuttle config init` | Initialize config (guided) |
 | `uvx shuttle config show` | Show current config |
@@ -478,8 +535,8 @@ SPA fallback: all non-`/api` requests serve `index.html`.
 ### 9.2 Optimizations
 
 - **Connection health:** Check staleness on `acquire()`, not via periodic ping. Background eviction scan every 60s for idle connections only.
-- **Async log writes:** `ssh_execute` returns immediately; `CommandLog` insertion via `asyncio.create_task`. Non-blocking response path.
-- **stdout truncation:** Output > 64KB stored as first + last 5000 chars in DB. Full output returned to MCP client but not persisted. Prevents DB bloat.
+- **Log writes:** `CommandLog` insertion is awaited inline (single INSERT is ~1ms on SQLite). The simplicity and correctness guarantee outweighs the negligible latency. Fire-and-forget was considered but rejected: MCP processes are ephemeral and may exit immediately after returning, which would silently lose log entries.
+- **stdout truncation:** Output > 64KB stored as first + last 5000 chars in DB. Full output returned to MCP client but not persisted. Prevents DB bloat. **Memory safety:** MCP-side output buffer is capped at 10MB. Commands exceeding this limit have their output truncated with a warning appended. This prevents OOM on pathological commands (e.g., `cat /dev/urandom`).
 
 ### 9.3 Error Recovery
 
@@ -488,7 +545,7 @@ SPA fallback: all non-`/api` requests serve `index.html`.
 | SSH connection dropped | Auto-evict from pool, rebuild on next acquire |
 | Jump host dropped | Cascade-close all tunneled connections, trigger reconnect |
 | DB lock timeout | WAL mode + busy_timeout=5000ms, retry 3x on contention |
-| MCP process crash | Sessions marked orphaned, visible in Web panel for cleanup |
+| MCP process crash | Orphan detection: the MCP process writes its PID to `~/.shuttle/mcp.pid` on startup. The Web process periodically checks (every 60s) if the PID is alive. Sessions belonging to a dead MCP process are marked `orphaned` and auto-closed after 1h. |
 | Web process crash | No impact on MCP; restart recovers all state from DB |
 
 ### 9.4 Data Cleanup
