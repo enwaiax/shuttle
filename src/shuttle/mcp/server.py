@@ -7,6 +7,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import AsyncIterator, Optional
 
+from fastapi import FastAPI
 from fastmcp import FastMCP
 from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -161,3 +162,168 @@ async def create_mcp_server(
 
     # ── 12. Return ──────────────────────────────────────────────────
     return mcp
+
+
+async def create_service_app(
+    host: str = "127.0.0.1",
+    port: int = 9876,
+    api_token: str | None = None,
+    shuttle_dir: Optional[Path] = None,
+    db_url: Optional[str] = None,
+) -> FastAPI:
+    """Create a unified ASGI app with FastMCP mounted at /mcp and FastAPI at /.
+
+    This is the entry point for ``shuttle serve`` — a single HTTP server that
+    exposes both the MCP endpoint and the web control panel.
+    """
+    from fastapi import Depends
+    from fastapi.middleware.cors import CORSMiddleware
+    from fastapi.staticfiles import StaticFiles
+
+    from shuttle.db.seeds import seed_default_rules
+    from shuttle.web.deps import init_db_deps, verify_token
+
+    # ── Config ───────────────────────────────────────────────────────
+    config = ShuttleConfig()
+    if shuttle_dir is not None:
+        config.shuttle_dir = shuttle_dir
+    if db_url is not None:
+        config.db_url = db_url
+
+    config.shuttle_dir.mkdir(parents=True, exist_ok=True)
+
+    # ── PID file ─────────────────────────────────────────────────────
+    pid_file = config.shuttle_dir / "shuttle.pid"
+    pid_file.write_text(str(os.getpid()))
+
+    # ── DB engine + init ─────────────────────────────────────────────
+    resolved_db_url = config.db_url
+    if ":///" in resolved_db_url and "~" in resolved_db_url:
+        resolved_db_url = resolved_db_url.replace("~", str(Path.home()))
+
+    engine = create_db_engine(resolved_db_url)
+    session_factory = create_session_factory(engine)
+
+    # ── Core objects ─────────────────────────────────────────────────
+    guard = CommandGuard()
+
+    pool_config = PoolConfig(
+        max_per_node=config.pool_max_per_node,
+        max_total=config.pool_max_total,
+        idle_timeout=float(config.pool_idle_timeout),
+        max_lifetime=float(config.pool_max_lifetime),
+    )
+    pool = ConnectionPool(config=pool_config)
+
+    cred_mgr = CredentialManager(config.shuttle_dir)
+    token_store = ConfirmTokenStore()
+
+    @asynccontextmanager
+    async def db_session_ctx() -> AsyncIterator[AsyncSession]:
+        async with session_factory() as sess:
+            yield sess
+
+    session_mgr = SessionManager(pool=pool, db_session_factory=db_session_ctx)
+
+    # ── FastMCP + tools ──────────────────────────────────────────────
+    mcp = FastMCP(name="shuttle")
+    register_tools(
+        mcp=mcp,
+        pool=pool,
+        guard=guard,
+        token_store=token_store,
+        session_mgr=session_mgr,
+        db_session_ctx=db_session_ctx,
+        node_repo_factory=NodeRepo,
+        cred_mgr=cred_mgr,
+    )
+
+    mcp_http = mcp.http_app()
+
+    # ── Combined lifespan ────────────────────────────────────────────
+    @asynccontextmanager
+    async def combined_lifespan(app: FastAPI):
+        # Startup: init DB, seed rules, register nodes, start pool
+        await init_db(engine)
+        async with session_factory() as db_sess:
+            seeded = await seed_default_rules(db_sess)
+            if seeded:
+                logger.info("Seeded {n} default security rules", n=seeded)
+
+        # Register nodes from DB
+        async with session_factory() as db_sess:
+            node_repo = NodeRepo(db_sess)
+            nodes = await node_repo.list_all()
+
+        for node in nodes:
+            try:
+                password = None
+                private_key = None
+                if node.encrypted_credential:
+                    decrypted = cred_mgr.decrypt(node.encrypted_credential)
+                    if node.auth_type == "key":
+                        private_key = decrypted
+                    else:
+                        password = decrypted
+                info = NodeConnectInfo(
+                    node_id=node.name,
+                    hostname=node.host,
+                    port=node.port,
+                    username=node.username,
+                    password=password,
+                    private_key=private_key,
+                )
+                pool.register_node(info)
+            except Exception:
+                logger.warning("Failed to register node '{name}' — skipping", name=node.name)
+
+        logger.info("Registered {n} nodes in pool", n=len(pool._registry))
+        await pool.start_eviction_loop()
+
+        # Run MCP lifespan within the combined lifespan
+        async with mcp_http.lifespan(mcp_http):
+            yield
+
+        # Shutdown
+        await pool.close_all()
+        await engine.dispose()
+
+    # ── Inject shared deps into web layer ────────────────────────────
+    init_db_deps(api_token=api_token, engine=engine, session_factory=session_factory)
+
+    # ── FastAPI app ──────────────────────────────────────────────────
+    app = FastAPI(
+        title="Shuttle",
+        version="0.2.0",
+        lifespan=combined_lifespan,
+        dependencies=[Depends(verify_token)],
+    )
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+    # API routes
+    from shuttle.web.routes import data, logs, nodes, rules, sessions, settings, stats
+
+    app.include_router(stats.router, prefix="/api")
+    app.include_router(nodes.router, prefix="/api")
+    app.include_router(rules.router, prefix="/api")
+    app.include_router(sessions.router, prefix="/api")
+    app.include_router(logs.router, prefix="/api")
+    app.include_router(settings.router, prefix="/api")
+    app.include_router(data.router, prefix="/api")
+
+    # Mount MCP at /mcp
+    app.mount("/mcp", mcp_http)
+
+    # Mount static SPA at / (if it exists)
+    static_dir = Path(__file__).resolve().parent.parent / "web" / "static"
+    if static_dir.is_dir() and (static_dir / "index.html").exists():
+        app.mount("/", StaticFiles(directory=str(static_dir), html=True))
+
+    return app

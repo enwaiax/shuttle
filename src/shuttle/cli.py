@@ -51,18 +51,18 @@ def main(
         asyncio.run(_run())
 
 
-# ── Web command ───────────────────────────────────────────────────────────────
+# ── Serve command ─────────────────────────────────────────────────────────────
 
-@app.command("web")
-def web(
+@app.command("serve")
+def serve(
     host: str = typer.Option("127.0.0.1", "--host", "-h", help="Bind address"),
     port: int = typer.Option(9876, "--port", "-p", help="Bind port"),
+    db_url: str | None = typer.Option(None, "--db-url", help="Database URL override"),
 ) -> None:
-    """Start the Shuttle Web Control Panel."""
+    """Start Shuttle in service mode (MCP + Web on single HTTP server)."""
     import uvicorn
 
     from shuttle.core.config import ShuttleConfig
-    from shuttle.web.app import create_app
 
     config = ShuttleConfig()
     config.shuttle_dir.mkdir(parents=True, exist_ok=True)
@@ -76,10 +76,22 @@ def web(
         token_path.write_text(api_token)
         token_path.chmod(0o600)
 
-    typer.echo(f"Starting Shuttle Web Panel at http://{host}:{port}")
-    typer.echo(f"API Token: {api_token}")
-    web_app = create_app(api_token=api_token)
-    uvicorn.run(web_app, host=host, port=port, log_level="info")
+    typer.echo(f"Shuttle service starting at http://{host}:{port}")
+    typer.echo(f"  MCP endpoint: http://{host}:{port}/mcp")
+    typer.echo(f"  Web panel:    http://{host}:{port}")
+    typer.echo(f"  API token:    {api_token}")
+
+    async def _run():
+        from shuttle.mcp.server import create_service_app
+
+        service_app = await create_service_app(
+            host=host, port=port, api_token=api_token, db_url=db_url,
+        )
+        uvi_config = uvicorn.Config(service_app, host=host, port=port, log_level="info")
+        server = uvicorn.Server(uvi_config)
+        await server.serve()
+
+    asyncio.run(_run())
 
 
 # ── Node commands ─────────────────────────────────────────────────────────────
