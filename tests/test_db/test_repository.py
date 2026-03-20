@@ -65,7 +65,7 @@ async def test_node_list_all_with_tag_filter(db_session):
         username="u",
         auth_type="password",
         encrypted_credential="enc:p",
-        tags={"env": "prod"},
+        tags=["prod", "web"],
     )
     await repo.create(
         name="tag-node-2",
@@ -74,7 +74,7 @@ async def test_node_list_all_with_tag_filter(db_session):
         username="u",
         auth_type="password",
         encrypted_credential="enc:p",
-        tags={"env": "dev"},
+        tags=["dev", "db"],
     )
 
     all_nodes = await repo.list_all()

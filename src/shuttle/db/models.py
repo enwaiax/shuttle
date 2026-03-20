@@ -36,7 +36,7 @@ class Node(Base):
     jump_host_id: Mapped[str | None] = mapped_column(
         String(36), ForeignKey("nodes.id"), nullable=True
     )
-    tags: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    tags: Mapped[list | None] = mapped_column(JSON, nullable=True)
     pool_config: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     status: Mapped[str] = mapped_column(String(50), nullable=False, default="active")
     created_at: Mapped[datetime] = mapped_column(

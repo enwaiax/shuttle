@@ -24,7 +24,7 @@ class NodeRepo:
         auth_type: str = "password",
         encrypted_credential: str = "",
         jump_host_id: str | None = None,
-        tags: dict | None = None,
+        tags: list | None = None,
         pool_config: dict | None = None,
         status: str = "active",
     ) -> Node:
@@ -64,12 +64,7 @@ class NodeRepo:
         nodes = list(result.scalars().all())
 
         if tag is not None:
-            # Filter nodes whose tags dict contains the given tag value
-            nodes = [
-                n
-                for n in nodes
-                if n.tags and tag in (n.tags.values() if isinstance(n.tags, dict) else n.tags)
-            ]
+            nodes = [n for n in nodes if n.tags and tag in n.tags]
 
         return nodes
 
