@@ -186,6 +186,7 @@ export interface LogParams {
   page?: number;
   page_size?: number;
   node_id?: string;
+  session_id?: string;
 }
 
 export function useLogs(params?: LogParams) {
@@ -196,6 +197,7 @@ export function useLogs(params?: LogParams) {
       if (params?.page) search.set("page", String(params.page));
       if (params?.page_size) search.set("page_size", String(params.page_size));
       if (params?.node_id) search.set("node_id", params.node_id);
+      if (params?.session_id) search.set("session_id", params.session_id);
       const qs = search.toString();
       return apiFetch(`/logs${qs ? `?${qs}` : ""}`);
     },
