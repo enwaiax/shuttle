@@ -42,13 +42,15 @@ def create_app(
         allow_headers=["*"],
     )
 
-    from shuttle.web.routes import logs, nodes, rules, sessions, stats
+    from shuttle.web.routes import data, logs, nodes, rules, sessions, settings, stats
 
     app.include_router(stats.router, prefix="/api")
     app.include_router(nodes.router, prefix="/api")
     app.include_router(rules.router, prefix="/api")
     app.include_router(sessions.router, prefix="/api")
     app.include_router(logs.router, prefix="/api")
+    app.include_router(settings.router, prefix="/api")
+    app.include_router(data.router, prefix="/api")
 
     static_dir = Path(__file__).parent / "static"
     if static_dir.is_dir() and (static_dir / "index.html").exists():
