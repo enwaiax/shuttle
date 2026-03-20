@@ -1,0 +1,226 @@
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+import type {
+  NodeResponse,
+  NodeCreate,
+  NodeUpdate,
+  RuleResponse,
+  RuleCreate,
+  SessionResponse,
+  CommandLogResponse,
+  LogListResponse,
+  StatsResponse,
+  SettingsResponse,
+  SettingsUpdate,
+} from "../types";
+
+// ── Fetch wrapper ──────────────────────────────────
+
+const BASE = "/api";
+
+async function apiFetch<T>(
+  path: string,
+  init?: RequestInit,
+): Promise<T> {
+  const res = await fetch(`${BASE}${path}`, {
+    headers: { "Content-Type": "application/json", ...init?.headers },
+    ...init,
+  });
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`${res.status}: ${body}`);
+  }
+  // 204 No Content
+  if (res.status === 204) return undefined as T;
+  return res.json() as Promise<T>;
+}
+
+// ── Query keys ─────────────────────────────────────
+
+const keys = {
+  stats: ["stats"] as const,
+  nodes: (tag?: string) =>
+    tag ? (["nodes", tag] as const) : (["nodes"] as const),
+  node: (id: string) => ["nodes", id] as const,
+  rules: ["rules"] as const,
+  sessions: (status?: string) =>
+    status ? (["sessions", status] as const) : (["sessions"] as const),
+  logs: (params?: LogParams) => ["logs", params] as const,
+  settings: ["settings"] as const,
+};
+
+// ── Stats ──────────────────────────────────────────
+
+export function useStats() {
+  return useQuery<StatsResponse>({
+    queryKey: keys.stats,
+    queryFn: () => apiFetch("/stats"),
+  });
+}
+
+// ── Nodes ──────────────────────────────────────────
+
+export function useNodes(tag?: string) {
+  return useQuery<NodeResponse[]>({
+    queryKey: keys.nodes(tag),
+    queryFn: () =>
+      apiFetch(`/nodes${tag ? `?tag=${encodeURIComponent(tag)}` : ""}`),
+  });
+}
+
+export function useNode(id: string) {
+  return useQuery<NodeResponse>({
+    queryKey: keys.node(id),
+    queryFn: () => apiFetch(`/nodes/${id}`),
+    enabled: !!id,
+  });
+}
+
+export function useCreateNode() {
+  const qc = useQueryClient();
+  return useMutation<NodeResponse, Error, NodeCreate>({
+    mutationFn: (body) =>
+      apiFetch("/nodes", { method: "POST", body: JSON.stringify(body) }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ["nodes"] });
+      void qc.invalidateQueries({ queryKey: keys.stats });
+    },
+  });
+}
+
+export function useUpdateNode(id: string) {
+  const qc = useQueryClient();
+  return useMutation<NodeResponse, Error, NodeUpdate>({
+    mutationFn: (body) =>
+      apiFetch(`/nodes/${id}`, { method: "PUT", body: JSON.stringify(body) }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ["nodes"] });
+    },
+  });
+}
+
+export function useDeleteNode() {
+  const qc = useQueryClient();
+  return useMutation<void, Error, string>({
+    mutationFn: (id) => apiFetch(`/nodes/${id}`, { method: "DELETE" }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ["nodes"] });
+      void qc.invalidateQueries({ queryKey: keys.stats });
+    },
+  });
+}
+
+// ── Rules ──────────────────────────────────────────
+
+export function useRules() {
+  return useQuery<RuleResponse[]>({
+    queryKey: keys.rules,
+    queryFn: () => apiFetch("/rules"),
+  });
+}
+
+export function useCreateRule() {
+  const qc = useQueryClient();
+  return useMutation<RuleResponse, Error, RuleCreate>({
+    mutationFn: (body) =>
+      apiFetch("/rules", { method: "POST", body: JSON.stringify(body) }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: keys.rules });
+    },
+  });
+}
+
+export function useDeleteRule() {
+  const qc = useQueryClient();
+  return useMutation<void, Error, string>({
+    mutationFn: (id) => apiFetch(`/rules/${id}`, { method: "DELETE" }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: keys.rules });
+    },
+  });
+}
+
+export function useReorderRules() {
+  const qc = useQueryClient();
+  return useMutation<RuleResponse[], Error, string[]>({
+    mutationFn: (ids) =>
+      apiFetch("/rules/reorder", {
+        method: "POST",
+        body: JSON.stringify({ ids }),
+      }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: keys.rules });
+    },
+  });
+}
+
+// ── Sessions ───────────────────────────────────────
+
+export function useSessions(status?: string) {
+  return useQuery<SessionResponse[]>({
+    queryKey: keys.sessions(status),
+    queryFn: () =>
+      apiFetch(
+        `/sessions${status ? `?status_filter=${encodeURIComponent(status)}` : ""}`,
+      ),
+  });
+}
+
+export function useCloseSession() {
+  const qc = useQueryClient();
+  return useMutation<SessionResponse, Error, string>({
+    mutationFn: (id) => apiFetch(`/sessions/${id}`, { method: "DELETE" }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ["sessions"] });
+      void qc.invalidateQueries({ queryKey: keys.stats });
+    },
+  });
+}
+
+// ── Logs ───────────────────────────────────────────
+
+export interface LogParams {
+  page?: number;
+  page_size?: number;
+  node_id?: string;
+}
+
+export function useLogs(params?: LogParams) {
+  return useQuery<LogListResponse>({
+    queryKey: keys.logs(params),
+    queryFn: () => {
+      const search = new URLSearchParams();
+      if (params?.page) search.set("page", String(params.page));
+      if (params?.page_size) search.set("page_size", String(params.page_size));
+      if (params?.node_id) search.set("node_id", params.node_id);
+      const qs = search.toString();
+      return apiFetch(`/logs${qs ? `?${qs}` : ""}`);
+    },
+  });
+}
+
+// ── Settings ───────────────────────────────────────
+
+export function useSettings() {
+  return useQuery<SettingsResponse>({
+    queryKey: keys.settings,
+    queryFn: () => apiFetch("/settings"),
+  });
+}
+
+export function useUpdateSettings() {
+  const qc = useQueryClient();
+  return useMutation<SettingsResponse, Error, SettingsUpdate>({
+    mutationFn: (body) =>
+      apiFetch("/settings", { method: "PUT", body: JSON.stringify(body) }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: keys.settings });
+    },
+  });
+}
+
+// Re-export types for convenience
+export type { CommandLogResponse };
