@@ -1,9 +1,7 @@
 """Tests for ShuttleConfig pydantic-settings configuration."""
 
-import os
 from pathlib import Path
 
-import pytest
 
 from shuttle.core.config import ShuttleConfig
 

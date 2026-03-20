@@ -2,7 +2,7 @@
 
 import pytest
 
-from shuttle.db.repository import ConfigRepo, LogRepo, NodeRepo, RuleRepo, SessionRepo
+from shuttle.db.repository import ConfigRepo, NodeRepo, RuleRepo
 
 
 @pytest.mark.asyncio
@@ -58,7 +58,7 @@ async def test_node_update_and_delete(db_session):
 async def test_node_list_all_with_tag_filter(db_session):
     """Test listing nodes with optional tag filter."""
     repo = NodeRepo(db_session)
-    n1 = await repo.create(
+    await repo.create(
         name="tag-node-1",
         host="1.1.1.1",
         port=22,
@@ -67,7 +67,7 @@ async def test_node_list_all_with_tag_filter(db_session):
         encrypted_credential="enc:p",
         tags={"env": "prod"},
     )
-    n2 = await repo.create(
+    await repo.create(
         name="tag-node-2",
         host="2.2.2.2",
         port=22,
@@ -100,13 +100,13 @@ async def test_rule_create_and_ordered_list(db_session):
     )
 
     rule_repo = RuleRepo(db_session)
-    r3 = await rule_repo.create(
+    await rule_repo.create(
         pattern="pattern-c", level="warn", node_id=node.id, priority=30
     )
-    r1 = await rule_repo.create(
+    await rule_repo.create(
         pattern="pattern-a", level="safe", node_id=node.id, priority=10
     )
-    r2 = await rule_repo.create(
+    await rule_repo.create(
         pattern="pattern-b", level="blocked", node_id=node.id, priority=20
     )
 

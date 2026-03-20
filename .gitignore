@@ -208,3 +208,9 @@ __marimo__/
 
 # cursor
 .cursor/
+.claude/
+.superpowers/
+.agents/
+
+# Shuttle runtime data
+.shuttle/

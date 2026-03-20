@@ -7,7 +7,6 @@ import pytest
 from shuttle.core.security import (
     CommandGuard,
     ConfirmTokenStore,
-    SecurityDecision,
     SecurityLevel,
 )
 
