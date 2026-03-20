@@ -27,7 +27,7 @@ def make_info(node_id: str = "test-node") -> NodeConnectInfo:
 def make_mock_conn(*, closing: bool = False) -> MagicMock:
     """Return a mock asyncssh connection."""
     conn = MagicMock()
-    conn.is_closing.return_value = closing
+    conn.is_closed.return_value = closing
     conn.close = MagicMock()
     return conn
 
