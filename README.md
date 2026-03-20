@@ -1,524 +1,243 @@
-# FastMCP SSH Server - Python Implementation
+<div align="center">
 
-[![Python Version](https://img.shields.io/badge/python-3.12+-blue.svg)](https://python.org)
-[![FastMCP](https://img.shields.io/badge/FastMCP-2.0+-green.svg)](https://github.com/jlowin/fastmcp)
-[![License](https://img.shields.io/badge/license-ISC-blue.svg)](LICENSE)
-[![Test Coverage](https://img.shields.io/badge/coverage-35%25-yellow.svg)](htmlcov/index.html)
+# 🚀 Shuttle
 
-> 🚀 **A modern, FastMCP-based SSH server implementation for Model Context Protocol (MCP)**
+**Secure SSH gateway for AI assistants**
 
-FastMCP SSH Server is a Python implementation of an SSH server for the Model Context Protocol, providing seamless SSH connection management and command execution capabilities for AI models. This is a complete re-implementation of the TypeScript version with enhanced features and improved performance.
+[![Python](https://img.shields.io/badge/python-3.12+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![FastMCP](https://img.shields.io/badge/MCP-2.0+-76B900?style=flat-square)](https://modelcontextprotocol.io)
+[![License](https://img.shields.io/badge/license-ISC-blue?style=flat-square)](LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/shuttle-mcp?style=flat-square&color=76B900)](https://pypi.org/project/shuttle-mcp)
 
-## ✨ Features
+Shuttle lets AI assistants (Claude Code, Cursor, etc.) securely execute commands on your remote SSH servers — with connection pooling, session isolation, command safety rules, and a web audit panel.
 
-### 🔌 **Core Capabilities**
+[Getting Started](#getting-started) · [MCP Tools](#mcp-tools) · [Web Panel](#web-panel) · [Security Rules](#security-rules) · [中文文档](README_CN.md)
 
-- **Multi-SSH Connection Management**: Connect to multiple SSH servers simultaneously
-- **FastMCP Integration**: Native integration with FastMCP framework for optimal performance
-- **Authentication Methods**: Support for password and private key authentication
-- **Security Validation**: Command whitelist/blacklist with regex pattern matching
-- **File Transfer**: Secure SFTP upload and download operations
-- **Async Architecture**: Full async/await support for high performance
-
-### 🛡️ **Security Features**
-
-- **Command Filtering**: Configurable whitelist and blacklist for command security
-- **Connection Validation**: Comprehensive SSH connection parameter validation
-- **Error Handling**: Robust error handling with detailed logging
-- **Secure Credentials**: Support for private key authentication with passphrase protection
-
-### 🚀 **Performance & Reliability**
-
-- **Connection Pooling**: Efficient connection reuse and management
-- **Singleton Pattern**: Centralized connection management
-- **Timeout Controls**: Configurable timeouts for all operations
-- **Resource Cleanup**: Automatic cleanup of connections and resources
-
-## 📦 Installation
-
-### Requirements
-
-- **Python 3.12+** (recommended)
-- **uv** package manager (recommended) or **pip**
-- **AsyncSSH** for SSH connections
-- **FastMCP** framework
-
-### Using uv (Recommended)
-
-```bash
-# Install from source
-git clone https://github.com/your-username/fastmcp-ssh-server.git
-cd fastmcp-ssh-server
-
-# Install with uv
-uv sync
-
-# Or install in development mode
-uv sync --dev
-```
-
-### Using pip
-
-```bash
-# Install from source
-git clone https://github.com/your-username/fastmcp-ssh-server.git
-cd fastmcp-ssh-server
-
-# Install dependencies
-pip install -e .
-
-# Or with development dependencies
-pip install -e ".[dev]"
-```
-
-### From PyPI (Future)
-
-```bash
-# Will be available when published
-pip install fastmcp-ssh-server
-```
-
-## 🚀 Quick Start
-
-### 1. Basic Usage
-
-```bash
-# Single connection mode
-fastmcp-ssh-server --host example.com --username myuser --password mypass
-
-# Multiple connection mode using SSH connection strings
-fastmcp-ssh-server user1@server1.com:22 user2@server2.com:2222
-
-# With private key authentication
-fastmcp-ssh-server --host server.com --username user --private-key ~/.ssh/id_rsa
-```
-
-### 2. Security Configuration
-
-```bash
-# With command restrictions
-fastmcp-ssh-server \
-    --host example.com \
-    --username user \
-    --password pass \
-    --whitelist "ls,pwd,echo.*" \
-    --blacklist "rm.*,sudo.*"
-```
-
-### 3. Configuration File (Coming Soon)
-
-```yaml
-# config.yaml
-servers:
-  production:
-    host: prod.example.com
-    port: 22
-    username: deploy
-    private_key: ~/.ssh/prod_key
-    whitelist: ["git.*", "npm.*", "node.*"]
-    blacklist: ["rm.*", "sudo.*"]
-
-  staging:
-    host: staging.example.com
-    port: 2222
-    username: dev
-    password: dev_password
-    whitelist: ["*"]
-    blacklist: ["rm -rf"]
-```
-
-## 📖 Usage Guide
-
-### Command Line Interface
-
-The FastMCP SSH Server provides a flexible CLI with support for both single and multiple connection modes.
-
-#### Single Connection Mode
-
-```bash
-fastmcp-ssh-server [OPTIONS]
-
-Options:
-  -h, --host TEXT          SSH hostname
-  -p, --port INTEGER       SSH port (default: 22)
-  -u, --username TEXT      SSH username
-  -w, --password TEXT      SSH password
-  -k, --private-key TEXT   SSH private key file path
-  -P, --passphrase TEXT    SSH private key passphrase
-  -W, --whitelist TEXT     Command whitelist patterns (comma-separated)
-  -B, --blacklist TEXT     Command blacklist patterns (comma-separated)
-  --help                   Show help and exit
-```
-
-#### Multiple Connection Mode
-
-```bash
-# Format: [user@]host[:port]
-fastmcp-ssh-server user1@server1.com:22 user2@server2.com:2222
-```
-
-#### Global Security Options
-
-```bash
-# Apply security settings to all connections
-fastmcp-ssh-server --whitelist "ls,pwd,cat" --blacklist "rm,sudo" \
-    user1@server1.com user2@server2.com
-```
-
-### MCP Tools
-
-The server provides four main MCP tools:
-
-#### 1. `execute-command`
-
-Execute commands on SSH servers with security validation.
-
-```json
-{
-  "tool": "execute-command",
-  "arguments": {
-    "cmdString": "ls -la /home",
-    "serverName": "production",
-    "timeout": 30
-  }
-}
-```
-
-#### 2. `upload`
-
-Upload files to SSH servers via SFTP.
-
-```json
-{
-  "tool": "upload",
-  "arguments": {
-    "localPath": "/local/file.txt",
-    "remotePath": "/remote/path/file.txt",
-    "serverName": "production"
-  }
-}
-```
-
-#### 3. `download`
-
-Download files from SSH servers via SFTP.
-
-```json
-{
-  "tool": "download",
-  "arguments": {
-    "remotePath": "/remote/path/file.txt",
-    "localPath": "/local/file.txt",
-    "serverName": "production"
-  }
-}
-```
-
-#### 4. `list-servers`
-
-List all configured SSH servers and their status.
-
-```json
-{
-  "tool": "list-servers",
-  "arguments": {}
-}
-```
-
-## 🔧 Configuration
-
-### Security Configuration
-
-#### Command Whitelist
-
-- Use regex patterns to allow specific commands
-- `["ls.*", "echo.*", "pwd"]` - Allow ls, echo commands and pwd
-- `["*"]` - Allow all commands (use with blacklist)
-
-#### Command Blacklist
-
-- Use regex patterns to deny specific commands
-- `["rm.*", "sudo.*"]` - Deny rm and sudo commands
-- `[".*--force.*"]` - Deny any command with --force flag
-
-#### Example Security Configurations
-
-```bash
-# Development environment - restrictive
---whitelist "git.*,npm.*,node.*,python.*" \
---blacklist ".*--force.*,rm.*"
-
-# Production environment - very restrictive
---whitelist "ls,pwd,cat,grep" \
---blacklist "rm.*,sudo.*,chmod.*"
-
-# Staging environment - moderate
---whitelist "*" \
---blacklist "rm -rf.*,sudo su.*,dd.*"
-```
-
-### Authentication Methods
-
-#### Password Authentication
-
-```bash
-fastmcp-ssh-server --host server.com --username user --password secret
-```
-
-#### Private Key Authentication
-
-```bash
-# Without passphrase
-fastmcp-ssh-server --host server.com --username user --private-key ~/.ssh/id_rsa
-
-# With passphrase
-fastmcp-ssh-server --host server.com --username user \
-    --private-key ~/.ssh/id_rsa --passphrase mypassphrase
-```
-
-#### Mixed Authentication for Multiple Servers
-
-```bash
-# Use global password for connection strings without explicit auth
-fastmcp-ssh-server --password globalpass \
-    user1@server1.com \
-    user2@server2.com
-```
-
-## 🧪 Development
-
-### Setting up Development Environment
-
-```bash
-# Clone the repository
-git clone https://github.com/your-username/fastmcp-ssh-server.git
-cd fastmcp-ssh-server
-
-# Install with development dependencies
-uv sync --dev
-
-# Or with pip
-pip install -e ".[dev]"
-```
-
-### Running Tests
-
-```bash
-# Run all tests with coverage
-python tests/run_tests.py
-
-# Run specific test categories
-python tests/run_tests.py --unit          # Unit tests only
-python tests/run_tests.py --integration   # Integration tests only
-python tests/run_tests.py --fast          # Fast tests only
-
-# Run with verbose output
-python tests/run_tests.py --verbose
-
-# Generate coverage report
-python tests/run_tests.py --coverage
-```
-
-### Code Quality
-
-```bash
-# Run linting and formatting
-python tests/run_tests.py --lint
-
-# Or run tools individually
-ruff check src/
-black src/
-isort src/
-mypy src/
-```
-
-### Project Structure
-
-```
-fastmcp-ssh-server/
-├── src/
-│   └── python_ssh_mcp/
-│       ├── __init__.py          # Package initialization
-│       ├── __main__.py          # Module entry point
-│       ├── main.py              # Main application entry
-│       ├── server.py            # SSH MCP server implementation
-│       ├── ssh_manager.py       # SSH connection manager
-│       ├── cli.py               # Command line interface
-│       ├── models.py            # Pydantic data models
-│       ├── tools/               # MCP tools implementation
-│       │   ├── __init__.py
-│       │   ├── execute_command.py
-│       │   ├── upload.py
-│       │   ├── download.py
-│       │   └── list_servers.py
-│       └── utils/               # Utility modules
-│           ├── __init__.py
-│           ├── logger.py        # Logging system
-│           └── error_handling.py
-├── tests/                       # Test suite
-├── docs/                        # Documentation
-├── examples/                    # Usage examples
-├── pyproject.toml              # Project configuration
-└── README_PYTHON.md           # This file
-```
-
-## 📚 Documentation
-
-- **[API Documentation](docs/api.md)** - Detailed MCP tools API reference
-- **[Migration Guide](docs/MIGRATION_TO_V2.md)** - Migrating from TypeScript version
-- **[Examples](examples/)** - Usage examples and configurations
-- **[Test Documentation](tests/README.md)** - Testing guide and coverage
-- **[Troubleshooting](docs/troubleshooting.md)** - Common issues and solutions
-
-## 🔄 Migration from TypeScript Version
-
-This Python implementation is designed to be fully compatible with the TypeScript version. See our [Migration Guide](docs/MIGRATION_TO_V2.md) for detailed instructions on switching from the TypeScript implementation.
-
-### Key Differences
-
-| Feature           | TypeScript    | Python             |
-| ----------------- | ------------- | ------------------ |
-| **Framework**     | Native TS     | FastMCP            |
-| **Performance**   | Good          | Enhanced           |
-| **Async Support** | Promise-based | Native async/await |
-| **Type Safety**   | TypeScript    | Pydantic           |
-| **Testing**       | Jest          | pytest             |
-| **Packaging**     | npm           | pip/uv             |
-
-### API Compatibility
-
-All MCP tools maintain the same interface:
-
-- ✅ `execute-command` - Full compatibility
-- ✅ `upload` - Full compatibility
-- ✅ `download` - Full compatibility
-- ✅ `list-servers` - Full compatibility
-
-## 🚀 Deployment
-
-### Docker Deployment (Coming Soon)
-
-```bash
-# Build Docker image
-docker build -t fastmcp-ssh-server .
-
-# Run container
-docker run -d --name ssh-mcp-server \
-    -e SSH_HOST=example.com \
-    -e SSH_USER=myuser \
-    -e SSH_PASS=mypass \
-    fastmcp-ssh-server
-```
-
-### Systemd Service
-
-```ini
-# /etc/systemd/system/fastmcp-ssh-server.service
-[Unit]
-Description=FastMCP SSH Server
-After=network.target
-
-[Service]
-Type=simple
-User=mcp
-WorkingDirectory=/opt/fastmcp-ssh-server
-ExecStart=/opt/fastmcp-ssh-server/.venv/bin/fastmcp-ssh-server \
-    --host prod.example.com \
-    --username deploy \
-    --private-key /opt/fastmcp-ssh-server/keys/deploy.key
-Restart=always
-RestartSec=3
-
-[Install]
-WantedBy=multi-user.target
-```
-
-### Production Considerations
-
-- **Security**: Use private key authentication in production
-- **Logging**: Configure structured logging with log rotation
-- **Monitoring**: Set up health checks and monitoring
-- **Backup**: Regular backup of configuration and keys
-- **Updates**: Automated update strategy
-
-## 🛠️ Troubleshooting
-
-### Common Issues
-
-#### Connection Issues
-
-```bash
-# Test SSH connection manually
-ssh user@host -p port
-
-# Check SSH key permissions
-chmod 600 ~/.ssh/id_rsa
-
-# Verbose SSH debugging
-ssh -v user@host
-```
-
-#### Permission Issues
-
-```bash
-# Check file permissions
-ls -la /path/to/private/key
-
-# Fix key permissions
-chmod 600 /path/to/private/key
-chmod 700 ~/.ssh
-```
-
-#### Command Execution Issues
-
-```bash
-# Test command validation
-fastmcp-ssh-server --host server.com --username user --password pass \
-    --whitelist "ls.*" --blacklist "rm.*"
-```
-
-For more detailed troubleshooting, see [docs/troubleshooting.md](docs/troubleshooting.md).
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-### Development Workflow
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Ensure all tests pass
-6. Submit a pull request
-
-### Code Standards
-
-- **Python 3.12+** compatibility
-- **Type hints** for all functions
-- **Comprehensive tests** with 90%+ coverage
-- **Documentation** for all public APIs
-- **Security first** approach
-
-## 📄 License
-
-This project is licensed under the ISC License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **[FastMCP](https://github.com/jlowin/fastmcp)** - The excellent MCP framework
-- **[AsyncSSH](https://github.com/ronf/asyncssh)** - Robust SSH implementation
-- **[Pydantic](https://github.com/pydantic/pydantic)** - Data validation and settings
-- **[Typer](https://github.com/tiangolo/typer)** - Modern CLI framework
-
-## 📞 Support
-
-- **Issues**: [GitHub Issues](https://github.com/your-username/fastmcp-ssh-server/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-username/fastmcp-ssh-server/discussions)
-- **Documentation**: [docs/](docs/)
+</div>
 
 ---
 
-**FastMCP SSH Server** - Empowering AI models with secure, efficient SSH connectivity 🚀
+## Why Shuttle?
 
-# {{END_MODIFICATIONS}}
+When AI coding assistants need to operate remote servers (run tests on GPU machines, deploy to staging, check logs), they need a secure bridge. Shuttle provides:
+
+- **🔐 4-Level Command Security** — Block dangerous commands, require confirmation for risky ones, warn on installs, allow the rest
+- **🔄 Connection Pooling** — Reuse SSH connections across commands, no repeated handshakes
+- **📦 Session Isolation** — Each AI conversation gets its own working directory context
+- **🌐 Web Audit Panel** — See every command the AI ran, per node, with full stdout/stderr
+- **🛡️ Per-Node Rules** — Different security policies for prod vs dev servers
+- **⚡ Jump Host Support** — Connect through bastion/jump servers
+
+## Getting Started
+
+### 1. Install
+
+```bash
+# Via uvx (recommended)
+uvx shuttle-mcp
+
+# Or pip
+pip install shuttle-mcp
+```
+
+### 2. Add your first node
+
+```bash
+shuttle node add
+# Follow the prompts: name, host, username, password/key
+```
+
+### 3. Connect to your AI assistant
+
+**Claude Code / Cursor (stdio mode):**
+
+```json
+// .mcp.json
+{
+  "mcpServers": {
+    "shuttle": {
+      "command": "uvx",
+      "args": ["shuttle-mcp"]
+    }
+  }
+}
+```
+
+**Service mode (with Web UI):**
+
+```bash
+# Start the service
+shuttle serve
+
+# Then configure your AI client with the URL
+```
+
+```json
+// .mcp.json
+{
+  "mcpServers": {
+    "shuttle": {
+      "url": "http://localhost:9876/mcp/"
+    }
+  }
+}
+```
+
+That's it. Your AI assistant can now execute commands on your remote servers.
+
+## Two Running Modes
+
+| Mode | Command | MCP Transport | Web UI | Use Case |
+|------|---------|--------------|--------|----------|
+| **CLI** | `shuttle` | stdio | ❌ | Quick use, AI client manages lifecycle |
+| **Service** | `shuttle serve` | streamable-http | ✅ http://localhost:9876 | Audit logs, manage rules, cloud deploy |
+
+Both modes share the same SQLite database — commands logged in CLI mode are visible in the Web UI when you switch to service mode.
+
+## MCP Tools
+
+AI assistants get these tools automatically:
+
+| Tool | Description |
+|------|-------------|
+| `ssh_execute` | Run a command on a remote node |
+| `ssh_upload` | Upload a file via SFTP |
+| `ssh_download` | Download a file via SFTP |
+| `ssh_list_nodes` | List all configured nodes |
+| `ssh_add_node` | Add a new SSH node |
+| `ssh_remove_node` | Remove a node |
+| `ssh_session_start` | Start a stateful session (preserves working directory) |
+| `ssh_session_end` | End a session |
+| `ssh_session_list` | List active sessions |
+
+### Example conversation
+
+```
+You: Check the GPU usage on my training server
+AI:  → ssh_execute(node="gpu-server", command="nvidia-smi")
+AI:  Your GPU server has 7x A100-80GB, all idle at 0% utilization.
+
+You: Start a training run
+AI:  → ssh_session_start(node="gpu-server")
+AI:  → ssh_execute(session_id="abc123", command="cd /workspace && python train.py")
+AI:  Training started. Epoch 1/10...
+```
+
+## Security Rules
+
+Commands are evaluated against a 4-level security system:
+
+| Level | Behavior | Example |
+|-------|----------|---------|
+| 🔴 **block** | Rejected immediately | `rm -rf /`, `mkfs`, fork bomb |
+| 🟡 **confirm** | Requires user confirmation | `sudo`, `rm -rf`, `shutdown` |
+| 🟠 **warn** | Executes with warning logged | `apt install`, `pip install` |
+| 🟢 **allow** | Executes normally | Everything else |
+
+Default rules are seeded on first startup. Customize via Web UI or directly in the database.
+
+### Per-Node Overrides
+
+Different servers can have different rules:
+
+```
+Global: sudo .* → confirm
+GPU Server: sudo .* → allow (trusted environment)
+Prod Server: DROP TABLE → block (extra protection)
+```
+
+## Web Panel
+
+Start with `shuttle serve`, open `http://localhost:9876`:
+
+- **Overview** — Node cards with status, quick stats
+- **Activity** — Per-node command log (console-style, with stdout/stderr)
+- **Security Rules** — Manage global defaults and per-node overrides
+- **Settings** — Connection pool and cleanup configuration
+
+The Web UI requires a bearer token (displayed when you run `shuttle serve`).
+
+## CLI Reference
+
+```bash
+# MCP Server
+shuttle                      # Start MCP server (stdio mode)
+shuttle serve                # Start service mode (MCP + Web)
+shuttle serve --port 8080    # Custom port
+shuttle serve --host 0.0.0.0 # Bind to all interfaces
+
+# Node Management
+shuttle node add             # Add node interactively
+shuttle node list            # List all nodes
+shuttle node test <name>     # Test SSH connection
+shuttle node edit <name>     # Edit a node
+shuttle node remove <name>   # Remove a node
+
+# Configuration
+shuttle config show          # Display current config
+```
+
+## Configuration
+
+All settings can be overridden with environment variables (prefix `SHUTTLE_`):
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `SHUTTLE_DB_URL` | `sqlite:///~/.shuttle/shuttle.db` | Database URL |
+| `SHUTTLE_WEB_PORT` | `9876` | Web panel port |
+| `SHUTTLE_POOL_MAX_TOTAL` | `50` | Max total SSH connections |
+| `SHUTTLE_POOL_MAX_PER_NODE` | `5` | Max connections per node |
+| `SHUTTLE_POOL_IDLE_TIMEOUT` | `300` | Idle connection timeout (seconds) |
+
+### Using PostgreSQL
+
+```bash
+SHUTTLE_DB_URL=postgresql+asyncpg://user:pass@host:5432/shuttle shuttle serve
+```
+
+Requires: `pip install asyncpg`
+
+## Development
+
+```bash
+# Clone and install
+git clone https://github.com/enwaiax/ssh-mcp.git
+cd ssh-mcp
+uv sync
+
+# Run tests
+uv run pytest tests/ -v
+
+# Lint
+uv run ruff check src/ tests/
+
+# Frontend dev (hot reload)
+cd web && npm install && npm run dev
+# Backend: uv run shuttle serve (in another terminal)
+```
+
+## Architecture
+
+```
+Developer ↔ AI Assistant ↔ Shuttle (MCP) ↔ SSH ↔ Remote Servers
+                              │
+                    ┌─────────┴──────────┐
+                    │   Core Engine       │
+                    │  ├ ConnectionPool   │
+                    │  ├ SessionManager   │
+                    │  ├ CommandGuard     │
+                    │  └ SQLAlchemy ORM   │
+                    └────────────────────┘
+```
+
+**Service mode:** Single ASGI app serving both MCP (at `/mcp/`) and Web UI (at `/`) on the same port.
+
+## License
+
+[ISC](LICENSE)
+
+---
+
+<div align="center">
+  <sub>Built for developers who let AI do the SSH-ing.</sub>
+</div>
