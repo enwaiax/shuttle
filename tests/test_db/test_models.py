@@ -3,7 +3,7 @@
 import pytest
 from sqlalchemy import select
 
-from shuttle.db.models import AppConfig, CommandLog, Node, SecurityRule, Session
+from shuttle.db.models import CommandLog, Node, SecurityRule, Session
 
 
 @pytest.mark.asyncio

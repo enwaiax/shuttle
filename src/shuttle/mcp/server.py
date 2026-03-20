@@ -18,7 +18,7 @@ from shuttle.core.proxy import NodeConnectInfo
 from shuttle.core.security import CommandGuard, ConfirmTokenStore
 from shuttle.core.session import SessionManager
 from shuttle.db.engine import create_db_engine, create_session_factory, init_db
-from shuttle.db.repository import LogRepo, NodeRepo, RuleRepo
+from shuttle.db.repository import NodeRepo, RuleRepo
 from shuttle.mcp.tools import register_tools
 
 
