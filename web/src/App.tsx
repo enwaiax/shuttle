@@ -1,6 +1,9 @@
+import { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+import { getToken } from "./api/client";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
 import Nodes from "./pages/Nodes";
 import Rules from "./pages/Rules";
 import Sessions from "./pages/Sessions";
@@ -9,6 +12,12 @@ import Logs from "./pages/Logs";
 import Settings from "./pages/Settings";
 
 export default function App() {
+  const [authed, setAuthed] = useState(!!getToken());
+
+  if (!authed) {
+    return <Login onLogin={() => setAuthed(true)} />;
+  }
+
   return (
     <Routes>
       <Route element={<Layout />}>

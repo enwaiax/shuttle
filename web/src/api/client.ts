@@ -21,19 +21,41 @@ import type {
 
 const BASE = "/api";
 
+export function getToken(): string | null {
+  return localStorage.getItem("shuttle_token");
+}
+
+export function setToken(token: string) {
+  localStorage.setItem("shuttle_token", token);
+}
+
+export function clearToken() {
+  localStorage.removeItem("shuttle_token");
+}
+
 async function apiFetch<T>(
   path: string,
   init?: RequestInit,
 ): Promise<T> {
-  const res = await fetch(`${BASE}${path}`, {
-    headers: { "Content-Type": "application/json", ...init?.headers },
-    ...init,
-  });
+  const token = getToken();
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    ...init?.headers as Record<string, string>,
+  };
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  const res = await fetch(`${BASE}${path}`, { ...init, headers });
+  if (res.status === 401) {
+    clearToken();
+    window.location.reload();
+    throw new Error("Unauthorized");
+  }
   if (!res.ok) {
     const body = await res.text();
     throw new Error(`${res.status}: ${body}`);
   }
-  // 204 No Content
   if (res.status === 204) return undefined as T;
   return res.json() as Promise<T>;
 }
