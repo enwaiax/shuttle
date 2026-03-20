@@ -77,6 +77,13 @@ async def create_mcp_server(
     await init_db(engine)
     session_factory = create_session_factory(engine)
 
+    # ── 3a. Seed default security rules ─────────────────────────────
+    from shuttle.db.seeds import seed_default_rules
+    async with session_factory() as db_session:
+        seeded = await seed_default_rules(db_session)
+    if seeded:
+        logger.info("Seeded {n} default security rules", n=seeded)
+
     # ── 4. Load security rules ──────────────────────────────────────
     guard = CommandGuard()
     async with session_factory() as db_sess:
