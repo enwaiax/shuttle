@@ -96,7 +96,8 @@ register_tools(mcp, pool, guard, ...)
 app = create_app(engine, pool, guard, session_mgr)
 
 # 4. Mount FastMCP's HTTP app inside FastAPI
-app.mount("/mcp", mcp.streamable_http_app())
+mcp_http = mcp.http_app()  # Returns StarletteWithLifespan
+app.mount("/mcp", mcp_http)
 
 # 5. uvicorn runs the single FastAPI app
 uvicorn.run(app, host=host, port=port)
@@ -104,7 +105,20 @@ uvicorn.run(app, host=host, port=port)
 
 **Single engine, single pool.** Both FastMCP tools and FastAPI routes use the same `engine`, `pool`, `guard`, and `session_mgr` instances — passed via constructor/closure, not module-level globals. The v1 `deps.py` module-level globals are refactored to accept injected instances in service mode.
 
-**Lifespan:** FastAPI's lifespan handles all startup/shutdown: init DB tables, start eviction loop, seed default rules. FastMCP's sub-app has no separate lifespan — it only needs the shared objects which are already initialized.
+**Lifespan:** `mcp.http_app()` returns a `StarletteWithLifespan` that has its own lifespan for MCP session management. FastAPI's lifespan handles Shuttle-specific init (DB tables, eviction loop, rule seeding). Both lifespans must run. Use FastAPI's lifespan to also invoke the MCP sub-app's lifespan:
+
+```python
+@asynccontextmanager
+async def combined_lifespan(app: FastAPI):
+    # Shuttle init
+    await init_db(engine)
+    await seed_default_rules(...)
+    pool.start_eviction_loop()
+
+    # MCP sub-app lifespan
+    async with mcp_http.lifespan(mcp_http):
+        yield
+```
 
 ### Shared Database
 
@@ -277,7 +291,7 @@ class CommandLog(Base):
 
 Logging is inline (`await log_repo.create(...)`) within the command execution flow. This ensures logs are persisted before the response is returned. The latency overhead is minimal for async SQLite/PostgreSQL writes.
 
-Full command output is returned to the AI client. Only truncated output (first+last 5000 chars if >64KB) is persisted to DB to prevent bloat.
+Full command output is returned to the AI client. Only truncated output (first N bytes + `[truncated]` marker if >64KB) is persisted to DB to prevent bloat.
 
 ### Cleanup Policy
 
@@ -418,15 +432,20 @@ These modules are stable and require no changes:
 
 ### Changes to Core
 
-1. **`core/security.py`** — Refactor `CommandGuard.evaluate()` to accept a DB session and query rules per call (global + node-specific), instead of relying on stale in-memory cache. The `load_rules()` method is removed; rules are always live from DB.
+1. **`core/security.py`** — Refactor `CommandGuard.evaluate()`:
+   - Change from `def evaluate(...)` to `async def evaluate(...)` (sync → async)
+   - Add `db_session: AsyncSession` parameter
+   - Query rules from DB per call (global + node-specific), instead of in-memory cache
+   - Remove `load_rules()` method; rules are always live from DB
+   - **All callers must be updated:** `_execute_command_logic()` in `tools.py` and all tests that call `evaluate()`
 
-3. **`db/models.py`** — Add `source_rule_id` nullable field to `SecurityRule` for tracking which default rule was overridden. **Schema migration:** Since `Base.metadata.create_all()` does not add columns to existing tables, add an explicit migration in `init_db()` that checks for the column and runs `ALTER TABLE security_rules ADD COLUMN source_rule_id VARCHAR(36)` if missing. This is safe for SQLite and PostgreSQL.
+2. **`db/models.py`** — Add `source_rule_id` nullable field to `SecurityRule` for tracking which default rule was overridden. **Schema migration:** Since `Base.metadata.create_all()` does not add columns to existing tables, add an explicit migration in `init_db()` that checks for the column and runs `ALTER TABLE security_rules ADD COLUMN source_rule_id VARCHAR(36)` if missing. This is safe for SQLite and PostgreSQL.
 
-4. **`db/repository.py`** — Add `source_rule_id` parameter to `RuleRepo.create()`. Add `RuleRepo.list_effective(node_id)` method that returns merged global + node-specific rules ordered by priority.
+3. **`db/repository.py`** — Add `source_rule_id` parameter to `RuleRepo.create()`. Add `RuleRepo.list_effective(node_id)` method that returns merged global + node-specific rules ordered by priority.
 
-5. **`web/schemas.py`** — Add `source_rule_id: str | None` to `RuleCreate`, `RuleResponse`.
+4. **`web/schemas.py`** — Add `source_rule_id: str | None` to `RuleCreate`, `RuleResponse`.
 
-6. **`mcp/tools.py`** — Fix pre-existing bug: `CommandLog.node_id` must store the node UUID, not the node name string. Resolve node name to UUID before logging.
+5. **`mcp/tools.py`** — Fix pre-existing bug: `CommandLog.node_id` must store the node UUID, not the node name string. Resolve node name to `(name, uuid)` early; use name for pool/guard, uuid for DB logging.
 
 ---
 
@@ -499,7 +518,7 @@ web/                          # React source
 ### What changes
 - `cli.py` — remove `shuttle web`, add `shuttle serve` (wires FastMCP + FastAPI into single ASGI app)
 - `mcp/server.py` — add streamable-http startup, return ASGI sub-app for mounting
-- `mcp/tools.py` — add ssh_add_node, ssh_remove_node; fix node_id bug (store UUID not name)
+- `mcp/tools.py` — add ssh_add_node, ssh_remove_node; fix node_id bug: resolve node name to `(node_name, node_uuid)` tuple early in `_execute_command_logic()`. Use `node_name` for pool/guard/token_store (they are keyed by name). Use `node_uuid` for `CommandLog.node_id` (FK to nodes.id). This keeps the pool's name-based keying intact while fixing the DB FK violation.
 - `web/app.py` — accept injected core objects; mount FastMCP sub-app in service mode
 - `web/deps.py` — refactor from module-level globals to accept injected engine/pool
 - `core/security.py` — refactor evaluate() to query DB per call (live rules, no cache)
@@ -507,7 +526,7 @@ web/                          # React source
 - `db/repository.py` — add RuleRepo.list_effective(node_id), add source_rule_id to RuleRepo.create()
 - `web/schemas.py` — add source_rule_id to RuleCreate/RuleResponse
 - `web/routes/rules.py` — add GET /api/rules/effective/:node_id
-- `db/models.py` — reconcile tags: change Node.tags column to store `list` directly (not `dict`)
+- `db/models.py` — reconcile tags: change `Node.tags` type annotation from `dict | None` to `list | None` (JSON column stays the same — it's schema-agnostic). Update `NodeRepo.list_all()` filter to only handle lists: `tag in (n.tags or [])`. Existing rows with dict-format tags are treated as empty (no migration needed — this is a new product with minimal data).
 
 ### What's new (frontend)
 - `pages/Activity.tsx` — replaces Dashboard + Sessions + Logs as the main view
