@@ -161,7 +161,7 @@ async def _execute_command_logic(
             async with pool.connection(resolved_node) as pc:
                 ssh_result = await pc.conn.run(command, timeout=timeout, check=False)
                 stdout = ssh_result.stdout or ""
-                exit_code = ssh_result.exit_code
+                exit_code = ssh_result.exit_status
         except Exception as exc:
             return f"Error: command execution failed — {exc}"
 

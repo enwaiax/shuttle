@@ -191,7 +191,7 @@ class ConnectionPool:
             idle_queue = self._idle[node_id]
             while idle_queue:
                 pc = idle_queue.popleft()
-                if pc.conn.is_closing():
+                if pc.conn.is_closed():
                     # Connection died while idle — discard and try next
                     async with self._global_lock:
                         self._global_active -= 1
@@ -259,7 +259,7 @@ class ConnectionPool:
                 self._active[node_id] -= 1
 
             if (
-                not pc.conn.is_closing()
+                not pc.conn.is_closed()
                 and not pc.is_expired(
                     self._config.idle_timeout, self._config.max_lifetime
                 )
@@ -295,7 +295,7 @@ class ConnectionPool:
                     pc = idle_queue.popleft()
                     if pc.is_expired(
                         self._config.idle_timeout, self._config.max_lifetime
-                    ) or pc.conn.is_closing():
+                    ) or pc.conn.is_closed():
                         pc.conn.close()
                         async with self._global_lock:
                             if self._global_active > 0:

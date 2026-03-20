@@ -92,13 +92,15 @@ def node_add() -> None:
     host = typer.prompt("Host")
     username = typer.prompt("Username")
     port = typer.prompt("Port", default="22")
-    auth_type = typer.prompt("Auth type (password/key)", default="password")
+    password = typer.prompt("Password (leave empty to use key file)", default="", hide_input=True)
 
-    if auth_type == "password":
-        credential = typer.prompt("Password", hide_input=True)
+    if password:
+        auth_type = "password"
+        credential = password
     else:
-        key_path = typer.prompt("Path to private key file")
+        key_path = typer.prompt("Private key file path")
         credential = Path(key_path).expanduser().read_text()
+        auth_type = "key"
 
     async def _add() -> None:
         from shuttle.core.config import ShuttleConfig
