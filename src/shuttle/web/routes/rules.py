@@ -38,6 +38,23 @@ async def create_rule(
     return rule
 
 
+@router.get("/effective/{node_id}", response_model=list[RuleResponse])
+async def get_effective_rules(
+    node_id: str,
+    db: AsyncSession = Depends(get_db_session),
+):
+    """Return effective rules for a node (global defaults + node overrides merged)."""
+    from shuttle.db.repository import NodeRepo
+
+    node_repo = NodeRepo(db)
+    node = await node_repo.get_by_id(node_id)
+    if not node:
+        raise HTTPException(404, "Node not found")
+
+    repo = RuleRepo(db)
+    return await repo.list_effective(node_id)
+
+
 @router.put("/{rule_id}", response_model=RuleResponse)
 async def update_rule(
     rule_id: str,

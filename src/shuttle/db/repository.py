@@ -150,6 +150,30 @@ class RuleRepo:
         await self._session.commit()
         return True
 
+    async def list_effective(self, node_id: str) -> list["SecurityRule"]:
+        """Return merged global + node-specific rules. Node rules override globals with same pattern."""
+        global_q = (
+            select(SecurityRule)
+            .where(SecurityRule.node_id.is_(None))
+            .order_by(SecurityRule.priority)
+        )
+        global_result = await self._session.execute(global_q)
+        global_rules = list(global_result.scalars().all())
+
+        node_q = (
+            select(SecurityRule)
+            .where(SecurityRule.node_id == node_id)
+            .order_by(SecurityRule.priority)
+        )
+        node_result = await self._session.execute(node_q)
+        node_rules = list(node_result.scalars().all())
+
+        node_patterns = {r.pattern for r in node_rules}
+        merged = [r for r in global_rules if r.pattern not in node_patterns]
+        merged.extend(node_rules)
+        merged.sort(key=lambda r: r.priority)
+        return merged
+
     async def reorder(self, ids: list[str]) -> None:
         """Assign new priorities based on position in the ids list.
 
