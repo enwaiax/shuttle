@@ -18,30 +18,31 @@ export default function DataTable<T>({
   keyField,
 }: DataTableProps<T>) {
   return (
-    <div className="overflow-hidden rounded-lg border border-[#1a1a1a] bg-[#0e0e0e]">
-      <table className="min-w-full divide-y divide-[#1a1a1a]">
+    <div className="overflow-hidden rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
+      <table className="min-w-full">
         <thead>
-          <tr className="bg-[#111]">
+          <tr className="border-b border-[var(--border-subtle)]">
             {columns.map((col) => (
               <th
                 key={col.key}
-                className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-wider text-[#555]"
+                className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--text-quaternary)]"
               >
                 {col.label}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-[#1a1a1a]">
-          {data.map((row) => (
+        <tbody>
+          {data.map((row, i) => (
             <tr
               key={String(row[keyField])}
-              className="transition-colors hover:bg-[#161616]"
+              className="border-b border-[var(--border-subtle)] transition-colors duration-150 last:border-b-0 hover:bg-[var(--bg-tertiary)]"
+              style={{ animationDelay: `${i * 30}ms` }}
             >
               {columns.map((col) => (
                 <td
                   key={col.key}
-                  className="whitespace-nowrap px-4 py-2.5 text-[13px] text-[#999]"
+                  className="whitespace-nowrap px-5 py-3 text-[13px] text-[var(--text-secondary)]"
                 >
                   {col.render
                     ? col.render(row)

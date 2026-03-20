@@ -1,18 +1,11 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 
 export default function Layout() {
-  const { pathname } = useLocation();
-  const isDark = pathname === "/" || pathname.startsWith("/activity");
-
   return (
-    <div className="flex h-screen overflow-hidden bg-[#0a0a0a]">
+    <div className="flex h-screen overflow-hidden bg-black">
       <Sidebar />
-      <main
-        className={`flex-1 overflow-hidden ${
-          isDark ? "" : "overflow-y-auto bg-[#0a0a0a] p-8"
-        }`}
-      >
+      <main className="flex-1 overflow-hidden">
         <Outlet />
       </main>
     </div>

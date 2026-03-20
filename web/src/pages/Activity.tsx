@@ -8,9 +8,7 @@ import clsx from "clsx";
 const PAGE_SIZE = 50;
 const PREVIEW_LINES = 15;
 
-// ── Helpers ─────────────────────────────────────────
-
-const mono = { fontFamily: "'JetBrains Mono', 'Fira Code', monospace" };
+const mono = { fontFamily: "var(--font-mono)" };
 
 function fmtTime(iso: string): string {
   return new Date(iso).toLocaleTimeString(undefined, {
@@ -36,8 +34,6 @@ function truncate(text: string) {
 
 type TimeRange = "today" | "7d" | "30d" | "all";
 
-// ── Command Entry ───────────────────────────────────
-
 function Entry({ log }: { log: CommandLogResponse }) {
   const [expanded, setExpanded] = useState(false);
 
@@ -55,49 +51,48 @@ function Entry({ log }: { log: CommandLogResponse }) {
   return (
     <div
       className={clsx(
-        "group border-b border-[#1a1a1a]",
-        failed && "bg-[#1a0000]",
+        "group border-b border-[var(--border-subtle)] transition-colors",
+        failed && "bg-[var(--red)]/[0.03]",
       )}
     >
       {/* Command line */}
-      <div className="flex items-baseline px-4 py-2" style={mono}>
-        {/* Time */}
-        <span className="w-[72px] shrink-0 text-[12px] text-[#444]">
+      <div className="flex items-baseline px-5 py-2.5" style={mono}>
+        <span className="w-[76px] shrink-0 text-[12px] text-[var(--text-quaternary)]">
           {fmtTime(log.executed_at)}
         </span>
 
-        {/* Prompt */}
-        <span className="mr-1.5 text-[12px] text-[#555]">$</span>
+        <span className="mr-2 text-[12px] text-[var(--green)]/60">$</span>
 
-        {/* Command */}
         <span
           className={clsx(
             "flex-1 text-[13px]",
-            failed ? "text-[#ff6369]" : "text-[#e0e0e0]",
+            failed ? "text-[var(--red)]" : "text-[var(--text-primary)]",
           )}
         >
           {log.command}
         </span>
 
-        {/* Security badge */}
         {hasSec && (
           <span
             className={clsx(
-              "mx-3 shrink-0 rounded-full px-2 py-[1px] text-[10px] font-medium",
-              sec === "block" && "bg-[#ff0000]/10 text-[#ff4444]",
-              sec === "confirm" && "bg-[#ff9500]/10 text-[#ff9500]",
-              sec === "warn" && "bg-[#ffd60a]/8 text-[#ffd60a]",
+              "mx-3 shrink-0 rounded-full px-2.5 py-[2px] text-[10px] font-semibold uppercase",
+              sec === "block" && "bg-[var(--red-subtle)] text-[var(--red)]",
+              sec === "confirm" && "bg-[var(--orange-subtle)] text-[var(--orange)]",
+              sec === "warn" && "bg-[var(--yellow-subtle)] text-[var(--yellow)]",
             )}
           >
             {sec}
           </span>
         )}
 
-        {/* Exit code */}
         <span
           className={clsx(
-            "w-8 shrink-0 text-right text-[11px]",
-            failed ? "text-[#ff4444]" : log.exit_code === 0 ? "text-[#30d158]" : "text-[#444]",
+            "w-8 shrink-0 text-right text-[11px] tabular-nums",
+            failed
+              ? "text-[var(--red)]"
+              : log.exit_code === 0
+                ? "text-[var(--green)]"
+                : "text-[var(--text-quaternary)]",
           )}
         >
           {log.exit_code !== null
@@ -107,18 +102,17 @@ function Entry({ log }: { log: CommandLogResponse }) {
             : "·"}
         </span>
 
-        {/* Duration */}
-        <span className="w-14 shrink-0 text-right text-[11px] text-[#333]">
+        <span className="w-14 shrink-0 text-right text-[11px] text-[var(--text-muted)]">
           {fmtDuration(log.duration_ms)}
         </span>
       </div>
 
-      {/* Output — default visible */}
+      {/* Output */}
       {hasOutput && (
-        <div className="mx-4 mb-2 rounded border border-[#1a1a1a] bg-[#080808]">
+        <div className="mx-5 mb-3 overflow-hidden rounded-lg border border-[var(--border-subtle)] bg-black">
           {stdout && (
             <pre
-              className="overflow-x-auto px-3 py-2 text-[12px] leading-[1.6] text-[#888]"
+              className="overflow-x-auto px-4 py-2.5 text-[12px] leading-[1.7] text-[var(--text-tertiary)]"
               style={mono}
             >
               {expanded ? stdout : stdoutT.text}
@@ -127,8 +121,8 @@ function Entry({ log }: { log: CommandLogResponse }) {
           {stderr && (
             <pre
               className={clsx(
-                "overflow-x-auto px-3 py-2 text-[12px] leading-[1.6] text-[#994444]",
-                stdout && "border-t border-[#1a1a1a]",
+                "overflow-x-auto px-4 py-2.5 text-[12px] leading-[1.7] text-[var(--red)]/70",
+                stdout && "border-t border-[var(--border-subtle)]",
               )}
               style={mono}
             >
@@ -138,7 +132,7 @@ function Entry({ log }: { log: CommandLogResponse }) {
           {needsExpand && !expanded && (
             <button
               onClick={() => setExpanded(true)}
-              className="flex w-full items-center gap-1 border-t border-[#1a1a1a] px-3 py-1.5 text-[11px] text-[#555] transition-colors hover:bg-[#111] hover:text-[#888]"
+              className="flex w-full items-center gap-1.5 border-t border-[var(--border-subtle)] px-4 py-2 text-[11px] text-[var(--text-quaternary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-tertiary)]"
             >
               <ChevronRight size={10} />
               {stdout.split("\n").length + stderr.split("\n").length} lines total
@@ -149,8 +143,6 @@ function Entry({ log }: { log: CommandLogResponse }) {
     </div>
   );
 }
-
-// ── Activity Page ───────────────────────────────────
 
 export default function Activity() {
   const { nodeId } = useParams<{ nodeId?: string }>();
@@ -173,7 +165,6 @@ export default function Activity() {
     page_size: PAGE_SIZE,
   });
 
-  // Accumulate pages
   useEffect(() => {
     if (!data?.items) return;
     if (page === 1) {
@@ -186,7 +177,6 @@ export default function Activity() {
     }
   }, [data, page]);
 
-  // Auto-refresh
   const tick = useCallback(() => void refetch(), [refetch]);
   useEffect(() => {
     if (!live) return;
@@ -194,7 +184,6 @@ export default function Activity() {
     return () => clearInterval(id);
   }, [live, tick]);
 
-  // Infinite scroll
   useEffect(() => {
     const el = sentinel.current;
     if (!el) return;
@@ -222,39 +211,49 @@ export default function Activity() {
 
   if (!nodeId) {
     return (
-      <div className="flex h-full items-center justify-center bg-[#0a0a0a]">
-        <p className="text-[13px] text-[#333]">Select a node</p>
+      <div className="flex h-full items-center justify-center bg-black">
+        <p className="text-[13px] text-[var(--text-muted)]">Select a node</p>
       </div>
     );
   }
 
   return (
-    <div className="flex h-full flex-col bg-[#0e0e0e]">
+    <div className="flex h-full flex-col bg-black">
       {/* Toolbar */}
-      <div className="flex h-10 items-center justify-between border-b border-[#1a1a1a] bg-[#0a0a0a] px-4">
-        <div className="flex items-center gap-4">
-          {/* Node info */}
-          <span className="text-[13px] font-medium text-[#ededed]">
-            {node?.name ?? "…"}
-          </span>
-          <span className="text-[11px] text-[#444]">
+      <div className="flex h-12 items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)] px-5">
+        <div className="flex items-center gap-5">
+          <div className="flex items-center gap-2.5">
+            <span
+              className={clsx(
+                "h-2 w-2 rounded-full",
+                node?.status === "active"
+                  ? "bg-[var(--green)] animate-pulse-green"
+                  : "bg-[var(--text-muted)]",
+              )}
+            />
+            <span className="text-[14px] font-semibold text-[var(--text-primary)]">
+              {node?.name ?? "…"}
+            </span>
+          </div>
+          <span
+            className="text-[12px] text-[var(--text-quaternary)]"
+            style={{ fontFamily: "var(--font-mono)" }}
+          >
             {node ? `${node.host}:${node.port}` : ""}
           </span>
 
-          {/* Separator */}
-          <span className="text-[#1a1a1a]">|</span>
+          <div className="h-4 w-px bg-[var(--border-subtle)]" />
 
-          {/* Time pills */}
-          <div className="flex gap-0.5">
+          <div className="flex gap-0.5 rounded-lg bg-[var(--bg-tertiary)] p-0.5">
             {ranges.map((r) => (
               <button
                 key={r.value}
                 onClick={() => setRange(r.value)}
                 className={clsx(
-                  "rounded px-2 py-0.5 text-[11px] font-medium transition-colors",
+                  "rounded-md px-2.5 py-1 text-[11px] font-medium transition-all duration-200",
                   range === r.value
-                    ? "bg-[#222] text-[#ededed]"
-                    : "text-[#555] hover:text-[#999]",
+                    ? "bg-[var(--bg-elevated)] text-[var(--text-primary)] shadow-sm"
+                    : "text-[var(--text-quaternary)] hover:text-[var(--text-tertiary)]",
                 )}
               >
                 {r.label}
@@ -262,7 +261,7 @@ export default function Activity() {
             ))}
           </div>
 
-          <span className="text-[11px] tabular-nums text-[#333]">
+          <span className="text-[11px] tabular-nums text-[var(--text-muted)]" style={{ fontFamily: "var(--font-mono)" }}>
             {total.toLocaleString()} cmd{total !== 1 ? "s" : ""}
           </span>
         </div>
@@ -270,22 +269,22 @@ export default function Activity() {
         <div className="flex items-center gap-1">
           <a
             href={csv}
-            className="flex items-center gap-1 rounded px-2 py-1 text-[11px] text-[#555] transition-colors hover:bg-[#161616] hover:text-[#999]"
+            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11px] font-medium text-[var(--text-quaternary)] transition-colors hover:bg-[var(--bg-hover)] hover:text-[var(--text-secondary)]"
           >
-            <Download size={11} strokeWidth={1.5} />
-            CSV
+            <Download size={12} strokeWidth={1.5} />
+            Export
           </a>
           <button
             onClick={() => setLive((v) => !v)}
             className={clsx(
-              "flex items-center gap-1.5 rounded px-2 py-1 text-[11px] font-medium transition-colors",
+              "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11px] font-semibold transition-all duration-200",
               live
-                ? "bg-[#30d158]/10 text-[#30d158]"
-                : "text-[#555] hover:bg-[#161616] hover:text-[#999]",
+                ? "bg-[var(--green-subtle)] text-[var(--green)]"
+                : "text-[var(--text-quaternary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-secondary)]",
             )}
           >
             <RefreshCw
-              size={10}
+              size={11}
               strokeWidth={1.5}
               className={live ? "animate-spin" : ""}
             />
@@ -297,12 +296,18 @@ export default function Activity() {
       {/* Log body */}
       <div className="flex-1 overflow-y-auto">
         {items.length === 0 && !isFetching ? (
-          <div className="flex h-full flex-col items-center justify-center gap-3">
-            <Terminal size={20} strokeWidth={1} className="text-[#333]" />
-            <p className="text-[13px] text-[#444]">No commands yet</p>
-            <p className="text-[11px] text-[#333]">
-              Commands will appear as AI executes them
-            </p>
+          <div className="flex h-full flex-col items-center justify-center gap-4">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-[var(--border-default)] bg-[var(--bg-elevated)]">
+              <Terminal size={22} strokeWidth={1.2} className="text-[var(--text-quaternary)]" />
+            </div>
+            <div className="text-center">
+              <p className="text-[14px] font-medium text-[var(--text-secondary)]">
+                No commands yet
+              </p>
+              <p className="mt-1 text-[12px] text-[var(--text-quaternary)]">
+                Commands will appear as AI executes them
+              </p>
+            </div>
           </div>
         ) : (
           <>
@@ -311,12 +316,12 @@ export default function Activity() {
             ))}
             <div ref={sentinel} className="h-px" />
             {isFetching && (
-              <p className="py-4 text-center text-[11px] text-[#333]">
+              <p className="py-6 text-center text-[12px] text-[var(--text-muted)]">
                 Loading…
               </p>
             )}
             {!isFetching && items.length >= total && total > 0 && (
-              <p className="py-4 text-center text-[11px] text-[#222]">
+              <p className="py-6 text-center text-[11px] text-[var(--text-muted)]">
                 — end —
               </p>
             )}

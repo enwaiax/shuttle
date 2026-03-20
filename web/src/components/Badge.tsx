@@ -1,17 +1,17 @@
 import clsx from "clsx";
 
 const colorMap: Record<string, string> = {
-  block: "bg-[#ff0000]/10 text-[#ff4444]",
-  confirm: "bg-[#ff9500]/10 text-[#ff9500]",
-  warn: "bg-[#ffd60a]/8 text-[#ffd60a]",
-  allow: "bg-[#30d158]/10 text-[#30d158]",
-  active: "bg-[#30d158]/10 text-[#30d158]",
-  online: "bg-[#30d158]/10 text-[#30d158]",
-  closed: "bg-[#333]/50 text-[#666]",
-  offline: "bg-[#ff4444]/10 text-[#ff4444]",
+  block: "bg-[var(--red-subtle)] text-[var(--red)]",
+  confirm: "bg-[var(--orange-subtle)] text-[var(--orange)]",
+  warn: "bg-[var(--yellow-subtle)] text-[var(--yellow)]",
+  allow: "bg-[var(--success-subtle)] text-[var(--success)]",
+  active: "bg-[var(--green-subtle)] text-[var(--green)]",
+  online: "bg-[var(--green-subtle)] text-[var(--green)]",
+  closed: "bg-[var(--bg-hover)] text-[var(--text-quaternary)]",
+  offline: "bg-[var(--red-subtle)] text-[var(--red)]",
 };
 
-const fallback = "bg-[#222] text-[#666]";
+const fallback = "bg-[var(--bg-hover)] text-[var(--text-tertiary)]";
 
 interface BadgeProps {
   value: string;
@@ -23,7 +23,7 @@ export default function Badge({ value, className }: BadgeProps) {
   return (
     <span
       className={clsx(
-        "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium",
+        "inline-flex items-center rounded-full px-2.5 py-[3px] text-[10px] font-semibold uppercase tracking-wide",
         colors,
         className,
       )}

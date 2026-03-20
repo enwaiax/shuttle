@@ -3,49 +3,53 @@ import { Shield, Settings, Plus, LayoutGrid } from "lucide-react";
 import clsx from "clsx";
 import { useNodes } from "../api/client";
 
+const navItemCls = (isActive: boolean) =>
+  clsx(
+    "group flex items-center gap-2.5 rounded-lg px-3 py-[7px] text-[13px] font-medium transition-all duration-200",
+    isActive
+      ? "bg-[var(--green-subtle)] text-[var(--green)]"
+      : "text-[var(--text-tertiary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-secondary)]",
+  );
+
 export default function Sidebar() {
   const { data: nodes } = useNodes();
 
   return (
-    <aside className="flex w-[200px] flex-col border-r border-[#1a1a1a] bg-[#0a0a0a]">
+    <aside className="flex w-[220px] shrink-0 flex-col border-r border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
       {/* Brand */}
-      <NavLink to="/" className="flex items-center gap-2.5 px-4 py-4 transition-opacity hover:opacity-80">
-        <div className="flex h-6 w-6 items-center justify-center rounded border border-[#222] bg-[#111]">
+      <NavLink
+        to="/"
+        className="flex items-center gap-3 px-5 py-5 transition-opacity hover:opacity-80"
+      >
+        <div className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--green)]/30 bg-[var(--green-subtle)]">
           <span
-            className="text-[11px] font-semibold text-[#ededed]"
-            style={{ fontFamily: "'JetBrains Mono', monospace" }}
+            className="text-[12px] font-bold text-[var(--green)]"
+            style={{ fontFamily: "var(--font-mono)" }}
           >
             S
           </span>
         </div>
-        <span className="text-[13px] font-medium tracking-[-0.01em] text-[#999]">
+        <span className="text-[14px] font-semibold tracking-[-0.02em] text-[var(--text-primary)]">
           Shuttle
         </span>
       </NavLink>
 
-      <nav className="flex-1 px-2">
+      <nav className="flex-1 space-y-0.5 px-3">
         {/* Overview */}
-        <NavLink
-          to="/"
-          end
-          className={({ isActive }) =>
-            clsx(
-              "flex items-center gap-2 rounded-md px-2 py-[5px] text-[13px] transition-colors",
-              isActive
-                ? "bg-[#161616] text-[#ededed]"
-                : "text-[#666] hover:bg-[#111] hover:text-[#999]",
-            )
-          }
-        >
-          <LayoutGrid size={13} strokeWidth={1.5} />
+        <NavLink to="/" end className={({ isActive }) => navItemCls(isActive)}>
+          <LayoutGrid size={14} strokeWidth={1.8} />
           Overview
         </NavLink>
 
         {/* Nodes section */}
-        <div className="my-3 border-t border-[#1a1a1a]" />
-        <p className="mb-1.5 px-2 text-[10px] font-medium uppercase tracking-[0.08em] text-[#444]">
-          Nodes
-        </p>
+        <div className="!mt-5 !mb-2 flex items-center justify-between px-3">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--text-quaternary)]">
+            Nodes
+          </p>
+          <span className="text-[10px] tabular-nums text-[var(--text-muted)]">
+            {nodes?.length ?? 0}
+          </span>
+        </div>
 
         {nodes?.map((node) => (
           <NavLink
@@ -53,23 +57,20 @@ export default function Sidebar() {
             to={`/activity/${node.id}`}
             className={({ isActive }) =>
               clsx(
-                "flex items-center gap-2 rounded-md px-2 py-[5px] text-[13px] transition-colors",
+                "group flex items-center gap-2.5 rounded-lg px-3 py-[7px] text-[13px] transition-all duration-200",
                 isActive
-                  ? "bg-[#161616] text-[#ededed]"
-                  : "text-[#666] hover:bg-[#111] hover:text-[#999]",
+                  ? "bg-[var(--bg-elevated)] text-[var(--text-primary)]"
+                  : "text-[var(--text-tertiary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-secondary)]",
               )
             }
           >
             <span
               className={clsx(
-                "h-[6px] w-[6px] rounded-full",
-                node.status === "active" ? "bg-[#0f0]" : "bg-[#333]",
-              )}
-              style={
+                "h-[7px] w-[7px] shrink-0 rounded-full transition-all",
                 node.status === "active"
-                  ? { boxShadow: "0 0 4px rgba(0,255,0,0.3)" }
-                  : undefined
-              }
+                  ? "bg-[var(--green)] animate-pulse-green"
+                  : "bg-[var(--text-muted)]",
+              )}
             />
             <span className="truncate">{node.name}</span>
           </NavLink>
@@ -78,42 +79,37 @@ export default function Sidebar() {
         <NavLink
           to="/"
           end={false}
-          className="mt-1 flex items-center gap-2 rounded-md px-2 py-[5px] text-[13px] text-[#333] transition-colors hover:bg-[#111] hover:text-[#666]"
+          className="mt-1 flex items-center gap-2.5 rounded-lg border border-dashed border-[var(--border-default)] px-3 py-[6px] text-[12px] text-[var(--text-quaternary)] transition-all duration-200 hover:border-[var(--green)]/30 hover:text-[var(--green)]"
         >
-          <Plus size={13} strokeWidth={1.5} />
+          <Plus size={12} strokeWidth={2} />
           Add node
         </NavLink>
 
-        <div className="my-3 border-t border-[#1a1a1a]" />
+        {/* Divider */}
+        <div className="!my-4 border-t border-[var(--border-subtle)]" />
+
         <NavLink
           to="/rules"
-          className={({ isActive }) =>
-            clsx(
-              "flex items-center gap-2 rounded-md px-2 py-[5px] text-[13px] transition-colors",
-              isActive
-                ? "bg-[#161616] text-[#ededed]"
-                : "text-[#666] hover:bg-[#111] hover:text-[#999]",
-            )
-          }
+          className={({ isActive }) => navItemCls(isActive)}
         >
-          <Shield size={13} strokeWidth={1.5} />
+          <Shield size={14} strokeWidth={1.8} />
           Rules
         </NavLink>
         <NavLink
           to="/settings"
-          className={({ isActive }) =>
-            clsx(
-              "flex items-center gap-2 rounded-md px-2 py-[5px] text-[13px] transition-colors",
-              isActive
-                ? "bg-[#161616] text-[#ededed]"
-                : "text-[#666] hover:bg-[#111] hover:text-[#999]",
-            )
-          }
+          className={({ isActive }) => navItemCls(isActive)}
         >
-          <Settings size={13} strokeWidth={1.5} />
+          <Settings size={14} strokeWidth={1.8} />
           Settings
         </NavLink>
       </nav>
+
+      {/* Footer */}
+      <div className="border-t border-[var(--border-subtle)] px-5 py-3">
+        <p className="text-[10px] text-[var(--text-muted)]">
+          Shuttle MCP v2
+        </p>
+      </div>
     </aside>
   );
 }

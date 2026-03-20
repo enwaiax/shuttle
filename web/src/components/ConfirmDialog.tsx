@@ -24,21 +24,21 @@ export default function ConfirmDialog({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-sm" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg border border-[#222] bg-[#111] p-6 shadow-2xl focus:outline-none">
+        <Dialog.Overlay className="fixed inset-0 bg-black/70 backdrop-blur-md data-[state=open]:animate-fade-in" />
+        <Dialog.Content className="animate-scale-in fixed left-1/2 top-1/2 w-full max-w-md rounded-2xl border border-[var(--border-default)] bg-[var(--bg-elevated)] p-6 shadow-2xl focus:outline-none">
           <div className="flex items-start justify-between">
-            <Dialog.Title className="text-[14px] font-medium text-[#ededed]">
+            <Dialog.Title className="text-[15px] font-semibold text-[var(--text-primary)]">
               {title}
             </Dialog.Title>
-            <Dialog.Close className="rounded-md p-1 text-[#555] hover:text-[#999]">
+            <Dialog.Close className="rounded-lg p-1.5 text-[var(--text-quaternary)] transition-colors hover:bg-[var(--bg-hover)] hover:text-[var(--text-secondary)]">
               <X size={14} />
             </Dialog.Close>
           </div>
-          <Dialog.Description className="mt-2 text-[13px] text-[#666]">
+          <Dialog.Description className="mt-3 text-[13px] leading-relaxed text-[var(--text-tertiary)]">
             {description}
           </Dialog.Description>
           <div className="mt-6 flex justify-end gap-3">
-            <Dialog.Close className="rounded-md border border-[#222] bg-[#161616] px-3 py-1.5 text-[13px] font-medium text-[#999] hover:bg-[#1a1a1a]">
+            <Dialog.Close className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-tertiary)] px-4 py-2 text-[13px] font-medium text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-hover)]">
               Cancel
             </Dialog.Close>
             <button
@@ -47,10 +47,10 @@ export default function ConfirmDialog({
                 onOpenChange(false);
               }}
               className={clsx(
-                "rounded-md px-3 py-1.5 text-[13px] font-medium",
+                "rounded-lg px-4 py-2 text-[13px] font-semibold transition-all duration-200",
                 variant === "danger"
-                  ? "bg-[#ff4444] text-white hover:bg-[#e63e3e]"
-                  : "bg-[#ededed] text-[#0a0a0a] hover:opacity-90",
+                  ? "bg-[var(--red)] text-white hover:brightness-110"
+                  : "bg-[var(--green)] text-black hover:bg-[var(--green-light)]",
               )}
             >
               {confirmLabel}
