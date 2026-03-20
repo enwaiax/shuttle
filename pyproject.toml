@@ -1,179 +1,62 @@
-# {{RIPER-5:
-#   Action: "Added"
-#   Task_ID: "ec47c2ec-fcf4-4fba-9582-ee4c0dba3d77"
-#   Timestamp: "2025-08-05T17:01:20+08:00"
-#   Authoring_Role: "LD"
-#   Principle_Applied: "SOLID-S (单一职责原则)"
-#   Quality_Check: "项目配置清晰，依赖版本明确，开发工具配置完整"
-# }}
-# {{START_MODIFICATIONS}}
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "fastmcp-ssh-server"
+name = "shuttle-mcp"
 version = "0.1.0"
-description = "FastMCP-based SSH server for Model Context Protocol - Python implementation"
+description = "Secure SSH gateway for AI assistants — MCP server with connection pooling, session isolation, and command safety"
 authors = [{ name = "enwaiax", email = "enwaiax@users.noreply.github.com" }]
 readme = "README.md"
 license = { text = "ISC" }
 requires-python = ">=3.12"
-keywords = ["ssh", "mcp", "fastmcp", "server", "ai", "llm"]
+keywords = ["ssh", "mcp", "ai", "llm", "remote", "shuttle"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: ISC License (ISCL)",
-    "Programming Language :: Python :: 3",
-
     "Programming Language :: Python :: 3.12",
     "Topic :: System :: Networking",
-    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
 dependencies = [
     "fastmcp>=2.0.0",
     "asyncssh>=2.14.0",
+    "sqlalchemy[asyncio]>=2.0.0",
+    "aiosqlite>=0.19.0",
     "pydantic>=2.0.0",
-    "typer>=0.12.0",
     "pydantic-settings>=2.0.0",
+    "typer>=0.12.0",
+    "cryptography>=41.0.0",
     "loguru>=0.7.0",
+    "uvicorn>=0.27.0",
+    "fastapi>=0.110.0",
 ]
 
 [project.scripts]
-fastmcp-ssh-server = "ssh_mcp.main:main"
-
-[project.optional-dependencies]
-dev = [
-    "pytest>=7.0.0",
-    "pytest-asyncio>=0.21.0",
-    "pytest-cov>=4.0.0",
-    "black>=23.0.0",
-    "isort>=5.12.0",
-    "mypy>=1.0.0",
-    "ruff>=0.1.0",
-    "pre-commit>=3.0.0",
-]
-
-test = [
-    "pytest>=7.0.0",
-    "pytest-asyncio>=0.21.0",
-    "pytest-cov>=4.0.0",
-    "pytest-mock>=3.10.0",
-]
+shuttle = "shuttle.cli:app"
 
 [project.urls]
-homepage = "https://github.com/enwaiax/ssh-mcp"
-repository = "https://github.com/enwaiax/ssh-mcp"
-documentation = "https://github.com/enwaiax/ssh-mcp#readme"
-issues = "https://github.com/enwaiax/ssh-mcp/issues"
+homepage = "https://github.com/enwaiax/shuttle"
+repository = "https://github.com/enwaiax/shuttle"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/ssh_mcp"]
+packages = ["src/shuttle"]
 
-[tool.hatch.build.targets.sdist]
-include = [
-    "/src",
-    "/tests",
-    "/README_PYTHON.md",
-    "/LICENSE",
-    "/pyproject.toml",
-]
-
-[tool.black]
-line-length = 88
-target-version = ["py312"]
-include = '\.pyi?$'
-extend-exclude = '''
-/(
-  # directories
-  \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | build
-  | dist
-)/
-'''
-
-[tool.isort]
-profile = "black"
-multi_line_output = 3
-line_length = 88
-known_first_party = ["ssh_mcp"]
-
-[tool.mypy]
-python_version = "3.12"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-check_untyped_defs = true
-disallow_untyped_decorators = true
-no_implicit_optional = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_no_return = true
-warn_unreachable = true
-strict_equality = true
-
-[[tool.mypy.overrides]]
-module = ["asyncssh.*", "fastmcp.*"]
-ignore_missing_imports = true
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers"
+testpaths = ["tests"]
+asyncio_mode = "auto"
 
 [tool.ruff]
 target-version = "py312"
 line-length = 88
-select = [
-    "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings
-    "F",  # pyflakes
-    "I",  # isort
-    "B",  # flake8-bugbear
-    "C4", # flake8-comprehensions
-    "UP", # pyupgrade
-]
-ignore = [
-    "E501", # line too long, handled by black
-    "B008", # do not perform function calls in argument defaults
-    "C901", # too complex
-]
-
-[tool.ruff.per-file-ignores]
-"__init__.py" = ["F401"]
-
-[tool.pytest.ini_options]
-minversion = "7.0"
-addopts = "-ra -q --strict-markers --strict-config"
-testpaths = ["tests"]
-asyncio_mode = "auto"
-markers = [
-    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
-    "integration: marks tests as integration tests",
-    "unit: marks tests as unit tests",
-]
-
-[tool.coverage.run]
-source = ["ssh_mcp"]
-omit = ["*/tests/*", "*/test_*.py", "*/__pycache__/*"]
-
-[tool.coverage.report]
-exclude_lines = [
-    "pragma: no cover",
-    "def __repr__",
-    "raise AssertionError",
-    "raise NotImplementedError",
-    "if __name__ == .__main__.:",
-    "@abstract",
-]
 
 [dependency-groups]
 dev = [
-    "pytest>=8.4.1",
-    "pytest-asyncio>=1.1.0",
-    "pytest-cov>=6.2.1",
-    "pytest-mock>=3.14.1",
+    "pytest>=8.0.0",
+    "pytest-asyncio>=1.0.0",
+    "pytest-cov>=6.0.0",
+    "pytest-mock>=3.14.0",
+    "ruff>=0.4.0",
 ]
-# {{END_MODIFICATIONS}}
