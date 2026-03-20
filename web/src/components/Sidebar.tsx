@@ -1,14 +1,14 @@
 import { NavLink } from "react-router-dom";
-import { Activity, Shield, Settings, Plus } from "lucide-react";
+import { Terminal, Shield, Settings, Plus, Server } from "lucide-react";
 import clsx from "clsx";
 import { useNodes } from "../api/client";
 
 function linkClass({ isActive }: { isActive: boolean }) {
   return clsx(
-    "flex items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] font-medium transition-all",
+    "flex items-center gap-2.5 rounded-md px-3 py-1.5 text-[13px] font-medium transition-all",
     isActive
-      ? "bg-white text-gray-900 shadow-sm"
-      : "text-gray-500 hover:bg-gray-200/50 hover:text-gray-700",
+      ? "bg-zinc-800 text-zinc-100"
+      : "text-zinc-500 hover:bg-zinc-800/50 hover:text-zinc-300",
   );
 }
 
@@ -16,29 +16,27 @@ export default function Sidebar() {
   const { data: nodes } = useNodes();
 
   return (
-    <aside className="flex w-56 flex-col border-r border-gray-200/60 bg-gray-100/70 backdrop-blur-xl">
+    <aside className="flex w-52 flex-col border-r border-zinc-800/80 bg-zinc-900">
       {/* Logo */}
-      <div className="flex items-center gap-2.5 px-5 py-6">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 text-sm font-bold text-white shadow-sm">
+      <div className="flex items-center gap-2.5 px-4 py-5">
+        <div className="flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-br from-emerald-400 to-cyan-500 text-xs font-bold text-zinc-900">
           S
         </div>
-        <span className="text-[15px] font-semibold tracking-tight text-gray-900">
+        <span className="text-sm font-semibold tracking-tight text-zinc-200">
           Shuttle
         </span>
       </div>
 
-      <nav className="flex-1 space-y-1 px-3">
+      <nav className="flex-1 space-y-0.5 px-2">
         {/* All Activity */}
         <NavLink to="/activity" end className={linkClass}>
-          <Activity size={16} strokeWidth={1.8} />
+          <Terminal size={14} strokeWidth={1.8} />
           All Activity
         </NavLink>
 
-        {/* Divider */}
-        <div className="my-2 border-t border-gray-200/60" />
-
         {/* Nodes section */}
-        <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+        <div className="my-3 border-t border-zinc-800/60" />
+        <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-widest text-zinc-600">
           Nodes
         </p>
 
@@ -50,8 +48,8 @@ export default function Sidebar() {
           >
             <span
               className={clsx(
-                "inline-block h-2 w-2 rounded-full",
-                node.status === "online" ? "bg-green-500" : "bg-gray-400",
+                "inline-block h-1.5 w-1.5 rounded-full",
+                node.status === "active" ? "bg-emerald-400" : "bg-zinc-600",
               )}
             />
             <span className="truncate">{node.name}</span>
@@ -59,23 +57,29 @@ export default function Sidebar() {
         ))}
 
         <NavLink to="/nodes" className={linkClass}>
-          <Plus size={16} strokeWidth={1.8} />
-          Add Node
+          <Plus size={14} strokeWidth={1.8} />
+          <span className="text-zinc-600">Add Node</span>
         </NavLink>
 
-        {/* Divider */}
-        <div className="my-2 border-t border-gray-200/60" />
-
         {/* Bottom links */}
+        <div className="my-3 border-t border-zinc-800/60" />
         <NavLink to="/rules" className={linkClass}>
-          <Shield size={16} strokeWidth={1.8} />
+          <Shield size={14} strokeWidth={1.8} />
           Security Rules
         </NavLink>
         <NavLink to="/settings" className={linkClass}>
-          <Settings size={16} strokeWidth={1.8} />
+          <Settings size={14} strokeWidth={1.8} />
           Settings
         </NavLink>
       </nav>
+
+      {/* Footer */}
+      <div className="border-t border-zinc-800/60 px-4 py-3">
+        <div className="flex items-center gap-2 text-[11px] text-zinc-600">
+          <Server size={11} />
+          <span>{nodes?.length ?? 0} nodes</span>
+        </div>
+      </div>
     </aside>
   );
 }
