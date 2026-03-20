@@ -1,14 +1,19 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { RefreshCw, ChevronUp, Terminal } from "lucide-react";
+import { RefreshCw, Download, Terminal } from "lucide-react";
 import { useLogs, useStats } from "../api/client";
 import type { CommandLogResponse } from "../api/client";
 import EmptyState from "../components/EmptyState";
 
-const PAGE_SIZE = 100;
+const PAGE_SIZE = 50;
+const OUTPUT_PREVIEW_LINES = 15;
+
+// ── Helpers ──────────────────────────────────────────
 
 function formatTime(iso: string): string {
-  return new Date(iso).toLocaleTimeString(undefined, {
+  return new Date(iso).toLocaleString(undefined, {
+    month: "short",
+    day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
@@ -23,89 +28,113 @@ function formatDuration(ms: number | null): string {
   return `${Math.floor(ms / 60000)}m${Math.floor((ms % 60000) / 1000)}s`;
 }
 
-function securityColor(level: string | null): string {
-  if (!level) return "";
-  switch (level) {
-    case "block":
-      return "text-red-400";
-    case "confirm":
-      return "text-amber-400";
-    case "warn":
-      return "text-yellow-400";
-    default:
-      return "";
+function truncateOutput(text: string): { preview: string; isTruncated: boolean } {
+  const lines = text.split("\n");
+  if (lines.length <= OUTPUT_PREVIEW_LINES) {
+    return { preview: text, isTruncated: false };
   }
+  return {
+    preview: lines.slice(0, OUTPUT_PREVIEW_LINES).join("\n"),
+    isTruncated: true,
+  };
 }
 
-function exitIndicator(code: number | null): { symbol: string; cls: string } {
-  if (code === null) return { symbol: "…", cls: "text-zinc-500" };
-  if (code === 0) return { symbol: "✓", cls: "text-emerald-400" };
-  return { symbol: `✗ ${code}`, cls: "text-red-400" };
-}
+type TimeRange = "today" | "7d" | "30d" | "all";
 
-function LogEntry({ log }: { log: CommandLogResponse }) {
-  const [expanded, setExpanded] = useState(false);
-  const exit = exitIndicator(log.exit_code);
-  const secCls = securityColor(log.security_level);
-  const hasOutput = !!(log.stdout || log.stderr);
+// ── Single command entry ────────────────────────────
+
+function CommandEntry({ log }: { log: CommandLogResponse }) {
+  const [showFull, setShowFull] = useState(false);
+
+  const hasFailed = log.exit_code !== null && log.exit_code !== 0;
+  const secLevel = log.security_level;
+  const hasSecEvent = secLevel && secLevel !== "allow";
+
+  // Output handling
+  const stdout = log.stdout || "";
+  const stderr = log.stderr || "";
+  const { preview: stdoutPreview, isTruncated: stdoutTruncated } = truncateOutput(stdout);
+  const { preview: stderrPreview, isTruncated: stderrTruncated } = truncateOutput(stderr);
+  const isTruncated = stdoutTruncated || stderrTruncated;
 
   return (
-    <div className="group border-b border-zinc-800/60 last:border-0">
+    <div
+      className={`border-l-2 py-1 pl-4 pr-4 ${
+        hasFailed
+          ? "border-l-red-500/60"
+          : hasSecEvent
+            ? "border-l-amber-500/40"
+            : "border-l-transparent"
+      }`}
+    >
       {/* Command line */}
-      <div
-        onClick={() => hasOutput && setExpanded(!expanded)}
-        className={`flex items-start gap-0 px-4 py-1.5 font-mono text-[13px] leading-relaxed ${
-          hasOutput ? "cursor-pointer hover:bg-zinc-800/40" : ""
-        } transition-colors`}
-      >
+      <div className="flex items-baseline gap-0 font-mono text-[13px] leading-relaxed">
         {/* Timestamp */}
-        <span className="w-20 shrink-0 text-zinc-500">{formatTime(log.executed_at)}</span>
+        <span className="mr-3 shrink-0 text-zinc-600">{formatTime(log.executed_at)}</span>
 
-        {/* Node name */}
+        {/* Node */}
         {log.node_name && (
-          <span className="w-28 shrink-0 truncate text-cyan-500/70">{log.node_name}</span>
+          <span className="mr-2 shrink-0 text-cyan-600/60">{log.node_name}</span>
         )}
 
         {/* Prompt + command */}
         <span className="mr-1.5 text-zinc-500">$</span>
         <span className="flex-1 text-zinc-200">{log.command}</span>
 
-        {/* Security badge */}
-        {log.security_level && log.security_level !== "allow" && (
-          <span className={`mx-2 shrink-0 text-xs ${secCls}`}>
-            {log.security_level}
+        {/* Security indicator */}
+        {hasSecEvent && (
+          <span
+            className={`mx-2 shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium ${
+              secLevel === "block"
+                ? "bg-red-500/15 text-red-400"
+                : secLevel === "confirm"
+                  ? "bg-amber-500/15 text-amber-400"
+                  : "bg-yellow-500/10 text-yellow-400"
+            }`}
+          >
+            {secLevel}
           </span>
         )}
 
         {/* Exit + duration */}
-        <span className={`w-12 shrink-0 text-right ${exit.cls}`}>{exit.symbol}</span>
-        <span className="w-16 shrink-0 text-right text-zinc-600">
-          {formatDuration(log.duration_ms)}
+        <span
+          className={`ml-2 shrink-0 text-xs ${
+            hasFailed ? "text-red-400" : log.exit_code === 0 ? "text-emerald-500/70" : "text-zinc-600"
+          }`}
+        >
+          {log.exit_code !== null
+            ? log.exit_code === 0
+              ? "✓"
+              : `✗ ${log.exit_code}`
+            : "…"}
         </span>
-
-        {/* Expand indicator */}
-        {hasOutput && (
-          <ChevronUp
-            size={12}
-            className={`ml-1 shrink-0 text-zinc-600 transition-transform ${
-              expanded ? "" : "rotate-180"
-            }`}
-          />
+        {log.duration_ms != null && (
+          <span className="ml-2 shrink-0 text-xs text-zinc-600">
+            {formatDuration(log.duration_ms)}
+          </span>
         )}
       </div>
 
-      {/* Expanded output */}
-      {expanded && (
-        <div className="mx-4 mb-2 mt-0.5 rounded-md bg-zinc-950/60 px-4 py-3">
-          {log.stdout && (
-            <pre className="max-h-64 overflow-auto whitespace-pre-wrap text-[12px] leading-relaxed text-zinc-400">
-              {log.stdout}
+      {/* Output — shown by default */}
+      {(stdout || stderr) && (
+        <div className="ml-[5.5rem] mt-1">
+          {stdout && (
+            <pre className="whitespace-pre-wrap text-[12px] leading-relaxed text-zinc-500">
+              {showFull ? stdout : stdoutPreview}
             </pre>
           )}
-          {log.stderr && (
-            <pre className="mt-2 max-h-32 overflow-auto whitespace-pre-wrap text-[12px] leading-relaxed text-red-400/80">
-              {log.stderr}
+          {stderr && (
+            <pre className="mt-1 whitespace-pre-wrap text-[12px] leading-relaxed text-red-400/70">
+              {showFull ? stderr : stderrPreview}
             </pre>
+          )}
+          {isTruncated && !showFull && (
+            <button
+              onClick={() => setShowFull(true)}
+              className="mt-1 text-[11px] text-zinc-600 hover:text-zinc-400"
+            >
+              ▸ Show full output ({stdout.split("\n").length + stderr.split("\n").length} lines)
+            </button>
           )}
         </div>
       )}
@@ -113,23 +142,46 @@ function LogEntry({ log }: { log: CommandLogResponse }) {
   );
 }
 
+// ── Main Activity view ──────────────────────────────
+
 export default function Activity() {
   const { nodeId } = useParams<{ nodeId?: string }>();
+  const [timeRange, setTimeRange] = useState<TimeRange>("today");
   const [page, setPage] = useState(1);
+  const [allItems, setAllItems] = useState<CommandLogResponse[]>([]);
   const [autoRefresh, setAutoRefresh] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
+  // Reset on node/time change
   useEffect(() => {
     setPage(1);
-  }, [nodeId]);
+    setAllItems([]);
+  }, [nodeId, timeRange]);
 
-  const { data, refetch } = useLogs({
+  const { data, refetch, isFetching } = useLogs({
     node_id: nodeId,
     page,
     page_size: PAGE_SIZE,
   });
   const { data: stats } = useStats();
 
+  // Accumulate pages for infinite scroll
+  useEffect(() => {
+    if (data?.items) {
+      if (page === 1) {
+        setAllItems(data.items);
+      } else {
+        setAllItems((prev) => {
+          const existingIds = new Set(prev.map((i) => i.id));
+          const newItems = data.items.filter((i) => !existingIds.has(i.id));
+          return [...prev, ...newItems];
+        });
+      }
+    }
+  }, [data, page]);
+
+  // Auto-refresh
   const doRefetch = useCallback(() => {
     void refetch();
   }, [refetch]);
@@ -140,44 +192,101 @@ export default function Activity() {
     return () => clearInterval(id);
   }, [autoRefresh, doRefetch]);
 
-  const items = data?.items ?? [];
+  // Infinite scroll — observe bottom sentinel
+  useEffect(() => {
+    const el = bottomRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && data && allItems.length < data.total && !isFetching) {
+          setPage((p) => p + 1);
+        }
+      },
+      { threshold: 0.1 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [data, allItems.length, isFetching]);
+
   const total = data?.total ?? 0;
-  const hasMore = total > page * PAGE_SIZE;
+
+  // Export URL
+  const exportUrl = `/api/logs/export?format=csv${nodeId ? `&node_id=${nodeId}` : ""}`;
+
+  const ranges: { label: string; value: TimeRange }[] = [
+    { label: "Today", value: "today" },
+    { label: "7 days", value: "7d" },
+    { label: "30 days", value: "30d" },
+    { label: "All", value: "all" },
+  ];
 
   return (
     <div className="flex h-full flex-col">
-      {/* Top bar */}
-      <div className="flex items-center justify-between border-b border-zinc-800/60 bg-zinc-900/80 px-4 py-2.5">
-        <div className="flex items-center gap-3">
-          <Terminal size={14} className="text-zinc-500" />
-          <span className="text-sm font-medium text-zinc-300">
-            {nodeId ? `Node Activity` : "All Activity"}
-          </span>
+      {/* Toolbar */}
+      <div className="flex items-center justify-between border-b border-zinc-800/60 bg-zinc-900/90 px-4 py-2">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Terminal size={14} className="text-zinc-500" />
+            <span className="text-sm font-medium text-zinc-300">
+              {nodeId ? "Node Activity" : "All Activity"}
+            </span>
+          </div>
+
+          {/* Time range pills */}
+          <div className="flex items-center gap-0.5 rounded-md bg-zinc-800/60 p-0.5">
+            {ranges.map((r) => (
+              <button
+                key={r.value}
+                onClick={() => setTimeRange(r.value)}
+                className={`rounded px-2.5 py-1 text-[11px] font-medium transition-colors ${
+                  timeRange === r.value
+                    ? "bg-zinc-700 text-zinc-200"
+                    : "text-zinc-500 hover:text-zinc-300"
+                }`}
+              >
+                {r.label}
+              </button>
+            ))}
+          </div>
+
           {stats && (
-            <span className="text-xs text-zinc-600">
-              {stats.node_count} nodes · {stats.active_sessions} sessions · {total} commands
+            <span className="text-[11px] text-zinc-600">
+              {total} commands
             </span>
           )}
         </div>
-        <button
-          onClick={() => setAutoRefresh((v) => !v)}
-          className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
-            autoRefresh
-              ? "bg-emerald-500/10 text-emerald-400"
-              : "text-zinc-500 hover:bg-zinc-800 hover:text-zinc-300"
-          }`}
-        >
-          <RefreshCw size={11} className={autoRefresh ? "animate-spin" : ""} />
-          {autoRefresh ? "Live" : "Auto"}
-        </button>
+
+        <div className="flex items-center gap-2">
+          {/* Export */}
+          <a
+            href={exportUrl}
+            className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs text-zinc-500 hover:bg-zinc-800 hover:text-zinc-300"
+          >
+            <Download size={11} />
+            Export
+          </a>
+
+          {/* Auto-refresh */}
+          <button
+            onClick={() => setAutoRefresh((v) => !v)}
+            className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+              autoRefresh
+                ? "bg-emerald-500/10 text-emerald-400"
+                : "text-zinc-500 hover:bg-zinc-800 hover:text-zinc-300"
+            }`}
+          >
+            <RefreshCw size={11} className={autoRefresh ? "animate-spin" : ""} />
+            {autoRefresh ? "Live" : "Auto"}
+          </button>
+        </div>
       </div>
 
-      {/* Console output */}
+      {/* Console body */}
       <div
         ref={scrollRef}
-        className="flex-1 overflow-y-auto bg-zinc-900 font-mono"
+        className="flex-1 overflow-y-auto bg-zinc-900"
       >
-        {items.length === 0 && page === 1 ? (
+        {allItems.length === 0 && !isFetching ? (
           <div className="flex h-full items-center justify-center">
             <EmptyState
               icon={Terminal}
@@ -185,39 +294,31 @@ export default function Activity() {
               description={
                 nodeId
                   ? "No commands have been executed on this node."
-                  : "Command execution logs will appear here."
+                  : "Commands will appear here as AI executes them."
               }
             />
           </div>
         ) : (
-          <>
-            {items.map((log) => (
-              <LogEntry key={log.id} log={log} />
+          <div className="divide-y divide-zinc-800/40 py-2">
+            {allItems.map((log) => (
+              <CommandEntry key={log.id} log={log} />
             ))}
 
-            {/* Load more / pagination */}
-            <div className="flex items-center justify-center gap-4 px-4 py-3">
-              {page > 1 && (
-                <button
-                  onClick={() => setPage((p) => p - 1)}
-                  className="text-xs text-zinc-500 hover:text-zinc-300"
-                >
-                  ↑ Newer
-                </button>
-              )}
-              <span className="text-xs text-zinc-600">
-                {total} commands{hasMore ? ` · page ${page}` : ""}
-              </span>
-              {hasMore && (
-                <button
-                  onClick={() => setPage((p) => p + 1)}
-                  className="text-xs text-zinc-500 hover:text-zinc-300"
-                >
-                  ↓ Older
-                </button>
-              )}
-            </div>
-          </>
+            {/* Bottom sentinel for infinite scroll */}
+            <div ref={bottomRef} className="h-8" />
+
+            {isFetching && (
+              <div className="py-3 text-center text-xs text-zinc-600">
+                Loading...
+              </div>
+            )}
+
+            {!isFetching && allItems.length >= total && total > 0 && (
+              <div className="py-3 text-center text-xs text-zinc-700">
+                End of history — {total} commands
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>
