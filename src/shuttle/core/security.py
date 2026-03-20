@@ -1,11 +1,18 @@
 """Command security primitives: SecurityLevel, CommandGuard, ConfirmTokenStore."""
 
+from __future__ import annotations
+
 import re
 import secrets
 import time
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
+
+from sqlalchemy import select
+
+if TYPE_CHECKING:
+    from sqlalchemy.ext.asyncio import AsyncSession
 
 
 class SecurityLevel(str, Enum):
@@ -78,118 +85,77 @@ class ConfirmTokenStore:
 # CommandGuard
 # ---------------------------------------------------------------------------
 
-@dataclass
-class _CompiledRule:
-    pattern: re.Pattern
-    pattern_str: str
-    level: SecurityLevel
-    name: str
-    priority: int
-    message: str
-    enabled: bool
-
 
 class CommandGuard:
-    """Evaluates shell commands against a prioritised list of security rules.
+    """Evaluates commands against security rules from the database."""
 
-    Rules are matched in ascending priority order (lower number = higher
-    priority).  The first match wins.  If no rule matches, the decision is
-    ALLOW with no matched rule.
-    """
-
-    def __init__(self) -> None:
-        self._rules: list[_CompiledRule] = []
-
-    def load_rules(self, rules: list[dict]) -> None:
-        """Compile and store rules from a list of dicts.
-
-        Each dict may contain:
-            name (str)          — human-readable identifier
-            pattern (str)       — regular-expression string (required)
-            level (str)         — one of block/confirm/warn/allow (required)
-            priority (int)      — lower = evaluated first (default 100)
-            message (str)       — optional explanation shown to the caller
-            enabled (bool)      — if False the rule is ignored (default True)
-
-        Raises ValueError if a pattern is not a valid regular expression.
-        """
-        compiled: list[_CompiledRule] = []
-        for rule in rules:
-            pattern_str: str = rule["pattern"]
-            try:
-                pattern = re.compile(pattern_str)
-            except re.error as exc:
-                raise ValueError(
-                    f"Invalid regex pattern {pattern_str!r}: {exc}"
-                ) from exc
-
-            level = SecurityLevel(rule["level"])
-            compiled.append(
-                _CompiledRule(
-                    pattern=pattern,
-                    pattern_str=pattern_str,
-                    level=level,
-                    name=rule.get("name", pattern_str),
-                    priority=int(rule.get("priority", 100)),
-                    message=rule.get("message", ""),
-                    enabled=bool(rule.get("enabled", True)),
-                )
-            )
-
-        compiled.sort(key=lambda r: r.priority)
-        self._rules = compiled
-
-    def evaluate(
+    async def evaluate(
         self,
         command: str,
         node_id: str,
-        bypass_patterns: Optional[list[str]] = None,
+        db_session: AsyncSession,
+        bypass_patterns: list[str] | None = None,
     ) -> SecurityDecision:
-        """Evaluate *command* against the loaded rules.
+        """Evaluate *command* against security rules fetched from the database.
 
         Parameters
         ----------
         command:
             The shell command string to inspect.
         node_id:
-            Identifier of the target node (reserved for future per-node rules).
+            Identifier of the target node.
+        db_session:
+            An async SQLAlchemy session used to query rules.
         bypass_patterns:
-            A list of rule pattern strings whose level should be downgraded to
-            ALLOW.  BLOCK rules can NEVER be bypassed.
+            A list of rule pattern strings that should be skipped
+            (unless the rule is BLOCK).
 
         Returns
         -------
         SecurityDecision
         """
-        bypass_patterns = bypass_patterns or []
+        from shuttle.db.models import SecurityRule
 
-        for rule in self._rules:
-            if not rule.enabled:
-                continue
-            if not rule.pattern.search(command):
-                continue
-
-            # BLOCK is absolute — cannot be bypassed
-            if rule.level == SecurityLevel.BLOCK:
-                return SecurityDecision(
-                    level=SecurityLevel.BLOCK,
-                    matched_rule=rule.name,
-                    message=rule.message or f"Command blocked by rule '{rule.name}'",
-                )
-
-            # Bypass: if the pattern string appears in bypass_patterns, treat as ALLOW
-            if rule.pattern_str in bypass_patterns:
-                return SecurityDecision(
-                    level=SecurityLevel.ALLOW,
-                    matched_rule=rule.name,
-                    message=f"Rule '{rule.name}' bypassed",
-                )
-
-            return SecurityDecision(
-                level=rule.level,
-                matched_rule=rule.name,
-                message=rule.message,
+        query = (
+            select(SecurityRule)
+            .where(
+                SecurityRule.enabled.is_(True),
+                (SecurityRule.node_id.is_(None)) | (SecurityRule.node_id == node_id),
             )
+            .order_by(SecurityRule.priority, SecurityRule.node_id.nullsfirst())
+        )
+        result = await db_session.execute(query)
+        rules = result.scalars().all()
 
-        # No rule matched
+        # Merge: node-specific overrides global with same pattern
+        seen_patterns: dict[str, SecurityRule] = {}
+        for rule in rules:
+            if rule.pattern in seen_patterns:
+                if rule.node_id is not None:
+                    seen_patterns[rule.pattern] = rule
+            else:
+                seen_patterns[rule.pattern] = rule
+
+        bypassed = set(bypass_patterns or [])
+
+        for rule in sorted(seen_patterns.values(), key=lambda r: r.priority):
+            try:
+                if re.search(rule.pattern, command):
+                    level = SecurityLevel(rule.level)
+                    if level == SecurityLevel.BLOCK:
+                        return SecurityDecision(
+                            level=level,
+                            matched_rule=rule.id,
+                            message=f"BLOCKED: {rule.description or rule.pattern}",
+                        )
+                    if rule.pattern in bypassed:
+                        continue
+                    return SecurityDecision(
+                        level=level,
+                        matched_rule=rule.id,
+                        message=rule.description or "",
+                    )
+            except re.error:
+                continue
+
         return SecurityDecision(level=SecurityLevel.ALLOW)

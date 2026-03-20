@@ -24,11 +24,9 @@ from shuttle.mcp.tools import _execute_command_logic
 def _make_guard(level: SecurityLevel, message: str = "", rule: str = "test-rule"):
     """Return a CommandGuard mock that always returns the given decision."""
     guard = MagicMock(spec=CommandGuard)
-    guard.evaluate.return_value = SecurityDecision(
+    guard.evaluate = AsyncMock(return_value=SecurityDecision(
         level=level, matched_rule=rule, message=message
-    )
-    # Expose _rules for bypass_scope logic (empty list for most tests)
-    guard._rules = []
+    ))
     return guard
 
 

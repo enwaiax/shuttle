@@ -18,7 +18,7 @@ from shuttle.core.proxy import NodeConnectInfo
 from shuttle.core.security import CommandGuard, ConfirmTokenStore
 from shuttle.core.session import SessionManager
 from shuttle.db.engine import create_db_engine, create_session_factory, init_db
-from shuttle.db.repository import NodeRepo, RuleRepo
+from shuttle.db.repository import NodeRepo
 from shuttle.mcp.tools import register_tools
 
 
@@ -32,7 +32,7 @@ async def create_mcp_server(
     1. Create ShuttleConfig, ensure shuttle_dir exists
     2. Write PID file
     3. Create DB engine, init DB tables
-    4. Load security rules from DB into CommandGuard
+    4. Create CommandGuard (rules queried per-call from DB)
     5. Create ConnectionPool with config from ShuttleConfig
     6. Register node connection infos from DB (decrypt credentials, warn on failure)
     7. Start eviction loop
@@ -84,23 +84,8 @@ async def create_mcp_server(
     if seeded:
         logger.info("Seeded {n} default security rules", n=seeded)
 
-    # ── 4. Load security rules ──────────────────────────────────────
+    # ── 4. Security guard (rules queried per-call from DB) ──────────
     guard = CommandGuard()
-    async with session_factory() as db_sess:
-        rule_repo = RuleRepo(db_sess)
-        db_rules = await rule_repo.list_all()
-        guard.load_rules([
-            {
-                "name": r.id,
-                "pattern": r.pattern,
-                "level": r.level,
-                "priority": r.priority,
-                "message": r.description or "",
-                "enabled": r.enabled,
-            }
-            for r in db_rules
-        ])
-    logger.info("Loaded {n} security rules", n=len(db_rules))
 
     # ── 5. Connection pool ──────────────────────────────────────────
     pool_config = PoolConfig(

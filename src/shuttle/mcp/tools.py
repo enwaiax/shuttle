@@ -109,7 +109,8 @@ async def _execute_command_logic(
 
     # ── 2. Security check ───────────────────────────────────────────
     bypass_patterns = list(session_obj.bypass_patterns) if session_obj else []
-    decision = guard.evaluate(command, resolved_node, bypass_patterns=bypass_patterns)
+    async with db_session_ctx() as db_sess:
+        decision = await guard.evaluate(command, resolved_node, db_sess, bypass_patterns)
 
     if decision.level == SecurityLevel.BLOCK:
         return f"BLOCKED: {decision.message}"
@@ -132,13 +133,12 @@ async def _execute_command_logic(
 
         # Token valid — optionally add bypass for this session
         if bypass_scope == "session" and session_obj and decision.matched_rule:
-            # The matched_rule here is the rule *name*; we need the pattern string.
-            # CommandGuard stores matched_rule as the rule name, but bypass_patterns
-            # are checked against pattern_str. We'll search for the matching pattern.
-            for rule in guard._rules:
-                if rule.name == decision.matched_rule:
-                    session_obj.bypass_patterns.add(rule.pattern_str)
-                    break
+            async with db_session_ctx() as db_sess:
+                from shuttle.db.repository import RuleRepo
+                rule_repo = RuleRepo(db_sess)
+                matched = await rule_repo.get_by_id(decision.matched_rule)
+                if matched:
+                    session_obj.bypass_patterns.add(matched.pattern)
 
     if decision.level == SecurityLevel.WARN:
         logger.warning(
