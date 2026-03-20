@@ -64,6 +64,7 @@ class RuleCreate(BaseModel):
     description: str | None = None
     priority: int = 0
     enabled: bool = True
+    source_rule_id: str | None = None
 
 
 class RuleUpdate(BaseModel):
@@ -83,6 +84,7 @@ class RuleResponse(BaseModel):
     description: str | None
     priority: int
     enabled: bool
+    source_rule_id: str | None = None
     created_at: datetime
 
     model_config = {"from_attributes": True}

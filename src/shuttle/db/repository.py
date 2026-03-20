@@ -102,6 +102,7 @@ class RuleRepo:
         description: str | None = None,
         priority: int = 0,
         enabled: bool = True,
+        source_rule_id: str | None = None,
     ) -> SecurityRule:
         rule = SecurityRule(
             pattern=pattern,
@@ -110,6 +111,7 @@ class RuleRepo:
             description=description,
             priority=priority,
             enabled=enabled,
+            source_rule_id=source_rule_id,
         )
         self._session.add(rule)
         await self._session.commit()

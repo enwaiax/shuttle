@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from sqlalchemy import event
+from sqlalchemy import event, text
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -62,3 +62,27 @@ async def init_db(engine: AsyncEngine) -> None:
     """
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+
+        # Migration: add source_rule_id if missing (v1 → v2)
+        if "sqlite" in str(engine.url):
+            result = await conn.execute(text("PRAGMA table_info(security_rules)"))
+            columns = [row[1] for row in result]
+            if "source_rule_id" not in columns:
+                await conn.execute(
+                    text(
+                        "ALTER TABLE security_rules ADD COLUMN source_rule_id VARCHAR(36)"
+                    )
+                )
+        else:
+            result = await conn.execute(
+                text(
+                    "SELECT column_name FROM information_schema.columns "
+                    "WHERE table_name = 'security_rules' AND column_name = 'source_rule_id'"
+                )
+            )
+            if not result.fetchone():
+                await conn.execute(
+                    text(
+                        "ALTER TABLE security_rules ADD COLUMN source_rule_id VARCHAR(36)"
+                    )
+                )
