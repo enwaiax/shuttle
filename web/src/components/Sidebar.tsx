@@ -1,24 +1,15 @@
-import { useEffect } from "react";
-import { NavLink, useParams, useNavigate } from "react-router-dom";
-import { Shield, Settings, Plus } from "lucide-react";
+import { NavLink } from "react-router-dom";
+import { Shield, Settings, Plus, LayoutGrid } from "lucide-react";
 import clsx from "clsx";
 import { useNodes } from "../api/client";
 
 export default function Sidebar() {
   const { data: nodes } = useNodes();
-  const { nodeId } = useParams<{ nodeId?: string }>();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!nodeId && nodes && nodes.length > 0) {
-      navigate(`/activity/${nodes[0].id}`, { replace: true });
-    }
-  }, [nodeId, nodes, navigate]);
 
   return (
     <aside className="flex w-[200px] flex-col border-r border-[#1a1a1a] bg-[#0a0a0a]">
       {/* Brand */}
-      <div className="flex items-center gap-2.5 px-4 py-4">
+      <NavLink to="/" className="flex items-center gap-2.5 px-4 py-4 transition-opacity hover:opacity-80">
         <div className="flex h-6 w-6 items-center justify-center rounded border border-[#222] bg-[#111]">
           <span
             className="text-[11px] font-semibold text-[#ededed]"
@@ -30,11 +21,29 @@ export default function Sidebar() {
         <span className="text-[13px] font-medium tracking-[-0.01em] text-[#999]">
           Shuttle
         </span>
-      </div>
+      </NavLink>
 
       <nav className="flex-1 px-2">
-        {/* Section label */}
-        <p className="mb-1.5 mt-2 px-2 text-[10px] font-medium uppercase tracking-[0.08em] text-[#444]">
+        {/* Overview */}
+        <NavLink
+          to="/"
+          end
+          className={({ isActive }) =>
+            clsx(
+              "flex items-center gap-2 rounded-md px-2 py-[5px] text-[13px] transition-colors",
+              isActive
+                ? "bg-[#161616] text-[#ededed]"
+                : "text-[#666] hover:bg-[#111] hover:text-[#999]",
+            )
+          }
+        >
+          <LayoutGrid size={13} strokeWidth={1.5} />
+          Overview
+        </NavLink>
+
+        {/* Nodes section */}
+        <div className="my-3 border-t border-[#1a1a1a]" />
+        <p className="mb-1.5 px-2 text-[10px] font-medium uppercase tracking-[0.08em] text-[#444]">
           Nodes
         </p>
 
@@ -81,9 +90,7 @@ export default function Sidebar() {
           Add node
         </NavLink>
 
-        {/* Divider */}
-        <div className="my-4 border-t border-[#1a1a1a]" />
-
+        <div className="my-3 border-t border-[#1a1a1a]" />
         <NavLink
           to="/rules"
           className={({ isActive }) =>
@@ -113,13 +120,6 @@ export default function Sidebar() {
           Settings
         </NavLink>
       </nav>
-
-      {/* Status bar */}
-      <div className="border-t border-[#1a1a1a] px-4 py-3">
-        <p className="text-[11px] text-[#333]">
-          {nodes?.length ?? 0} node{nodes?.length !== 1 ? "s" : ""} connected
-        </p>
-      </div>
     </aside>
   );
 }
