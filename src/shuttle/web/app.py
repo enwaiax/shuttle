@@ -56,6 +56,15 @@ def create_app(
 
     static_dir = Path(__file__).parent / "static"
     if static_dir.is_dir() and (static_dir / "index.html").exists():
-        app.mount("/", StaticFiles(directory=str(static_dir), html=True))
+        app.mount("/assets", StaticFiles(directory=str(static_dir / "assets")))
+
+        from starlette.responses import FileResponse
+
+        @app.get("/{path:path}", include_in_schema=False)
+        async def spa_fallback(path: str):
+            if path.startswith("api/"):
+                from fastapi import HTTPException
+                raise HTTPException(404)
+            return FileResponse(str(static_dir / "index.html"))
 
     return app

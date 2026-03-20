@@ -332,9 +332,21 @@ async def create_service_app(
 
     app.mount("/mcp", mcp_http)
 
-    # Mount static SPA at / (if it exists)
+    # SPA static files + catch-all fallback for client-side routing
     static_dir = Path(__file__).resolve().parent.parent / "web" / "static"
     if static_dir.is_dir() and (static_dir / "index.html").exists():
-        app.mount("/", StaticFiles(directory=str(static_dir), html=True))
+        # Serve actual static assets (JS, CSS, etc.)
+        app.mount("/assets", StaticFiles(directory=str(static_dir / "assets")))
+
+        # Catch-all: return index.html for any non-API, non-MCP route
+        from starlette.responses import FileResponse
+
+        @app.get("/{path:path}", include_in_schema=False)
+        async def spa_fallback(path: str):
+            # Don't intercept API or MCP routes
+            if path.startswith("api/") or path.startswith("mcp"):
+                from fastapi import HTTPException
+                raise HTTPException(404)
+            return FileResponse(str(static_dir / "index.html"))
 
     return app
