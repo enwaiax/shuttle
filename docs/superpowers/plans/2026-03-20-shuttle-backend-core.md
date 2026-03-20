@@ -400,6 +400,34 @@ async def test_create_command_log(db_session):
     fetched = result.scalar_one()
     assert fetched.command == "ls -la"
     assert fetched.bypassed is False
+
+
+@pytest.mark.asyncio
+async def test_command_log_nullable_session(db_session):
+    """CommandLog.session_id can be None for stateless execution."""
+    node = Node(
+        name="n2", host="h", port=22, username="u",
+        auth_type="password", encrypted_credential="p",
+    )
+    db_session.add(node)
+    await db_session.flush()
+
+    log = CommandLog(
+        session_id=None,
+        node_id=node.id,
+        command="whoami",
+        exit_code=0,
+        stdout="root",
+        stderr="",
+        security_level="allow",
+        duration_ms=5,
+    )
+    db_session.add(log)
+    await db_session.commit()
+
+    result = await db_session.execute(select(CommandLog).where(CommandLog.command == "whoami"))
+    fetched = result.scalar_one()
+    assert fetched.session_id is None
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
@@ -486,8 +514,8 @@ class CommandLog(Base):
     __tablename__ = "command_logs"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
-    session_id: Mapped[str] = mapped_column(
-        String(36), ForeignKey("sessions.id", ondelete="CASCADE"), nullable=False
+    session_id: Mapped[str | None] = mapped_column(
+        String(36), ForeignKey("sessions.id", ondelete="CASCADE"), nullable=True
     )
     node_id: Mapped[str] = mapped_column(
         String(36), ForeignKey("nodes.id", ondelete="CASCADE"), nullable=False
@@ -2285,7 +2313,7 @@ async def _execute_command_logic(
                 if len(db_stdout) > 64 * 1024:
                     db_stdout = db_stdout[:5000] + "\n...[TRUNCATED]...\n" + db_stdout[-5000:]
                 await LogRepo(db_s).create(
-                    session_id="",  # No session for stateless execution
+                    session_id=None,  # No session for stateless execution
                     node_id=resolved_node_id,
                     command=command,
                     exit_code=ssh_result.exit_status or 0,
