@@ -15,12 +15,21 @@ _api_token: str | None = None
 _bearer_scheme = HTTPBearer(auto_error=False)
 
 
-def init_db_deps(db_url: str | None = None, api_token: str | None = None) -> None:
+def init_db_deps(
+    db_url: str | None = None,
+    api_token: str | None = None,
+    engine=None,
+    session_factory=None,
+) -> None:
     """Initialize the module-level engine, session factory, and API token."""
     global _engine, _session_factory, _api_token
-    _engine = create_db_engine(db_url)
-    _session_factory = create_session_factory(_engine)
     _api_token = api_token
+    if engine and session_factory:
+        _engine = engine
+        _session_factory = session_factory
+    else:
+        _engine = create_db_engine(db_url)
+        _session_factory = create_session_factory(_engine)
 
 
 async def verify_token(

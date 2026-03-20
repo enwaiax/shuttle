@@ -22,9 +22,11 @@ async def lifespan(app: FastAPI):
 def create_app(
     db_url: str | None = None,
     api_token: str | None = None,
+    engine=None,
+    session_factory=None,
 ) -> FastAPI:
     """Build and return the FastAPI application."""
-    init_db_deps(db_url, api_token=api_token)
+    init_db_deps(db_url, api_token=api_token, engine=engine, session_factory=session_factory)
 
     app = FastAPI(
         title="Shuttle",
