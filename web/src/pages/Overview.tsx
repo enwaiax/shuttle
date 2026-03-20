@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Server, Terminal, Plus } from "lucide-react";
 import { useNodes, useStats } from "../api/client";
 import type { NodeResponse } from "../types";
+import NodeForm from "./NodeForm";
 
 function NodeCard({ node, onClick }: { node: NodeResponse; onClick: () => void }) {
   const isActive = node.status === "active";
@@ -36,6 +38,7 @@ export default function Overview() {
   const { data: nodes = [] } = useNodes();
   const { data: stats } = useStats();
   const navigate = useNavigate();
+  const [showForm, setShowForm] = useState(false);
 
   return (
     <div className="flex h-full flex-col bg-[#0a0a0a]">
@@ -61,7 +64,7 @@ export default function Overview() {
               Add a node to start monitoring SSH activity
             </p>
             <button
-              onClick={() => navigate("/nodes")}
+              onClick={() => setShowForm(true)}
               className="mt-4 rounded-md bg-[#ededed] px-3 py-1.5 text-[13px] font-medium text-[#0a0a0a] hover:opacity-90"
             >
               Add Node
@@ -82,7 +85,7 @@ export default function Overview() {
               ))}
               {/* Add node card */}
               <button
-                onClick={() => navigate("/nodes")}
+                onClick={() => setShowForm(true)}
                 className="flex flex-col items-center justify-center rounded-lg border border-dashed border-[#222] p-4 text-[#444] transition-colors hover:border-[#444] hover:text-[#666]"
               >
                 <Plus size={16} />
@@ -92,6 +95,8 @@ export default function Overview() {
           </>
         )}
       </div>
+
+      <NodeForm open={showForm} onOpenChange={setShowForm} />
     </div>
   );
 }

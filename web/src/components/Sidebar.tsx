@@ -76,15 +76,9 @@ export default function Sidebar() {
         ))}
 
         <NavLink
-          to="/nodes"
-          className={({ isActive }) =>
-            clsx(
-              "mt-1 flex items-center gap-2 rounded-md px-2 py-[5px] text-[13px] transition-colors",
-              isActive
-                ? "bg-[#161616] text-[#ededed]"
-                : "text-[#333] hover:bg-[#111] hover:text-[#666]",
-            )
-          }
+          to="/"
+          end={false}
+          className="mt-1 flex items-center gap-2 rounded-md px-2 py-[5px] text-[13px] text-[#333] transition-colors hover:bg-[#111] hover:text-[#666]"
         >
           <Plus size={13} strokeWidth={1.5} />
           Add node
