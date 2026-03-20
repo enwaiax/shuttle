@@ -17,28 +17,20 @@ export default function Nodes() {
   const [deleteTarget, setDeleteTarget] = useState<NodeResponse | null>(null);
 
   const columns: Column<NodeResponse>[] = [
-    { key: "name", label: "Name" },
-    {
-      key: "host",
-      label: "Host",
-      render: (r) => `${r.host}:${r.port}`,
-    },
+    { key: "name", label: "Name", render: (r) => <span className="text-[#ededed]">{r.name}</span> },
+    { key: "host", label: "Host", render: (r) => `${r.host}:${r.port}` },
     { key: "username", label: "User" },
-    { key: "auth_type", label: "Auth Type" },
-    {
-      key: "status",
-      label: "Status",
-      render: (r) => <Badge value={r.status} />,
-    },
+    { key: "auth_type", label: "Auth" },
+    { key: "status", label: "Status", render: (r) => <Badge value={r.status} /> },
     {
       key: "_actions",
       label: "",
       render: (r) => (
         <button
           onClick={() => setDeleteTarget(r)}
-          className="rounded-md p-1 text-gray-400 hover:bg-red-50 hover:text-red-600"
+          className="rounded-md p-1 text-[#444] hover:bg-[#ff4444]/10 hover:text-[#ff4444]"
         >
-          <Trash2 size={15} />
+          <Trash2 size={14} />
         </button>
       ),
     },
@@ -48,16 +40,14 @@ export default function Nodes() {
     <div>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-lg font-semibold text-gray-900">Nodes</h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Manage your SSH nodes.
-          </p>
+          <h1 className="text-[15px] font-medium text-[#ededed]">Nodes</h1>
+          <p className="mt-1 text-[13px] text-[#555]">Manage SSH connections</p>
         </div>
         <button
           onClick={() => setFormOpen(true)}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3.5 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
+          className="inline-flex items-center gap-1.5 rounded-md bg-[#ededed] px-3 py-1.5 text-[13px] font-medium text-[#0a0a0a] hover:opacity-90"
         >
-          <Plus size={15} />
+          <Plus size={14} />
           Add Node
         </button>
       </div>
@@ -71,10 +61,9 @@ export default function Nodes() {
             action={
               <button
                 onClick={() => setFormOpen(true)}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
+                className="text-[13px] font-medium text-[#ededed] hover:text-white"
               >
-                <Plus size={14} />
-                Add Node
+                Add Node →
               </button>
             }
           />
@@ -87,16 +76,12 @@ export default function Nodes() {
 
       <ConfirmDialog
         open={deleteTarget !== null}
-        onOpenChange={(open) => {
-          if (!open) setDeleteTarget(null);
-        }}
+        onOpenChange={(open) => { if (!open) setDeleteTarget(null); }}
         title="Delete Node"
-        description={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`}
+        description={`Delete "${deleteTarget?.name}"? This cannot be undone.`}
         confirmLabel="Delete"
         variant="danger"
-        onConfirm={() => {
-          if (deleteTarget) deleteNode.mutate(deleteTarget.id);
-        }}
+        onConfirm={() => { if (deleteTarget) deleteNode.mutate(deleteTarget.id); }}
       />
     </div>
   );

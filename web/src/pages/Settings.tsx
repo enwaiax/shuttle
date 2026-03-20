@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { useSettings, useUpdateSettings } from "../api/client";
 import type { SettingsUpdate } from "../types";
 
+const inputCls =
+  "w-full rounded-md border border-[#222] bg-[#0e0e0e] px-3 py-2 text-[13px] text-[#ededed] outline-none tabular-nums focus:border-[#444]";
+
 export default function Settings() {
   const { data: settings } = useSettings();
   const update = useUpdateSettings();
-
   const [form, setForm] = useState<SettingsUpdate>({});
   const [saved, setSaved] = useState(false);
 
@@ -30,30 +32,15 @@ export default function Settings() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    update.mutate(form, {
-      onSuccess: () => setSaved(true),
-    });
+    update.mutate(form, { onSuccess: () => setSaved(true) });
   }
 
-  const inputCls =
-    "w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500";
-
-  function Field({
-    label,
-    field,
-    suffix,
-  }: {
-    label: string;
-    field: keyof SettingsUpdate;
-    suffix?: string;
-  }) {
+  function Field({ label, field, suffix }: { label: string; field: keyof SettingsUpdate; suffix?: string }) {
     return (
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-gray-700">
+        <label className="mb-1 block text-[11px] font-medium text-[#666]">
           {label}
-          {suffix && (
-            <span className="ml-1 font-normal text-gray-400">({suffix})</span>
-          )}
+          {suffix && <span className="ml-1 text-[#444]">({suffix})</span>}
         </label>
         <input
           type="number"
@@ -67,50 +54,26 @@ export default function Settings() {
 
   return (
     <div className="max-w-2xl">
-      <h1 className="text-lg font-semibold text-gray-900">Settings</h1>
-      <p className="mt-1 text-sm text-gray-500">
-        Configure connection pool and cleanup policies.
-      </p>
+      <h1 className="text-[15px] font-medium text-[#ededed]">Settings</h1>
+      <p className="mt-1 text-[13px] text-[#555]">Connection pool and cleanup configuration</p>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-8">
-        {/* Connection Pool */}
         <section>
-          <h2 className="text-sm font-semibold text-gray-900">
-            Connection Pool
-          </h2>
-          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <h2 className="text-[13px] font-medium text-[#999]">Connection Pool</h2>
+          <div className="mt-3 grid grid-cols-2 gap-3">
             <Field label="Max Total" field="pool_max_total" />
             <Field label="Max Per Node" field="pool_max_per_node" />
-            <Field
-              label="Idle Timeout"
-              field="pool_idle_timeout"
-              suffix="seconds"
-            />
-            <Field
-              label="Max Lifetime"
-              field="pool_max_lifetime"
-              suffix="seconds"
-            />
+            <Field label="Idle Timeout" field="pool_idle_timeout" suffix="sec" />
+            <Field label="Max Lifetime" field="pool_max_lifetime" suffix="sec" />
             <Field label="Queue Size" field="pool_queue_size" />
           </div>
         </section>
 
-        {/* Cleanup Policy */}
         <section>
-          <h2 className="text-sm font-semibold text-gray-900">
-            Cleanup Policy
-          </h2>
-          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Field
-              label="Command Logs"
-              field="cleanup_command_logs_days"
-              suffix="days"
-            />
-            <Field
-              label="Closed Sessions"
-              field="cleanup_closed_sessions_days"
-              suffix="days"
-            />
+          <h2 className="text-[13px] font-medium text-[#999]">Cleanup Policy</h2>
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            <Field label="Command Logs" field="cleanup_command_logs_days" suffix="days" />
+            <Field label="Closed Sessions" field="cleanup_closed_sessions_days" suffix="days" />
           </div>
         </section>
 
@@ -118,13 +81,11 @@ export default function Settings() {
           <button
             type="submit"
             disabled={update.isPending}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 disabled:opacity-50"
+            className="rounded-md bg-[#ededed] px-4 py-1.5 text-[13px] font-medium text-[#0a0a0a] hover:opacity-90 disabled:opacity-30"
           >
-            {update.isPending ? "Saving..." : "Save Settings"}
+            {update.isPending ? "Saving…" : "Save"}
           </button>
-          {saved && (
-            <span className="text-sm text-green-600">Settings saved.</span>
-          )}
+          {saved && <span className="text-[12px] text-[#30d158]">Saved</span>}
         </div>
       </form>
     </div>

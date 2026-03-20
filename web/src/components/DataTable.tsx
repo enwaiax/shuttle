@@ -18,30 +18,30 @@ export default function DataTable<T>({
   keyField,
 }: DataTableProps<T>) {
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-      <table className="min-w-full divide-y divide-gray-200">
+    <div className="overflow-hidden rounded-lg border border-[#1a1a1a] bg-[#0e0e0e]">
+      <table className="min-w-full divide-y divide-[#1a1a1a]">
         <thead>
-          <tr className="bg-gray-50/80">
+          <tr className="bg-[#111]">
             {columns.map((col) => (
               <th
                 key={col.key}
-                className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-wider text-[#555]"
               >
                 {col.label}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody className="divide-y divide-[#1a1a1a]">
           {data.map((row) => (
             <tr
               key={String(row[keyField])}
-              className="transition-colors hover:bg-gray-50/60"
+              className="transition-colors hover:bg-[#161616]"
             >
               {columns.map((col) => (
                 <td
                   key={col.key}
-                  className="whitespace-nowrap px-4 py-3 text-sm text-gray-700"
+                  className="whitespace-nowrap px-4 py-2.5 text-[13px] text-[#999]"
                 >
                   {col.render
                     ? col.render(row)

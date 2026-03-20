@@ -24,21 +24,21 @@ export default function ConfirmDialog({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl border border-gray-200 bg-white p-6 shadow-lg focus:outline-none">
+        <Dialog.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-sm" />
+        <Dialog.Content className="fixed left-1/2 top-1/2 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg border border-[#222] bg-[#111] p-6 shadow-2xl focus:outline-none">
           <div className="flex items-start justify-between">
-            <Dialog.Title className="text-base font-semibold text-gray-900">
+            <Dialog.Title className="text-[14px] font-medium text-[#ededed]">
               {title}
             </Dialog.Title>
-            <Dialog.Close className="rounded-md p-1 text-gray-400 hover:text-gray-600">
-              <X size={16} />
+            <Dialog.Close className="rounded-md p-1 text-[#555] hover:text-[#999]">
+              <X size={14} />
             </Dialog.Close>
           </div>
-          <Dialog.Description className="mt-2 text-sm text-gray-500">
+          <Dialog.Description className="mt-2 text-[13px] text-[#666]">
             {description}
           </Dialog.Description>
           <div className="mt-6 flex justify-end gap-3">
-            <Dialog.Close className="rounded-lg border border-gray-200 bg-white px-3.5 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">
+            <Dialog.Close className="rounded-md border border-[#222] bg-[#161616] px-3 py-1.5 text-[13px] font-medium text-[#999] hover:bg-[#1a1a1a]">
               Cancel
             </Dialog.Close>
             <button
@@ -47,10 +47,10 @@ export default function ConfirmDialog({
                 onOpenChange(false);
               }}
               className={clsx(
-                "rounded-lg px-3.5 py-2 text-sm font-medium text-white shadow-sm",
+                "rounded-md px-3 py-1.5 text-[13px] font-medium",
                 variant === "danger"
-                  ? "bg-red-600 hover:bg-red-700"
-                  : "bg-blue-600 hover:bg-blue-700",
+                  ? "bg-[#ff4444] text-white hover:bg-[#e63e3e]"
+                  : "bg-[#ededed] text-[#0a0a0a] hover:opacity-90",
               )}
             >
               {confirmLabel}

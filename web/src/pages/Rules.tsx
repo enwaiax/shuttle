@@ -12,27 +12,30 @@ import RuleForm from "./RuleForm";
 export default function Rules() {
   const { data: rules = [] } = useRules();
   const deleteRule = useDeleteRule();
-
   const [formOpen, setFormOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<RuleResponse | null>(null);
 
   const columns: Column<RuleResponse>[] = [
-    { key: "pattern", label: "Pattern" },
     {
-      key: "level",
-      label: "Level",
-      render: (r) => <Badge value={r.level} />,
+      key: "pattern",
+      label: "Pattern",
+      render: (r) => (
+        <code className="text-[12px] text-[#ededed]" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+          {r.pattern}
+        </code>
+      ),
     },
-    {
-      key: "description",
-      label: "Description",
-      render: (r) => r.description ?? "--",
-    },
+    { key: "level", label: "Level", render: (r) => <Badge value={r.level} /> },
+    { key: "description", label: "Description", render: (r) => r.description ?? "—" },
     { key: "priority", label: "Priority" },
     {
       key: "enabled",
       label: "Enabled",
-      render: (r) => (r.enabled ? "Yes" : "No"),
+      render: (r) => (
+        <span className={r.enabled ? "text-[#30d158]" : "text-[#555]"}>
+          {r.enabled ? "Yes" : "No"}
+        </span>
+      ),
     },
     {
       key: "_actions",
@@ -40,9 +43,9 @@ export default function Rules() {
       render: (r) => (
         <button
           onClick={() => setDeleteTarget(r)}
-          className="rounded-md p-1 text-gray-400 hover:bg-red-50 hover:text-red-600"
+          className="rounded-md p-1 text-[#444] hover:bg-[#ff4444]/10 hover:text-[#ff4444]"
         >
-          <Trash2 size={15} />
+          <Trash2 size={14} />
         </button>
       ),
     },
@@ -52,18 +55,14 @@ export default function Rules() {
     <div>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-lg font-semibold text-gray-900">
-            Security Rules
-          </h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Manage command security rules.
-          </p>
+          <h1 className="text-[15px] font-medium text-[#ededed]">Security Rules</h1>
+          <p className="mt-1 text-[13px] text-[#555]">Control which commands require confirmation</p>
         </div>
         <button
           onClick={() => setFormOpen(true)}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3.5 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
+          className="inline-flex items-center gap-1.5 rounded-md bg-[#ededed] px-3 py-1.5 text-[13px] font-medium text-[#0a0a0a] hover:opacity-90"
         >
-          <Plus size={15} />
+          <Plus size={14} />
           Add Rule
         </button>
       </div>
@@ -72,15 +71,11 @@ export default function Rules() {
         {rules.length === 0 ? (
           <EmptyState
             icon={Shield}
-            title="No rules yet"
+            title="No rules"
             description="Add security rules to control command execution."
             action={
-              <button
-                onClick={() => setFormOpen(true)}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
-              >
-                <Plus size={14} />
-                Add Rule
+              <button onClick={() => setFormOpen(true)} className="text-[13px] font-medium text-[#ededed] hover:text-white">
+                Add Rule →
               </button>
             }
           />
@@ -93,16 +88,12 @@ export default function Rules() {
 
       <ConfirmDialog
         open={deleteTarget !== null}
-        onOpenChange={(open) => {
-          if (!open) setDeleteTarget(null);
-        }}
+        onOpenChange={(open) => { if (!open) setDeleteTarget(null); }}
         title="Delete Rule"
-        description={`Are you sure you want to delete the rule "${deleteTarget?.pattern}"? This action cannot be undone.`}
+        description={`Delete rule "${deleteTarget?.pattern}"?`}
         confirmLabel="Delete"
         variant="danger"
-        onConfirm={() => {
-          if (deleteTarget) deleteRule.mutate(deleteTarget.id);
-        }}
+        onConfirm={() => { if (deleteTarget) deleteRule.mutate(deleteTarget.id); }}
       />
     </div>
   );
