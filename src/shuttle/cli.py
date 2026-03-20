@@ -55,32 +55,31 @@ def main(
 
 @app.command("web")
 def web(
-    host: str = typer.Option("127.0.0.1", "--host", help="Host to bind the web panel"),
-    port: int = typer.Option(8000, "--port", "-p", help="Port for the web panel"),
+    host: str = typer.Option("127.0.0.1", "--host", "-h", help="Bind address"),
+    port: int = typer.Option(9876, "--port", "-p", help="Bind port"),
 ) -> None:
-    """Start the Shuttle web panel (coming in Plan 2)."""
-    if host != "127.0.0.1":
-        typer.secho(
-            f"WARNING: --host={host!r} exposes the web panel to the network. "
-            "Use 127.0.0.1 for local-only access.",
-            fg=typer.colors.YELLOW,
-            err=True,
-        )
+    """Start the Shuttle Web Control Panel."""
+    import uvicorn
 
-    # Generate / load web token
-    token_file = Path.home() / ".shuttle" / "web_token"
-    token_file.parent.mkdir(parents=True, exist_ok=True)
-    if not token_file.exists():
-        token = secrets.token_urlsafe(32)
-        token_file.write_text(token)
-        token_file.chmod(0o600)
+    from shuttle.core.config import ShuttleConfig
+    from shuttle.web.app import create_app
+
+    config = ShuttleConfig()
+    config.shuttle_dir.mkdir(parents=True, exist_ok=True)
+
+    # Load or generate API token
+    token_path = config.shuttle_dir / "web_token"
+    if token_path.exists():
+        api_token = token_path.read_text().strip()
     else:
-        token = token_file.read_text().strip()
+        api_token = secrets.token_urlsafe(32)
+        token_path.write_text(api_token)
+        token_path.chmod(0o600)
 
-    url = f"http://{host}:{port}"
-    typer.echo(f"Shuttle web panel URL : {url}")
-    typer.echo(f"Access token          : {token}")
-    typer.secho("Web panel is coming in Plan 2 — not yet implemented.", fg=typer.colors.YELLOW)
+    typer.echo(f"Starting Shuttle Web Panel at http://{host}:{port}")
+    typer.echo(f"API Token: {api_token}")
+    web_app = create_app(api_token=api_token)
+    uvicorn.run(web_app, host=host, port=port, log_level="info")
 
 
 # ── Node commands ─────────────────────────────────────────────────────────────

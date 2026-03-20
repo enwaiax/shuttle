@@ -20,7 +20,7 @@ class ShuttleConfig(BaseSettings):
 
     # Web server
     web_host: str = "127.0.0.1"
-    web_port: int = 8000
+    web_port: int = 9876
 
     # Connection pool settings
     pool_max_total: int = 50
