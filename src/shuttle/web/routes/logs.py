@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from shuttle.db.models import CommandLog, Node
 from shuttle.web.deps import get_db_session
-from shuttle.web.schemas import CommandLogResponse, LogListResponse
+from shuttle.web.schemas import LogListResponse
 
 router = APIRouter(tags=["logs"])
 

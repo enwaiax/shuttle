@@ -13,7 +13,7 @@ def test_default_config():
     assert cfg.shuttle_dir == Path.home() / ".shuttle"
     assert cfg.db_url == "sqlite+aiosqlite:///~/.shuttle/shuttle.db"
     assert cfg.web_host == "127.0.0.1"
-    assert cfg.web_port == 8000
+    assert cfg.web_port == 9876
     assert cfg.pool_max_total == 50
     assert cfg.pool_max_per_node == 5
     assert cfg.pool_idle_timeout == 300

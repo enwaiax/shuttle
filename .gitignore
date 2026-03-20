@@ -212,5 +212,16 @@ __marimo__/
 .superpowers/
 .agents/
 
+# Node.js
+node_modules/
+
 # Shuttle runtime data
 .shuttle/
+
+# React build output (embedded in Python package)
+src/shuttle/web/static/*
+!src/shuttle/web/static/.gitkeep
+
+# Node
+web/node_modules/
+web/dist/
