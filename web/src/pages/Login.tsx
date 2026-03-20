@@ -14,7 +14,6 @@ export default function Login({ onLogin }: Props) {
     e.preventDefault();
     setLoading(true);
     setError("");
-
     try {
       const res = await fetch("/api/stats", {
         headers: { Authorization: `Bearer ${token}` },
@@ -26,51 +25,77 @@ export default function Login({ onLogin }: Props) {
         setError("Invalid token");
       }
     } catch {
-      setError("Cannot connect to server");
+      setError("Cannot reach server");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-950">
-      <div className="w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-cyan-500">
-            <span className="text-lg font-bold text-zinc-900">S</span>
+    <div className="flex min-h-screen items-center justify-center bg-[#0a0a0a]">
+      {/* Subtle grid texture */}
+      <div
+        className="pointer-events-none fixed inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)",
+          backgroundSize: "64px 64px",
+        }}
+      />
+
+      <div className="relative w-full max-w-[360px] px-6">
+        {/* Logo mark */}
+        <div className="mb-10 flex flex-col items-center">
+          <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-lg border border-[#222] bg-[#111]">
+            <span
+              className="text-[15px] font-semibold text-[#ededed]"
+              style={{ fontFamily: "'JetBrains Mono', monospace" }}
+            >
+              S
+            </span>
           </div>
-          <h1 className="text-xl font-semibold text-zinc-100">Shuttle</h1>
-          <p className="mt-2 text-sm text-zinc-500">
-            Paste the API token from your terminal
+          <h1 className="text-[15px] font-medium tracking-[-0.01em] text-[#ededed]">
+            Shuttle
+          </h1>
+          <p className="mt-2 text-[13px] leading-relaxed text-[#666]">
+            Paste the token from your terminal
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+        <form onSubmit={handleSubmit}>
+          <div className="relative">
             <input
               type="password"
               value={token}
               onChange={(e) => setTokenValue(e.target.value)}
-              placeholder="API token"
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2.5 font-mono text-sm text-zinc-200 outline-none placeholder:text-zinc-600 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20"
+              placeholder="shuttle-xxxxxxxxxxxx"
               autoFocus
               required
+              className="h-10 w-full rounded-lg border border-[#222] bg-[#0f0f0f] px-3 text-[13px] text-[#ededed] outline-none transition-colors placeholder:text-[#333] focus:border-[#444]"
+              style={{ fontFamily: "'JetBrains Mono', monospace" }}
             />
           </div>
+
           {error && (
-            <p className="text-center text-xs text-red-400">{error}</p>
+            <p className="mt-3 text-center text-[12px] text-[#f04] ">
+              {error}
+            </p>
           )}
+
           <button
             type="submit"
             disabled={loading || !token}
-            className="w-full rounded-lg bg-emerald-500 px-4 py-2.5 text-sm font-medium text-zinc-900 hover:bg-emerald-400 disabled:opacity-40"
+            className="mt-4 h-10 w-full rounded-lg bg-[#ededed] text-[13px] font-medium text-[#0a0a0a] transition-opacity hover:opacity-90 disabled:opacity-30"
           >
             {loading ? "Verifying…" : "Connect"}
           </button>
         </form>
 
-        <p className="mt-6 text-center text-[11px] text-zinc-700">
-          Run <code className="rounded bg-zinc-800 px-1.5 py-0.5 text-zinc-400">shuttle serve</code> to get your token
+        <p className="mt-8 text-center text-[11px] text-[#444]">
+          <code className="rounded border border-[#1a1a1a] bg-[#111] px-1.5 py-0.5 text-[#555]">
+            shuttle serve
+          </code>
+          {" "}to start
         </p>
       </div>
     </div>

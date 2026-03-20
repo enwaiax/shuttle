@@ -1,24 +1,14 @@
 import { useEffect } from "react";
 import { NavLink, useParams, useNavigate } from "react-router-dom";
-import { Shield, Settings, Plus, Server } from "lucide-react";
+import { Shield, Settings, Plus } from "lucide-react";
 import clsx from "clsx";
 import { useNodes } from "../api/client";
-
-function linkClass({ isActive }: { isActive: boolean }) {
-  return clsx(
-    "flex items-center gap-2.5 rounded-md px-3 py-1.5 text-[13px] font-medium transition-all",
-    isActive
-      ? "bg-zinc-800 text-zinc-100"
-      : "text-zinc-500 hover:bg-zinc-800/50 hover:text-zinc-300",
-  );
-}
 
 export default function Sidebar() {
   const { data: nodes } = useNodes();
   const { nodeId } = useParams<{ nodeId?: string }>();
   const navigate = useNavigate();
 
-  // Auto-select first node when no node is selected and nodes are loaded
   useEffect(() => {
     if (!nodeId && nodes && nodes.length > 0) {
       navigate(`/activity/${nodes[0].id}`, { replace: true });
@@ -26,20 +16,25 @@ export default function Sidebar() {
   }, [nodeId, nodes, navigate]);
 
   return (
-    <aside className="flex w-52 flex-col border-r border-zinc-800/80 bg-zinc-900">
-      {/* Logo */}
-      <div className="flex items-center gap-2.5 px-4 py-5">
-        <div className="flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-br from-emerald-400 to-cyan-500 text-xs font-bold text-zinc-900">
-          S
+    <aside className="flex w-[200px] flex-col border-r border-[#1a1a1a] bg-[#0a0a0a]">
+      {/* Brand */}
+      <div className="flex items-center gap-2.5 px-4 py-4">
+        <div className="flex h-6 w-6 items-center justify-center rounded border border-[#222] bg-[#111]">
+          <span
+            className="text-[11px] font-semibold text-[#ededed]"
+            style={{ fontFamily: "'JetBrains Mono', monospace" }}
+          >
+            S
+          </span>
         </div>
-        <span className="text-sm font-semibold tracking-tight text-zinc-200">
+        <span className="text-[13px] font-medium tracking-[-0.01em] text-[#999]">
           Shuttle
         </span>
       </div>
 
-      <nav className="flex-1 space-y-0.5 px-2">
-        {/* Nodes section */}
-        <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-widest text-zinc-600">
+      <nav className="flex-1 px-2">
+        {/* Section label */}
+        <p className="mb-1.5 mt-2 px-2 text-[10px] font-medium uppercase tracking-[0.08em] text-[#444]">
           Nodes
         </p>
 
@@ -47,41 +42,83 @@ export default function Sidebar() {
           <NavLink
             key={node.id}
             to={`/activity/${node.id}`}
-            className={linkClass}
+            className={({ isActive }) =>
+              clsx(
+                "flex items-center gap-2 rounded-md px-2 py-[5px] text-[13px] transition-colors",
+                isActive
+                  ? "bg-[#161616] text-[#ededed]"
+                  : "text-[#666] hover:bg-[#111] hover:text-[#999]",
+              )
+            }
           >
             <span
               className={clsx(
-                "inline-block h-1.5 w-1.5 rounded-full",
-                node.status === "active" ? "bg-emerald-400" : "bg-zinc-600",
+                "h-[6px] w-[6px] rounded-full",
+                node.status === "active" ? "bg-[#0f0]" : "bg-[#333]",
               )}
+              style={
+                node.status === "active"
+                  ? { boxShadow: "0 0 4px rgba(0,255,0,0.3)" }
+                  : undefined
+              }
             />
             <span className="truncate">{node.name}</span>
           </NavLink>
         ))}
 
-        <NavLink to="/nodes" className={linkClass}>
-          <Plus size={14} strokeWidth={1.8} />
-          <span className="text-zinc-600">Add Node</span>
+        <NavLink
+          to="/nodes"
+          className={({ isActive }) =>
+            clsx(
+              "mt-1 flex items-center gap-2 rounded-md px-2 py-[5px] text-[13px] transition-colors",
+              isActive
+                ? "bg-[#161616] text-[#ededed]"
+                : "text-[#333] hover:bg-[#111] hover:text-[#666]",
+            )
+          }
+        >
+          <Plus size={13} strokeWidth={1.5} />
+          Add node
         </NavLink>
 
-        {/* Bottom links */}
-        <div className="my-3 border-t border-zinc-800/60" />
-        <NavLink to="/rules" className={linkClass}>
-          <Shield size={14} strokeWidth={1.8} />
-          Security Rules
+        {/* Divider */}
+        <div className="my-4 border-t border-[#1a1a1a]" />
+
+        <NavLink
+          to="/rules"
+          className={({ isActive }) =>
+            clsx(
+              "flex items-center gap-2 rounded-md px-2 py-[5px] text-[13px] transition-colors",
+              isActive
+                ? "bg-[#161616] text-[#ededed]"
+                : "text-[#666] hover:bg-[#111] hover:text-[#999]",
+            )
+          }
+        >
+          <Shield size={13} strokeWidth={1.5} />
+          Rules
         </NavLink>
-        <NavLink to="/settings" className={linkClass}>
-          <Settings size={14} strokeWidth={1.8} />
+        <NavLink
+          to="/settings"
+          className={({ isActive }) =>
+            clsx(
+              "flex items-center gap-2 rounded-md px-2 py-[5px] text-[13px] transition-colors",
+              isActive
+                ? "bg-[#161616] text-[#ededed]"
+                : "text-[#666] hover:bg-[#111] hover:text-[#999]",
+            )
+          }
+        >
+          <Settings size={13} strokeWidth={1.5} />
           Settings
         </NavLink>
       </nav>
 
-      {/* Footer */}
-      <div className="border-t border-zinc-800/60 px-4 py-3">
-        <div className="flex items-center gap-2 text-[11px] text-zinc-600">
-          <Server size={11} />
-          <span>{nodes?.length ?? 0} nodes</span>
-        </div>
+      {/* Status bar */}
+      <div className="border-t border-[#1a1a1a] px-4 py-3">
+        <p className="text-[11px] text-[#333]">
+          {nodes?.length ?? 0} node{nodes?.length !== 1 ? "s" : ""} connected
+        </p>
       </div>
     </aside>
   );

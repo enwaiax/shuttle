@@ -1,16 +1,18 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { RefreshCw, Download, Terminal } from "lucide-react";
+import { RefreshCw, Download, Terminal, ChevronRight } from "lucide-react";
 import { useLogs, useNode } from "../api/client";
 import type { CommandLogResponse } from "../api/client";
-import EmptyState from "../components/EmptyState";
+import clsx from "clsx";
 
 const PAGE_SIZE = 50;
-const OUTPUT_PREVIEW_LINES = 15;
+const PREVIEW_LINES = 15;
 
-// ── Helpers ──────────────────────────────────────────
+// ── Helpers ─────────────────────────────────────────
 
-function formatTime(iso: string): string {
+const mono = { fontFamily: "'JetBrains Mono', 'Fira Code', monospace" };
+
+function fmtTime(iso: string): string {
   return new Date(iso).toLocaleTimeString(undefined, {
     hour: "2-digit",
     minute: "2-digit",
@@ -19,99 +21,127 @@ function formatTime(iso: string): string {
   });
 }
 
-function formatDuration(ms: number | null): string {
+function fmtDuration(ms: number | null): string {
   if (ms == null) return "";
   if (ms < 1000) return `${ms}ms`;
-  if (ms < 60000) return `${(ms / 1000).toFixed(1)}s`;
-  return `${Math.floor(ms / 60000)}m${Math.floor((ms % 60000) / 1000)}s`;
+  if (ms < 60_000) return `${(ms / 1000).toFixed(1)}s`;
+  return `${Math.floor(ms / 60_000)}m${Math.floor((ms % 60_000) / 1000)}s`;
 }
 
-function truncateOutput(text: string): { preview: string; isTruncated: boolean } {
+function truncate(text: string) {
   const lines = text.split("\n");
-  if (lines.length <= OUTPUT_PREVIEW_LINES) return { preview: text, isTruncated: false };
-  return { preview: lines.slice(0, OUTPUT_PREVIEW_LINES).join("\n"), isTruncated: true };
+  if (lines.length <= PREVIEW_LINES) return { text, truncated: false };
+  return { text: lines.slice(0, PREVIEW_LINES).join("\n"), truncated: true };
 }
 
 type TimeRange = "today" | "7d" | "30d" | "all";
 
-// ── Single command entry ────────────────────────────
+// ── Command Entry ───────────────────────────────────
 
-function CommandEntry({ log }: { log: CommandLogResponse }) {
-  const [showFull, setShowFull] = useState(false);
+function Entry({ log }: { log: CommandLogResponse }) {
+  const [expanded, setExpanded] = useState(false);
 
-  const hasFailed = log.exit_code !== null && log.exit_code !== 0;
-  const secLevel = log.security_level;
-  const hasSecEvent = secLevel && secLevel !== "allow";
+  const failed = log.exit_code !== null && log.exit_code !== 0;
+  const sec = log.security_level;
+  const hasSec = sec && sec !== "allow";
+  const hasOutput = !!(log.stdout || log.stderr);
 
   const stdout = log.stdout || "";
   const stderr = log.stderr || "";
-  const { preview: stdoutPreview, isTruncated: stdoutTruncated } = truncateOutput(stdout);
-  const { preview: stderrPreview, isTruncated: stderrTruncated } = truncateOutput(stderr);
-  const isTruncated = stdoutTruncated || stderrTruncated;
+  const stdoutT = truncate(stdout);
+  const stderrT = truncate(stderr);
+  const needsExpand = stdoutT.truncated || stderrT.truncated;
 
   return (
     <div
-      className={`border-l-2 py-1.5 pl-4 pr-4 ${
-        hasFailed
-          ? "border-l-red-500/60"
-          : hasSecEvent
-            ? "border-l-amber-500/40"
-            : "border-l-transparent"
-      }`}
+      className={clsx(
+        "group border-b border-[#1a1a1a]",
+        failed && "bg-[#1a0000]",
+      )}
     >
       {/* Command line */}
-      <div className="flex items-baseline gap-0 font-mono text-[13px] leading-relaxed">
-        <span className="mr-3 shrink-0 text-zinc-600">{formatTime(log.executed_at)}</span>
-        <span className="mr-1.5 text-zinc-500">$</span>
-        <span className="flex-1 text-zinc-200">{log.command}</span>
-
-        {hasSecEvent && (
-          <span
-            className={`mx-2 shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium ${
-              secLevel === "block"
-                ? "bg-red-500/15 text-red-400"
-                : secLevel === "confirm"
-                  ? "bg-amber-500/15 text-amber-400"
-                  : "bg-yellow-500/10 text-yellow-400"
-            }`}
-          >
-            {secLevel}
-          </span>
-        )}
-
-        <span
-          className={`ml-2 shrink-0 text-xs ${
-            hasFailed ? "text-red-400" : log.exit_code === 0 ? "text-emerald-500/70" : "text-zinc-600"
-          }`}
-        >
-          {log.exit_code !== null ? (log.exit_code === 0 ? "✓" : `✗ ${log.exit_code}`) : "…"}
+      <div className="flex items-baseline px-4 py-2" style={mono}>
+        {/* Time */}
+        <span className="w-[72px] shrink-0 text-[12px] text-[#444]">
+          {fmtTime(log.executed_at)}
         </span>
-        {log.duration_ms != null && (
-          <span className="ml-2 shrink-0 text-xs text-zinc-600">
-            {formatDuration(log.duration_ms)}
+
+        {/* Prompt */}
+        <span className="mr-1.5 text-[12px] text-[#555]">$</span>
+
+        {/* Command */}
+        <span
+          className={clsx(
+            "flex-1 text-[13px]",
+            failed ? "text-[#ff6369]" : "text-[#e0e0e0]",
+          )}
+        >
+          {log.command}
+        </span>
+
+        {/* Security badge */}
+        {hasSec && (
+          <span
+            className={clsx(
+              "mx-3 shrink-0 rounded-full px-2 py-[1px] text-[10px] font-medium",
+              sec === "block" && "bg-[#ff0000]/10 text-[#ff4444]",
+              sec === "confirm" && "bg-[#ff9500]/10 text-[#ff9500]",
+              sec === "warn" && "bg-[#ffd60a]/8 text-[#ffd60a]",
+            )}
+          >
+            {sec}
           </span>
         )}
+
+        {/* Exit code */}
+        <span
+          className={clsx(
+            "w-8 shrink-0 text-right text-[11px]",
+            failed ? "text-[#ff4444]" : log.exit_code === 0 ? "text-[#30d158]" : "text-[#444]",
+          )}
+        >
+          {log.exit_code !== null
+            ? log.exit_code === 0
+              ? "0"
+              : String(log.exit_code)
+            : "·"}
+        </span>
+
+        {/* Duration */}
+        <span className="w-14 shrink-0 text-right text-[11px] text-[#333]">
+          {fmtDuration(log.duration_ms)}
+        </span>
       </div>
 
-      {/* Output — shown by default */}
-      {(stdout || stderr) && (
-        <div className="ml-16 mt-1">
+      {/* Output — default visible */}
+      {hasOutput && (
+        <div className="mx-4 mb-2 rounded border border-[#1a1a1a] bg-[#080808]">
           {stdout && (
-            <pre className="whitespace-pre-wrap text-[12px] leading-relaxed text-zinc-500">
-              {showFull ? stdout : stdoutPreview}
+            <pre
+              className="overflow-x-auto px-3 py-2 text-[12px] leading-[1.6] text-[#888]"
+              style={mono}
+            >
+              {expanded ? stdout : stdoutT.text}
             </pre>
           )}
           {stderr && (
-            <pre className="mt-1 whitespace-pre-wrap text-[12px] leading-relaxed text-red-400/70">
-              {showFull ? stderr : stderrPreview}
+            <pre
+              className={clsx(
+                "overflow-x-auto px-3 py-2 text-[12px] leading-[1.6] text-[#994444]",
+                stdout && "border-t border-[#1a1a1a]",
+              )}
+              style={mono}
+            >
+              {expanded ? stderr : stderrT.text}
             </pre>
           )}
-          {isTruncated && !showFull && (
+          {needsExpand && !expanded && (
             <button
-              onClick={() => setShowFull(true)}
-              className="mt-1 text-[11px] text-zinc-600 hover:text-zinc-400"
+              onClick={() => setExpanded(true)}
+              className="flex w-full items-center gap-1 border-t border-[#1a1a1a] px-3 py-1.5 text-[11px] text-[#555] transition-colors hover:bg-[#111] hover:text-[#888]"
             >
-              ▸ Show full output ({stdout.split("\n").length + stderr.split("\n").length} lines)
+              <ChevronRight size={10} />
+              {stdout.split("\n").length + stderr.split("\n").length} lines total
             </button>
           )}
         </div>
@@ -120,22 +150,22 @@ function CommandEntry({ log }: { log: CommandLogResponse }) {
   );
 }
 
-// ── Main view ───────────────────────────────────────
+// ── Activity Page ───────────────────────────────────
 
 export default function Activity() {
   const { nodeId } = useParams<{ nodeId?: string }>();
-  const [timeRange, setTimeRange] = useState<TimeRange>("today");
+  const [range, setRange] = useState<TimeRange>("today");
   const [page, setPage] = useState(1);
-  const [allItems, setAllItems] = useState<CommandLogResponse[]>([]);
-  const [autoRefresh, setAutoRefresh] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const [items, setItems] = useState<CommandLogResponse[]>([]);
+  const [live, setLive] = useState(false);
+  const sentinel = useRef<HTMLDivElement>(null);
 
   const { data: node } = useNode(nodeId ?? "");
 
   useEffect(() => {
     setPage(1);
-    setAllItems([]);
-  }, [nodeId, timeRange]);
+    setItems([]);
+  }, [nodeId, range]);
 
   const { data, refetch, isFetching } = useLogs({
     node_id: nodeId,
@@ -143,35 +173,34 @@ export default function Activity() {
     page_size: PAGE_SIZE,
   });
 
-  // Accumulate pages for infinite scroll
+  // Accumulate pages
   useEffect(() => {
-    if (data?.items) {
-      if (page === 1) {
-        setAllItems(data.items);
-      } else {
-        setAllItems((prev) => {
-          const ids = new Set(prev.map((i) => i.id));
-          return [...prev, ...data.items.filter((i) => !ids.has(i.id))];
-        });
-      }
+    if (!data?.items) return;
+    if (page === 1) {
+      setItems(data.items);
+    } else {
+      setItems((prev) => {
+        const seen = new Set(prev.map((i) => i.id));
+        return [...prev, ...data.items.filter((i) => !seen.has(i.id))];
+      });
     }
   }, [data, page]);
 
-  const doRefetch = useCallback(() => void refetch(), [refetch]);
-
+  // Auto-refresh
+  const tick = useCallback(() => void refetch(), [refetch]);
   useEffect(() => {
-    if (!autoRefresh) return;
-    const id = setInterval(doRefetch, 5000);
+    if (!live) return;
+    const id = setInterval(tick, 5000);
     return () => clearInterval(id);
-  }, [autoRefresh, doRefetch]);
+  }, [live, tick]);
 
   // Infinite scroll
   useEffect(() => {
-    const el = bottomRef.current;
+    const el = sentinel.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && data && allItems.length < data.total && !isFetching) {
+      ([e]) => {
+        if (e.isIntersecting && data && items.length < data.total && !isFetching) {
           setPage((p) => p + 1);
         }
       },
@@ -179,10 +208,10 @@ export default function Activity() {
     );
     obs.observe(el);
     return () => obs.disconnect();
-  }, [data, allItems.length, isFetching]);
+  }, [data, items.length, isFetching]);
 
   const total = data?.total ?? 0;
-  const exportUrl = `/api/logs/export?format=csv${nodeId ? `&node_id=${nodeId}` : ""}`;
+  const csv = `/api/logs/export?format=csv${nodeId ? `&node_id=${nodeId}` : ""}`;
 
   const ranges: { label: string; value: TimeRange }[] = [
     { label: "Today", value: "today" },
@@ -191,94 +220,107 @@ export default function Activity() {
     { label: "All", value: "all" },
   ];
 
-  // No node selected yet (sidebar will auto-redirect)
   if (!nodeId) {
     return (
-      <div className="flex h-full items-center justify-center bg-zinc-900">
-        <p className="text-sm text-zinc-600">Select a node from the sidebar</p>
+      <div className="flex h-full items-center justify-center bg-[#0a0a0a]">
+        <p className="text-[13px] text-[#333]">Select a node</p>
       </div>
     );
   }
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col bg-[#0e0e0e]">
       {/* Toolbar */}
-      <div className="flex items-center justify-between border-b border-zinc-800/60 bg-zinc-900/90 px-4 py-2">
+      <div className="flex h-10 items-center justify-between border-b border-[#1a1a1a] bg-[#0a0a0a] px-4">
         <div className="flex items-center gap-4">
-          <span className="text-sm font-medium text-zinc-300">
+          {/* Node info */}
+          <span className="text-[13px] font-medium text-[#ededed]">
             {node?.name ?? "…"}
           </span>
-          <span className="text-[11px] text-zinc-600">
+          <span className="text-[11px] text-[#444]">
             {node ? `${node.host}:${node.port}` : ""}
           </span>
 
-          {/* Time range */}
-          <div className="flex items-center gap-0.5 rounded-md bg-zinc-800/60 p-0.5">
+          {/* Separator */}
+          <span className="text-[#1a1a1a]">|</span>
+
+          {/* Time pills */}
+          <div className="flex gap-0.5">
             {ranges.map((r) => (
               <button
                 key={r.value}
-                onClick={() => setTimeRange(r.value)}
-                className={`rounded px-2 py-0.5 text-[11px] font-medium transition-colors ${
-                  timeRange === r.value
-                    ? "bg-zinc-700 text-zinc-200"
-                    : "text-zinc-500 hover:text-zinc-300"
-                }`}
+                onClick={() => setRange(r.value)}
+                className={clsx(
+                  "rounded px-2 py-0.5 text-[11px] font-medium transition-colors",
+                  range === r.value
+                    ? "bg-[#222] text-[#ededed]"
+                    : "text-[#555] hover:text-[#999]",
+                )}
               >
                 {r.label}
               </button>
             ))}
           </div>
 
-          <span className="text-[11px] text-zinc-600">{total} commands</span>
+          <span className="text-[11px] tabular-nums text-[#333]">
+            {total.toLocaleString()} cmd{total !== 1 ? "s" : ""}
+          </span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <a
-            href={exportUrl}
-            className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-zinc-500 hover:bg-zinc-800 hover:text-zinc-300"
+            href={csv}
+            className="flex items-center gap-1 rounded px-2 py-1 text-[11px] text-[#555] transition-colors hover:bg-[#161616] hover:text-[#999]"
           >
-            <Download size={11} />
+            <Download size={11} strokeWidth={1.5} />
             CSV
           </a>
           <button
-            onClick={() => setAutoRefresh((v) => !v)}
-            className={`inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-colors ${
-              autoRefresh
-                ? "bg-emerald-500/10 text-emerald-400"
-                : "text-zinc-500 hover:bg-zinc-800 hover:text-zinc-300"
-            }`}
+            onClick={() => setLive((v) => !v)}
+            className={clsx(
+              "flex items-center gap-1.5 rounded px-2 py-1 text-[11px] font-medium transition-colors",
+              live
+                ? "bg-[#30d158]/10 text-[#30d158]"
+                : "text-[#555] hover:bg-[#161616] hover:text-[#999]",
+            )}
           >
-            <RefreshCw size={11} className={autoRefresh ? "animate-spin" : ""} />
-            {autoRefresh ? "Live" : "Auto"}
+            <RefreshCw
+              size={10}
+              strokeWidth={1.5}
+              className={live ? "animate-spin" : ""}
+            />
+            {live ? "Live" : "Auto"}
           </button>
         </div>
       </div>
 
-      {/* Console */}
-      <div className="flex-1 overflow-y-auto bg-zinc-900">
-        {allItems.length === 0 && !isFetching ? (
-          <div className="flex h-full items-center justify-center">
-            <EmptyState
-              icon={Terminal}
-              title="No commands yet"
-              description="Commands executed on this node will appear here."
-            />
+      {/* Log body */}
+      <div className="flex-1 overflow-y-auto">
+        {items.length === 0 && !isFetching ? (
+          <div className="flex h-full flex-col items-center justify-center gap-3">
+            <Terminal size={20} strokeWidth={1} className="text-[#333]" />
+            <p className="text-[13px] text-[#444]">No commands yet</p>
+            <p className="text-[11px] text-[#333]">
+              Commands will appear as AI executes them
+            </p>
           </div>
         ) : (
-          <div className="divide-y divide-zinc-800/40 py-1">
-            {allItems.map((log) => (
-              <CommandEntry key={log.id} log={log} />
+          <>
+            {items.map((log) => (
+              <Entry key={log.id} log={log} />
             ))}
-            <div ref={bottomRef} className="h-4" />
+            <div ref={sentinel} className="h-px" />
             {isFetching && (
-              <div className="py-3 text-center text-xs text-zinc-600">Loading…</div>
+              <p className="py-4 text-center text-[11px] text-[#333]">
+                Loading…
+              </p>
             )}
-            {!isFetching && allItems.length >= total && total > 0 && (
-              <div className="py-3 text-center text-xs text-zinc-700">
-                — {total} commands —
-              </div>
+            {!isFetching && items.length >= total && total > 0 && (
+              <p className="py-4 text-center text-[11px] text-[#222]">
+                — end —
+              </p>
             )}
-          </div>
+          </>
         )}
       </div>
     </div>
