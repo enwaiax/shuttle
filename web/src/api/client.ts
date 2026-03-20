@@ -246,5 +246,15 @@ export function useUpdateSettings() {
   });
 }
 
+// ── Effective Rules ────────────────────────────────
+
+export function useEffectiveRules(nodeId: string) {
+  return useQuery<RuleResponse[]>({
+    queryKey: ["rules", "effective", nodeId],
+    queryFn: () => apiFetch(`/rules/effective/${nodeId}`),
+    enabled: !!nodeId,
+  });
+}
+
 // Re-export types for convenience
 export type { CommandLogResponse };
