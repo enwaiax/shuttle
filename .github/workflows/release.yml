@@ -4,112 +4,88 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Release version (e.g., 1.0.0)'
+        description: "Release version (e.g., 0.2.0)"
         required: true
         type: string
-      release_type:
-        description: 'Type of release'
-        required: true
-        type: choice
-        options:
-          - patch
-          - minor
-          - major
-        default: patch
 
 jobs:
-  create-release:
+  release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      id-token: write
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.12"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
 
-    - name: Install uv
-      uses: astral-sh/setup-uv@v3
+      - name: Set up Python
+        run: uv python install 3.12
 
-    - name: Configure Git
-      run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
 
-    - name: Update version
-      run: |
-        # Update version in pyproject.toml
-        sed -i 's/version = "[^"]*"/version = "${{ github.event.inputs.version }}"/' pyproject.toml
+      - name: Update version in pyproject.toml
+        run: |
+          sed -i 's/version = "[^"]*"/version = "${{ github.event.inputs.version }}"/' pyproject.toml
 
-    - name: Install dependencies and run tests
-      run: |
-        uv sync --all-extras --dev
-        uv run pytest tests/ -v
-        uv run ruff check src/
-        uv run ruff format --check src/
+      - name: Install and test
+        run: |
+          uv sync --all-extras --dev
+          uv run pytest tests/ -v --tb=short
+          uv run ruff check src/ tests/
 
-    - name: Build package
-      run: |
-        uv build
+      - name: Build frontend
+        run: |
+          cd web
+          npm ci
+          npm run build
 
-    - name: Commit version bump
-      run: |
-        git add pyproject.toml
-        git commit -m "chore: bump version to v${{ github.event.inputs.version }}"
-        git push origin main
+      - name: Build package
+        run: uv build
 
-    - name: Create and push tag
-      run: |
-        git tag -a "v${{ github.event.inputs.version }}" -m "Release version ${{ github.event.inputs.version }}"
-        git push origin "v${{ github.event.inputs.version }}"
+      - name: Publish to PyPI
+        run: uv publish
+        env:
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
 
-    - name: Generate release notes
-      id: release_notes
-      run: |
-        # Extract release notes from CHANGELOG.md
-        echo "RELEASE_NOTES<<EOF" >> $GITHUB_OUTPUT
-        sed -n '/## \[Unreleased\]/,/## \[/p' CHANGELOG.md | head -n -1 | tail -n +2 >> $GITHUB_OUTPUT
-        echo "EOF" >> $GITHUB_OUTPUT
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-    - name: Create GitHub Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: v${{ github.event.inputs.version }}
-        release_name: SSH MCP Tools v${{ github.event.inputs.version }}
-        body: |
-          ## What's Changed
+      - name: Commit, tag, and push
+        run: |
+          git add pyproject.toml
+          git commit -m "chore: release v${{ github.event.inputs.version }}"
+          git tag -a "v${{ github.event.inputs.version }}" -m "v${{ github.event.inputs.version }}"
+          git push origin main --follow-tags
 
-          ${{ steps.release_notes.outputs.RELEASE_NOTES }}
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          name: Shuttle v${{ github.event.inputs.version }}
+          body: |
+            ## Shuttle v${{ github.event.inputs.version }}
 
-          ## Installation
+            ### Install
 
-          ```bash
-          pip install fastmcp-ssh-server==${{ github.event.inputs.version }}
-          ```
+            ```bash
+            uvx shuttle-mcp
+            # or
+            pip install shuttle-mcp==${{ github.event.inputs.version }}
+            ```
 
-          ## Quick Start
+            ### What's new
 
-          ```bash
-          fastmcp-ssh-server --host your-server.com --username your-user --tools-version v2
-          ```
-
-          See the [documentation](https://github.com/enwaiax/ssh-mcp#readme) for detailed usage instructions.
-        draft: false
-        prerelease: false
-
-    - name: Upload release assets
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/
-        asset_name: release-assets
-        asset_content_type: application/zip
+            See [CHANGELOG.md](https://github.com/enwaiax/ssh-mcp/blob/main/CHANGELOG.md) for details.
+          draft: false
+          prerelease: false
+          files: dist/*

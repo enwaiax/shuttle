@@ -3,109 +3,55 @@ name: Publish to PyPI
 on:
   push:
     tags:
-      - 'v*'  # Triggers on version tags like v1.0.0, v2.1.0, etc.
-  release:
-    types: [published]
-  workflow_dispatch:  # Allows manual triggering
+      - "v*"
+  workflow_dispatch:
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.12"]
-
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
 
-    - name: Install uv
-      uses: astral-sh/setup-uv@v3
+      - name: Set up Python
+        run: uv python install 3.12
 
-    - name: Install dependencies
-      run: |
-        uv sync --all-extras --dev
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
 
-    - name: Run tests
-      run: |
-        uv run pytest tests/ -v --cov=src --cov-report=xml
+      - name: Run tests
+        run: uv run pytest tests/ -v --tb=short
 
-    - name: Upload coverage reports
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./coverage.xml
-        flags: unittests
-        name: codecov-umbrella
-
-  build:
+  build-and-publish:
     needs: test
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.12"
-
-    - name: Install uv
-      uses: astral-sh/setup-uv@v3
-
-    - name: Build package
-      run: |
-        uv build
-
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: dist
-        path: dist/
-
-  publish-to-testpypi:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: testpypi
-      url: https://test.pypi.org/p/fastmcp-ssh-server
-    permissions:
-      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
-
-    steps:
-    - name: Download build artifacts
-      uses: actions/download-artifact@v3
-      with:
-        name: dist
-        path: dist/
-
-    - name: Publish to TestPyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        repository-url: https://test.pypi.org/legacy/
-        skip-existing: true
-
-  publish-to-pypi:
-    needs: [build, publish-to-testpypi]
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/fastmcp-ssh-server
+      url: https://pypi.org/p/shuttle-mcp
     permissions:
-      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
-
-    # Only publish to PyPI on release events or version tags
-    if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/v')
+      id-token: write
 
     steps:
-    - name: Download build artifacts
-      uses: actions/download-artifact@v3
-      with:
-        name: dist
-        path: dist/
+      - uses: actions/checkout@v4
 
-    - name: Publish to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Build frontend
+        run: |
+          cd web
+          npm ci
+          npm run build
+
+      - name: Build package
+        run: uv build
+
+      - name: Publish to PyPI
+        run: uv publish
+        env:
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_API_TOKEN }}

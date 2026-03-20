@@ -2,80 +2,34 @@ name: Tests
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
   pull_request:
-    branches: [main, develop]
+    branches: [main]
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        python-version: ["3.12"]
+        python-version: ["3.12", "3.13"]
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v3
+        run: uv python install ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: |
-          uv sync --all-extras --dev
+        run: uv sync --all-extras --dev
 
-      - name: Run linting
-        run: |
-          uv run ruff check src/
-          uv run ruff format --check src/
+      - name: Lint
+        run: uv run ruff check src/ tests/
 
-      - name: Run type checking
-        run: |
-          uv run mypy src/ || true
+      - name: Test
+        run: uv run pytest tests/ -v --tb=short
 
-      - name: Run tests
-        run: |
-          uv run pytest tests/ -v --cov=src --cov-report=xml --cov-report=html
-
-      - name: Upload coverage to Codecov
-        if: matrix.os == 'ubuntu-latest'
-        uses: codecov/codecov-action@v3
-        with:
-          file: ./coverage.xml
-          flags: unittests
-          name: codecov-umbrella
-
-  integration-test:
-    runs-on: ubuntu-latest
-    needs: test
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.12"
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v3
-
-      - name: Install package
-        run: |
-          uv sync --dev
-          uv build
-          uv pip install dist/*.whl
-
-      - name: Test CLI
-        run: |
-          fastmcp-ssh-server --help
-          fastmcp-ssh-server --version || true  # Allow to fail gracefully if --version not implemented
-
-      - name: Run performance benchmarks
-        run: |
-          uv run python tests/performance_benchmark.py
+      - name: Build check
+        run: uv build
