@@ -238,7 +238,7 @@ async def create_service_app(
         cred_mgr=cred_mgr,
     )
 
-    mcp_http = mcp.http_app()
+    mcp_http = mcp.http_app(path="/")
 
     # ── Combined lifespan ────────────────────────────────────────────
     @asynccontextmanager
@@ -292,11 +292,12 @@ async def create_service_app(
     init_db_deps(api_token=api_token, engine=engine, session_factory=session_factory)
 
     # ── FastAPI app ──────────────────────────────────────────────────
+    # Note: verify_token is applied per-router (not globally) so that
+    # /mcp/* endpoints are not gated by the web panel token.
     app = FastAPI(
         title="Shuttle",
         version="0.2.0",
         lifespan=combined_lifespan,
-        dependencies=[Depends(verify_token)],
     )
 
     app.add_middleware(
@@ -307,18 +308,28 @@ async def create_service_app(
         allow_headers=["*"],
     )
 
-    # API routes
+    # API routes — token auth applied per-router so /mcp is not gated
     from shuttle.web.routes import data, logs, nodes, rules, sessions, settings, stats
 
-    app.include_router(stats.router, prefix="/api")
-    app.include_router(nodes.router, prefix="/api")
-    app.include_router(rules.router, prefix="/api")
-    app.include_router(sessions.router, prefix="/api")
-    app.include_router(logs.router, prefix="/api")
-    app.include_router(settings.router, prefix="/api")
-    app.include_router(data.router, prefix="/api")
+    api_deps = [Depends(verify_token)]
+    app.include_router(stats.router, prefix="/api", dependencies=api_deps)
+    app.include_router(nodes.router, prefix="/api", dependencies=api_deps)
+    app.include_router(rules.router, prefix="/api", dependencies=api_deps)
+    app.include_router(sessions.router, prefix="/api", dependencies=api_deps)
+    app.include_router(logs.router, prefix="/api", dependencies=api_deps)
+    app.include_router(settings.router, prefix="/api", dependencies=api_deps)
+    app.include_router(data.router, prefix="/api", dependencies=api_deps)
 
-    # Mount MCP at /mcp
+    # Mount MCP — Starlette mount strips trailing path, so sub-app
+    # with path="/" receives requests at /mcp/*. The MCP client posts to
+    # /mcp/ (with trailing slash) which the sub-app handles at "/".
+    # We also add a redirect from /mcp → /mcp/ for clients that omit the slash.
+    from starlette.responses import RedirectResponse
+
+    @app.api_route("/mcp", methods=["GET", "POST", "DELETE"], include_in_schema=False)
+    async def mcp_redirect():
+        return RedirectResponse(url="/mcp/", status_code=307)
+
     app.mount("/mcp", mcp_http)
 
     # Mount static SPA at / (if it exists)
