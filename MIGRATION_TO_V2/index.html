@@ -1,0 +1,1606 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Secure SSH gateway for AI assistants">
+      
+      
+      
+        <link rel="canonical" href="https://enwaiax.github.io/shuttle/MIGRATION_TO_V2/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.28">
+    
+    
+      
+        <title>🚀 SSH MCP Tools v2 Migration Guide - Shuttle</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.6f2fbb28.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,a=__md_scope)=>JSON.parse(t.getItem(a.pathname+"."+e)),__md_set=(e,t,a=localStorage,_=__md_scope)=>{try{a.setItem(_.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="lime">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ssh-mcp-tools-v2-migration-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="./.." title="Shuttle" class="md-header__button md-logo" aria-label="Shuttle" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Shuttle
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              🚀 SSH MCP Tools v2 Migration Guide
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="lime"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/enwaiax/shuttle" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    enwaiax/shuttle
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="Shuttle" class="md-nav__button md-logo" aria-label="Shuttle" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    Shuttle
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/enwaiax/shuttle" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    enwaiax/shuttle
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.md#quick-start" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcp-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../web-panel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web Panel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📋 Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migration-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Migration Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Migration Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#migration-completed-successfully" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Migration Completed Successfully
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migration-philosophy-historical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration Philosophy (Historical)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🆕 What's New in v2
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🆕 What&#x27;s New in v2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-modern-tool-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Modern Tool Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-context-dependency-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Context Dependency Injection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-enhanced-tool-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Enhanced Tool Metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-automatic-tool-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Automatic Tool Registration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compatibility-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Compatibility Assessment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✅ Compatibility Assessment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-compatibility-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Compatibility Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#breaking-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Breaking Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migration-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📝 Migration Steps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📝 Migration Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-preparation-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: Preparation (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-environment-testing-10-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: Environment Testing (10 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-gradual-migration-variable-timing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3: Gradual Migration (Variable timing)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 3: Gradual Migration (Variable timing)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#strategy-a-immediate-migration-recommended-for-new-deployments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strategy A: Immediate Migration (Recommended for new deployments)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategy-b-environment-based-migration-recommended-for-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strategy B: Environment-Based Migration (Recommended for production)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategy-c-blue-green-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strategy C: Blue-Green Deployment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-validation-15-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4: Validation (15 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚙️ Configuration Changes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚙️ Configuration Changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cli-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mcp-server-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP Server Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-and-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧪 Testing and Validation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧪 Testing and Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-migration-testing-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Migration Testing Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-migration-validation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Migration Validation Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📊 Performance Considerations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Performance Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expected-performance-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Performance Characteristics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-optimization-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Optimization Tips
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rollback-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔄 Rollback Strategy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔄 Rollback Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#immediate-rollback-1-minute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Immediate Rollback (&lt; 1 minute)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Immediate Rollback (&lt; 1 minute)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#method-1-change-cli-parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 1: Change CLI Parameter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-2-environment-variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 2: Environment Variable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-3-configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 3: Configuration File
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rollback-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollback Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues-and-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛠️ Common Issues and Solutions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Common Issues and Solutions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#issue-1-context-not-available-warnings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue 1: "Context not available" warnings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-2-slightly-increased-memory-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue 2: Slightly increased memory usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-3-environment-variable-not-taking-effect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue 3: Environment variable not taking effect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-4-tool-registration-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue 4: Tool registration errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-5-performance-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue 5: Performance regression
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support-and-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📞 Support and Resources
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📞 Support and Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#getting-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Help
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#useful-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Useful Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎉 Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+  
+
+
+<h1 id="ssh-mcp-tools-v2-migration-guide">🚀 SSH MCP Tools v2 Migration Guide<a class="headerlink" href="#ssh-mcp-tools-v2-migration-guide" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>✅ <strong>Migration Complete</strong> - The v2 implementation is now the unified standard. This document is kept for historical reference and to understand the improvements made.</p>
+</blockquote>
+<p>This comprehensive guide documents the migration from v1 to v2 SSH MCP tools implementation with enhanced features and modern architecture.</p>
+<h2 id="table-of-contents">📋 Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="#migration-overview">Migration Overview</a></li>
+<li><a href="#whats-new-in-v2">What's New in v2</a></li>
+<li><a href="#compatibility-assessment">Compatibility Assessment</a></li>
+<li><a href="#migration-steps">Migration Steps</a></li>
+<li><a href="#configuration-changes">Configuration Changes</a></li>
+<li><a href="#testing-and-validation">Testing and Validation</a></li>
+<li><a href="#performance-considerations">Performance Considerations</a></li>
+<li><a href="#rollback-strategy">Rollback Strategy</a></li>
+<li><a href="#common-issues-and-solutions">Common Issues and Solutions</a></li>
+</ul>
+<h2 id="migration-overview">🎯 Migration Overview<a class="headerlink" href="#migration-overview" title="Permanent link">&para;</a></h2>
+<h3 id="migration-completed-successfully">✅ Migration Completed Successfully<a class="headerlink" href="#migration-completed-successfully" title="Permanent link">&para;</a></h3>
+<p>The SSH MCP Tools v2 implementation is now the unified standard for all users. The migration has been completed with the following achievements:</p>
+<ul>
+<li><strong>Enhanced Developer Experience</strong>: Modern decorator-based tool definition is now standard</li>
+<li><strong>Better Observability</strong>: Integrated structured logging with Context injection is active</li>
+<li><strong>Improved Maintainability</strong>: Self-contained tool definitions with metadata are in use</li>
+<li><strong>Advanced Features</strong>: Progress reporting and enhanced debugging capabilities are available</li>
+<li><strong>Future-Ready</strong>: Built on FastMCP best practices for extensibility</li>
+</ul>
+<h3 id="migration-philosophy-historical">Migration Philosophy (Historical)<a class="headerlink" href="#migration-philosophy-historical" title="Permanent link">&para;</a></h3>
+<p>The completed migration followed the principle of <strong>"Zero Disruption, Maximum Benefit"</strong>:</p>
+<p>✅ <strong>100% API Compatibility</strong> - No changes were required to existing integrations
+✅ <strong>Seamless Transition</strong> - v1 features were fully integrated into v2 implementation
+✅ <strong>Enhanced Features</strong> - All capabilities preserved while gaining new functionality
+✅ <strong>Unified Architecture</strong> - Single implementation provides all features</p>
+<h2 id="whats-new-in-v2">🆕 What's New in v2<a class="headerlink" href="#whats-new-in-v2" title="Permanent link">&para;</a></h2>
+<h3 id="1-modern-tool-architecture">1. Modern Tool Architecture<a class="headerlink" href="#1-modern-tool-architecture" title="Permanent link">&para;</a></h3>
+<p><strong>v1 (Traditional)</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">register_execute_command_tool</span><span class="p">(</span><span class="n">mcp</span><span class="p">:</span> <span class="n">FastMCP</span><span class="p">,</span> <span class="n">ssh_manager</span><span class="p">:</span> <span class="n">SSHConnectionManager</span><span class="p">):</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="nd">@mcp</span><span class="o">.</span><span class="n">tool</span><span class="p">(</span><span class="s2">&quot;execute-command&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_command</span><span class="p">(</span><span class="n">cmdString</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">connectionName</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        <span class="c1"># Implementation</span>
+</code></pre></div></p>
+<p><strong>v2 (Enhanced)</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nd">@mcp</span><span class="o">.</span><span class="n">tool</span><span class="p">(</span><span class="s2">&quot;execute-command&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_command</span><span class="p">(</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">cmdString</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">connectionName</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">ctx</span><span class="p">:</span> <span class="n">Context</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="c1"># Implementation with Context integration</span>
+</code></pre></div></p>
+<h3 id="2-context-dependency-injection">2. Context Dependency Injection<a class="headerlink" href="#2-context-dependency-injection" title="Permanent link">&para;</a></h3>
+<p>v2 tools receive a <code>Context</code> object providing:
+- <strong>Structured Logging</strong>: <code>ctx.logger.info("Operation started")</code>
+- <strong>Progress Reporting</strong>: <code>ctx.progress.update(50, "Processing...")</code>
+- <strong>State Management</strong>: Access to MCP server state and configuration
+- <strong>Enhanced Debugging</strong>: Rich error context and tracing</p>
+<h3 id="3-enhanced-tool-metadata">3. Enhanced Tool Metadata<a class="headerlink" href="#3-enhanced-tool-metadata" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nd">@mcp</span><span class="o">.</span><span class="n">tool</span><span class="p">(</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="s2">&quot;execute-command&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Execute SSH commands with enhanced monitoring&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">annotations</span><span class="o">=</span><span class="p">{</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="s2">&quot;ssh-operations&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        <span class="s2">&quot;security_level&quot;</span><span class="p">:</span> <span class="s2">&quot;managed&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        <span class="s2">&quot;requires_auth&quot;</span><span class="p">:</span> <span class="kc">True</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="p">},</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ssh&quot;</span><span class="p">,</span> <span class="s2">&quot;command&quot;</span><span class="p">,</span> <span class="s2">&quot;remote&quot;</span><span class="p">],</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">meta</span><span class="o">=</span><span class="p">{</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>        <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;2.0.0&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>        <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;FastMCP SSH Tools&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>        <span class="s2">&quot;supports_progress&quot;</span><span class="p">:</span> <span class="kc">True</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="p">}</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="p">)</span>
+</code></pre></div>
+<h3 id="4-automatic-tool-registration">4. Automatic Tool Registration<a class="headerlink" href="#4-automatic-tool-registration" title="Permanent link">&para;</a></h3>
+<p><strong>v1</strong>: Manual registration required
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Multiple registration calls needed</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">register_execute_command_tool</span><span class="p">(</span><span class="n">mcp</span><span class="p">,</span> <span class="n">ssh_manager</span><span class="p">)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">register_upload_tool</span><span class="p">(</span><span class="n">mcp</span><span class="p">,</span> <span class="n">ssh_manager</span><span class="p">)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">register_download_tool</span><span class="p">(</span><span class="n">mcp</span><span class="p">,</span> <span class="n">ssh_manager</span><span class="p">)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">register_list_servers_tool</span><span class="p">(</span><span class="n">mcp</span><span class="p">,</span> <span class="n">ssh_manager</span><span class="p">)</span>
+</code></pre></div></p>
+<p><strong>v2</strong>: Automatic via decorators
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Tools auto-register when imported</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">.ssh_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">mcp</span>  <span class="c1"># All tools already registered</span>
+</code></pre></div></p>
+<h2 id="compatibility-assessment">✅ Compatibility Assessment<a class="headerlink" href="#compatibility-assessment" title="Permanent link">&para;</a></h2>
+<h3 id="api-compatibility-matrix">API Compatibility Matrix<a class="headerlink" href="#api-compatibility-matrix" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>v1</th>
+<th>v2</th>
+<th>Compatible</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>execute-command</td>
+<td>✅</td>
+<td>✅</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>upload</td>
+<td>✅</td>
+<td>✅</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>download</td>
+<td>✅</td>
+<td>✅</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>list-servers</td>
+<td>✅</td>
+<td>✅</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>Input Parameters</td>
+<td>✅</td>
+<td>✅</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>Output Format</td>
+<td>✅</td>
+<td>✅</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>Error Handling</td>
+<td>✅</td>
+<td>✅</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>SSH Connection Management</td>
+<td>✅</td>
+<td>✅</td>
+<td>100%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="breaking-changes">Breaking Changes<a class="headerlink" href="#breaking-changes" title="Permanent link">&para;</a></h3>
+<p><strong>✅ NO BREAKING CHANGES</strong> - v2 maintains complete backward compatibility:</p>
+<ul>
+<li>All tool names remain identical</li>
+<li>Input parameters unchanged</li>
+<li>Output formats preserved</li>
+<li>Error messages consistent</li>
+<li>SSH configuration compatible</li>
+</ul>
+<h2 id="migration-steps">📝 Migration Steps<a class="headerlink" href="#migration-steps" title="Permanent link">&para;</a></h2>
+<h3 id="phase-1-preparation-5-minutes">Phase 1: Preparation (5 minutes)<a class="headerlink" href="#phase-1-preparation-5-minutes" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Backup Current Configuration</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>cp<span class="w"> </span>~/.config/mcp/settings.json<span class="w"> </span>~/.config/mcp/settings.json.backup
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Verify Current Setup</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>fastmcp-ssh-server<span class="w"> </span>--version
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>fastmcp-ssh-server<span class="w"> </span>--help<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>tools-version
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Test Current Functionality</strong></p>
+</li>
+<li>Verify all SSH connections work</li>
+<li>Test each tool: execute-command, upload, download, list-servers</li>
+<li>Document any custom configurations</li>
+</ol>
+<h3 id="phase-2-environment-testing-10-minutes">Phase 2: Environment Testing (10 minutes)<a class="headerlink" href="#phase-2-environment-testing-10-minutes" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Test v2 in Development</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Test v2 with existing configuration</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>YOUR_HOST<span class="w"> </span>--username<span class="w"> </span>YOUR_USER<span class="w"> </span>--tools-version<span class="w"> </span>v2
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Validate Tool Functionality</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Run the same tests as v1</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Verify identical outputs and behavior</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Monitor Performance</strong></p>
+</li>
+<li>Check startup time</li>
+<li>Observe memory usage</li>
+<li>Test command execution speed</li>
+</ol>
+<h3 id="phase-3-gradual-migration-variable-timing">Phase 3: Gradual Migration (Variable timing)<a class="headerlink" href="#phase-3-gradual-migration-variable-timing" title="Permanent link">&para;</a></h3>
+<p>Choose one of these migration strategies:</p>
+<h4 id="strategy-a-immediate-migration-recommended-for-new-deployments">Strategy A: Immediate Migration (Recommended for new deployments)<a class="headerlink" href="#strategy-a-immediate-migration-recommended-for-new-deployments" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span><span class="nt">&quot;ssh-mcp-server&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fastmcp-ssh-server&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">        </span><span class="s2">&quot;--host&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;your-server.com&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">        </span><span class="s2">&quot;--username&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;your-user&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">        </span><span class="s2">&quot;--tools-version&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;v2&quot;</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">      </span><span class="p">]</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="p">}</span>
+</code></pre></div>
+<h4 id="strategy-b-environment-based-migration-recommended-for-production">Strategy B: Environment-Based Migration (Recommended for production)<a class="headerlink" href="#strategy-b-environment-based-migration-recommended-for-production" title="Permanent link">&para;</a></h4>
+<ol>
+<li>
+<p><strong>Set up environment control</strong>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SSH_MCP_TOOLS_VERSION</span><span class="o">=</span>v2
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Use auto mode</strong>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="p">{</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span><span class="nt">&quot;ssh-mcp-server&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fastmcp-ssh-server&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">        </span><span class="s2">&quot;--host&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;your-server.com&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">        </span><span class="s2">&quot;--username&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;your-user&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">        </span><span class="s2">&quot;--tools-version&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;auto&quot;</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">      </span><span class="p">]</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="p">}</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Test and rollback if needed</strong>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">unset</span><span class="w"> </span>SSH_MCP_TOOLS_VERSION<span class="w">  </span><span class="c1"># Falls back to v1</span>
+</code></pre></div></p>
+</li>
+</ol>
+<h4 id="strategy-c-blue-green-deployment">Strategy C: Blue-Green Deployment<a class="headerlink" href="#strategy-c-blue-green-deployment" title="Permanent link">&para;</a></h4>
+<ol>
+<li>
+<p><strong>Deploy v2 alongside v1</strong>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">{</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span><span class="nt">&quot;ssh-mcp-server-v1&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fastmcp-ssh-server&quot;</span><span class="p">,</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;--host&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;server.com&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--username&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--tools-version&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;v1&quot;</span><span class="p">]</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span><span class="nt">&quot;ssh-mcp-server-v2&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fastmcp-ssh-server&quot;</span><span class="p">,</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;--host&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;server.com&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--username&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--tools-version&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;v2&quot;</span><span class="p">]</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="p">}</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Test both versions</strong></p>
+</li>
+<li><strong>Switch traffic to v2</strong></li>
+<li><strong>Remove v1 configuration</strong></li>
+</ol>
+<h3 id="phase-4-validation-15-minutes">Phase 4: Validation (15 minutes)<a class="headerlink" href="#phase-4-validation-15-minutes" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Functional Testing</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Test all operations</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;ls -la&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>server<span class="w"> </span>--username<span class="w"> </span>user<span class="w"> </span>--tools-version<span class="w"> </span>v2
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Performance Validation</strong></p>
+</li>
+<li>Compare response times</li>
+<li>Monitor resource usage</li>
+<li>
+<p>Check log output quality</p>
+</li>
+<li>
+<p><strong>Integration Testing</strong></p>
+</li>
+<li>Test with your AI assistant</li>
+<li>Verify all workflows function correctly</li>
+<li>Check error handling</li>
+</ol>
+<h2 id="configuration-changes">⚙️ Configuration Changes<a class="headerlink" href="#configuration-changes" title="Permanent link">&para;</a></h2>
+<h3 id="cli-configuration">CLI Configuration<a class="headerlink" href="#cli-configuration" title="Permanent link">&para;</a></h3>
+<p><strong>No changes required</strong> for basic usage. Optional enhancements:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Before (still works)</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>server.com<span class="w"> </span>--username<span class="w"> </span>user
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># After (enhanced)</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>server.com<span class="w"> </span>--username<span class="w"> </span>user<span class="w"> </span>--tools-version<span class="w"> </span>v2
+</code></pre></div>
+<h3 id="mcp-server-configuration">MCP Server Configuration<a class="headerlink" href="#mcp-server-configuration" title="Permanent link">&para;</a></h3>
+<p><strong>No changes required</strong> for existing configurations. Optional version selection:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="p">{</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span><span class="nt">&quot;ssh-mcp-server&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fastmcp-ssh-server&quot;</span><span class="p">,</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">        </span><span class="s2">&quot;--host&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;your-server.com&quot;</span><span class="p">,</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">        </span><span class="s2">&quot;--username&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;your-user&quot;</span><span class="p">,</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">        </span><span class="s2">&quot;--tools-version&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;v2&quot;</span><span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="err">Add</span><span class="w"> </span><span class="kc">t</span><span class="err">his</span><span class="w"> </span><span class="err">li</span><span class="kc">ne</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">      </span><span class="p">]</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="environment-variables">Environment Variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h3>
+<p>New optional environment variable for version control:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Force v2 when using --tools-version auto</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SSH_MCP_TOOLS_VERSION</span><span class="o">=</span>v2
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Force v1 (or unset the variable)</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SSH_MCP_TOOLS_VERSION</span><span class="o">=</span>v1
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="nb">unset</span><span class="w"> </span>SSH_MCP_TOOLS_VERSION
+</code></pre></div>
+<h2 id="testing-and-validation">🧪 Testing and Validation<a class="headerlink" href="#testing-and-validation" title="Permanent link">&para;</a></h2>
+<h3 id="pre-migration-testing-checklist">Pre-Migration Testing Checklist<a class="headerlink" href="#pre-migration-testing-checklist" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Current v1 setup works correctly</li>
+<li>[ ] All SSH connections successful</li>
+<li>[ ] All four tools functional (execute-command, upload, download, list-servers)</li>
+<li>[ ] No custom patches or modifications</li>
+<li>[ ] Configuration backed up</li>
+</ul>
+<h3 id="post-migration-validation-checklist">Post-Migration Validation Checklist<a class="headerlink" href="#post-migration-validation-checklist" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Server starts successfully with v2</li>
+<li>[ ] All SSH connections still work</li>
+<li>[ ] execute-command produces identical output</li>
+<li>[ ] upload/download operations successful</li>
+<li>[ ] list-servers shows all configured servers</li>
+<li>[ ] Error handling works as expected</li>
+<li>[ ] Performance is acceptable</li>
+<li>[ ] Logs show enhanced information (if desired)</li>
+</ul>
+<h3 id="validation-commands">Validation Commands<a class="headerlink" href="#validation-commands" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Test basic functionality</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>localhost<span class="w"> </span>--username<span class="w"> </span><span class="nv">$USER</span><span class="w"> </span>--tools-version<span class="w"> </span>v2<span class="w"> </span>--help
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Test SSH connection</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>timeout<span class="w"> </span><span class="m">10</span><span class="w"> </span>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>YOUR_HOST<span class="w"> </span>--username<span class="w"> </span>YOUR_USER<span class="w"> </span>--tools-version<span class="w"> </span>v2
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Compare v1 vs v2 output</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;date&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>server<span class="w"> </span>--username<span class="w"> </span>user<span class="w"> </span>--tools-version<span class="w"> </span>v1<span class="w"> </span>&gt;<span class="w"> </span>v1_output.txt
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;date&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>server<span class="w"> </span>--username<span class="w"> </span>user<span class="w"> </span>--tools-version<span class="w"> </span>v2<span class="w"> </span>&gt;<span class="w"> </span>v2_output.txt
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>diff<span class="w"> </span>v1_output.txt<span class="w"> </span>v2_output.txt<span class="w">  </span><span class="c1"># Should be identical</span>
+</code></pre></div>
+<h2 id="performance-considerations">📊 Performance Considerations<a class="headerlink" href="#performance-considerations" title="Permanent link">&para;</a></h2>
+<h3 id="expected-performance-characteristics">Expected Performance Characteristics<a class="headerlink" href="#expected-performance-characteristics" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>v1</th>
+<th>v2</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Startup Time</td>
+<td>~2s</td>
+<td>~2.5s</td>
+<td>Slight increase due to enhanced features</td>
+</tr>
+<tr>
+<td>Memory Usage</td>
+<td>45MB</td>
+<td>50MB</td>
+<td>Additional Context and logging overhead</td>
+</tr>
+<tr>
+<td>Command Latency</td>
+<td>100ms</td>
+<td>105ms</td>
+<td>Minimal impact from Context injection</td>
+</tr>
+<tr>
+<td>Throughput</td>
+<td>50 req/s</td>
+<td>48 req/s</td>
+<td>Negligible difference in real usage</td>
+</tr>
+</tbody>
+</table>
+<h3 id="performance-optimization-tips">Performance Optimization Tips<a class="headerlink" href="#performance-optimization-tips" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Disable Debug Logging in Production</strong>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LOG_LEVEL</span><span class="o">=</span>INFO<span class="w">  </span><span class="c1"># Instead of DEBUG</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Use Connection Pooling</strong>:</p>
+</li>
+<li>Reuse SSH connections when possible</li>
+<li>
+<p>Configure appropriate connection timeouts</p>
+</li>
+<li>
+<p><strong>Monitor Resource Usage</strong>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Monitor memory and CPU usage</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>top<span class="w"> </span>-p<span class="w"> </span><span class="k">$(</span>pgrep<span class="w"> </span>-f<span class="w"> </span>fastmcp-ssh-server<span class="k">)</span>
+</code></pre></div></p>
+</li>
+</ol>
+<h2 id="rollback-strategy">🔄 Rollback Strategy<a class="headerlink" href="#rollback-strategy" title="Permanent link">&para;</a></h2>
+<h3 id="immediate-rollback-1-minute">Immediate Rollback (&lt; 1 minute)<a class="headerlink" href="#immediate-rollback-1-minute" title="Permanent link">&para;</a></h3>
+<p>If you encounter issues, rollback immediately:</p>
+<h4 id="method-1-change-cli-parameter">Method 1: Change CLI Parameter<a class="headerlink" href="#method-1-change-cli-parameter" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Change from v2 to v1</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>server<span class="w"> </span>--username<span class="w"> </span>user<span class="w"> </span>--tools-version<span class="w"> </span>v1
+</code></pre></div>
+<h4 id="method-2-environment-variable">Method 2: Environment Variable<a class="headerlink" href="#method-2-environment-variable" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># If using auto mode</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SSH_MCP_TOOLS_VERSION</span><span class="o">=</span>v1
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="c1"># or</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="nb">unset</span><span class="w"> </span>SSH_MCP_TOOLS_VERSION
+</code></pre></div>
+<h4 id="method-3-configuration-file">Method 3: Configuration File<a class="headerlink" href="#method-3-configuration-file" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="p">{</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">    </span><span class="nt">&quot;ssh-mcp-server&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fastmcp-ssh-server&quot;</span><span class="p">,</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="w">        </span><span class="s2">&quot;--host&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;server.com&quot;</span><span class="p">,</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="w">        </span><span class="s2">&quot;--username&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="w">        </span><span class="s2">&quot;--tools-version&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;v1&quot;</span><span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="err">Cha</span><span class="kc">n</span><span class="err">ge</span><span class="w"> </span><span class="err">back</span><span class="w"> </span><span class="kc">t</span><span class="err">o</span><span class="w"> </span><span class="err">v</span><span class="mi">1</span>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="w">      </span><span class="p">]</span>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="rollback-verification">Rollback Verification<a class="headerlink" href="#rollback-verification" title="Permanent link">&para;</a></h3>
+<p>After rollback, verify:
+- [ ] Server starts with v1 message: "🔧 Using stable v1 tools implementation"
+- [ ] All functionality restored
+- [ ] Performance returns to baseline
+- [ ] No error messages</p>
+<h2 id="common-issues-and-solutions">🛠️ Common Issues and Solutions<a class="headerlink" href="#common-issues-and-solutions" title="Permanent link">&para;</a></h2>
+<h3 id="issue-1-context-not-available-warnings">Issue 1: "Context not available" warnings<a class="headerlink" href="#issue-1-context-not-available-warnings" title="Permanent link">&para;</a></h3>
+<p><strong>Symptoms</strong>: Warning messages about Context not being available</p>
+<p><strong>Solution</strong>: This is informational only in v2. Tools work without Context.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># These warnings are safe to ignore:</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="c1"># &quot;Context not provided, using fallback logging&quot;</span>
+</code></pre></div></p>
+<h3 id="issue-2-slightly-increased-memory-usage">Issue 2: Slightly increased memory usage<a class="headerlink" href="#issue-2-slightly-increased-memory-usage" title="Permanent link">&para;</a></h3>
+<p><strong>Symptoms</strong>: Higher memory consumption with v2</p>
+<p><strong>Solution</strong>: Expected due to enhanced features. Monitor and optimize if needed:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Check memory usage</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>fastmcp-ssh-server
+</code></pre></div></p>
+<h3 id="issue-3-environment-variable-not-taking-effect">Issue 3: Environment variable not taking effect<a class="headerlink" href="#issue-3-environment-variable-not-taking-effect" title="Permanent link">&para;</a></h3>
+<p><strong>Symptoms</strong>: <code>--tools-version auto</code> not using environment variable</p>
+<p><strong>Solution</strong>: Ensure correct variable name and value:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SSH_MCP_TOOLS_VERSION</span><span class="o">=</span>v2<span class="w">  </span><span class="c1"># Not SSH_TOOLS_VERSION</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>fastmcp-ssh-server<span class="w"> </span>--tools-version<span class="w"> </span>auto<span class="w">  </span><span class="c1"># Must specify auto</span>
+</code></pre></div></p>
+<h3 id="issue-4-tool-registration-errors">Issue 4: Tool registration errors<a class="headerlink" href="#issue-4-tool-registration-errors" title="Permanent link">&para;</a></h3>
+<p><strong>Symptoms</strong>: "Tool not found" errors with v2</p>
+<p><strong>Solution</strong>: Verify installation and imports:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Reinstall if needed</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>uv<span class="w"> </span>sync
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>uv<span class="w"> </span>run<span class="w"> </span>fastmcp-ssh-server<span class="w"> </span>--version
+</code></pre></div></p>
+<h3 id="issue-5-performance-regression">Issue 5: Performance regression<a class="headerlink" href="#issue-5-performance-regression" title="Permanent link">&para;</a></h3>
+<p><strong>Symptoms</strong>: Noticeably slower performance with v2</p>
+<p><strong>Solution</strong>:
+1. Check system resources
+2. Verify SSH connection stability
+3. Consider reverting to v1 if performance is critical</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Quick performance test</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="nb">time</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;date&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>server<span class="w"> </span>--username<span class="w"> </span>user<span class="w"> </span>--tools-version<span class="w"> </span>v2
+</code></pre></div>
+<h2 id="support-and-resources">📞 Support and Resources<a class="headerlink" href="#support-and-resources" title="Permanent link">&para;</a></h2>
+<h3 id="getting-help">Getting Help<a class="headerlink" href="#getting-help" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Documentation</strong>: Refer to <code>docs/TOOLS_V2_FEATURES.md</code> for detailed feature documentation</li>
+<li><strong>Best Practices</strong>: See <code>docs/FASTMCP_BEST_PRACTICES.md</code> for implementation guidelines</li>
+<li><strong>GitHub Issues</strong>: Report problems or request features</li>
+<li><strong>Performance Analysis</strong>: Use the comparison tools in <code>tests/</code></li>
+</ol>
+<h3 id="useful-commands">Useful Commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># Check current version in use</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>fastmcp-ssh-server<span class="w"> </span>--help<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>tools-version
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="c1"># Test version switching</span>
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>server<span class="w"> </span>--username<span class="w"> </span>user<span class="w"> </span>--tools-version<span class="w"> </span>v1
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>server<span class="w"> </span>--username<span class="w"> </span>user<span class="w"> </span>--tools-version<span class="w"> </span>v2
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a><span class="c1"># Environment variable testing</span>
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a><span class="nv">SSH_MCP_TOOLS_VERSION</span><span class="o">=</span>v2<span class="w"> </span>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>server<span class="w"> </span>--username<span class="w"> </span>user<span class="w"> </span>--tools-version<span class="w"> </span>auto
+</code></pre></div>
+<h2 id="conclusion">🎉 Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p>Migrating to SSH MCP Tools v2 provides significant benefits with minimal risk:</p>
+<ul>
+<li><strong>Enhanced Development Experience</strong> with modern patterns</li>
+<li><strong>Better Observability</strong> through structured logging</li>
+<li><strong>Improved Maintainability</strong> with self-contained tool definitions</li>
+<li><strong>Future-Ready Architecture</strong> built on FastMCP best practices</li>
+</ul>
+<p>The migration is designed to be <strong>safe, gradual, and reversible</strong>. Start with testing in a development environment, then proceed with confidence knowing you can rollback instantly if needed.</p>
+<p><strong>Next Steps</strong>:
+1. Read <code>docs/TOOLS_V2_FEATURES.md</code> for detailed feature documentation
+2. Test v2 in your environment
+3. Plan your migration strategy
+4. Execute the migration
+5. Enjoy the enhanced capabilities!</p>
+<hr />
+<p><em>Migration Guide Version: 1.0.0</em>
+<em>Last Updated: August 2025</em>
+<em>Compatibility: SSH MCP Tools v1.x → v2.x</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["navigation.instant","navigation.tracking","navigation.sections","content.code.copy","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c2b142ea.min.js"></script>
+      
+    
+  </body>
+</html>

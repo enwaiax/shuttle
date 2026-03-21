@@ -1,0 +1,1505 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Secure SSH gateway for AI assistants">
+      
+      
+      
+        <link rel="canonical" href="https://enwaiax.github.io/shuttle/superpowers/specs/2026-03-20-shuttle-v2-design/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.28">
+    
+    
+      
+        <title>Shuttle v2 — Design Spec - Shuttle</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.6f2fbb28.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,a=__md_scope)=>JSON.parse(t.getItem(a.pathname+"."+e)),__md_set=(e,t,a=localStorage,_=__md_scope)=>{try{a.setItem(_.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="lime">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#shuttle-v2-design-spec" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Shuttle" class="md-header__button md-logo" aria-label="Shuttle" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Shuttle
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Shuttle v2 — Design Spec
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="lime"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/enwaiax/shuttle" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    enwaiax/shuttle
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Shuttle" class="md-nav__button md-logo" aria-label="Shuttle" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    Shuttle
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/enwaiax/shuttle" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    enwaiax/shuttle
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../index.md#quick-start" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../mcp-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../web-panel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web Panel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-product-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Product Definition
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Product Definition">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-shuttle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Shuttle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#three-core-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three Core Capabilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#target-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Target User
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#two-running-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two Running Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#single-process-architecture-service-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Single-Process Architecture (Service Mode)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shared-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shared Database
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-cli-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. CLI Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-mcp-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. MCP Tools
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. MCP Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ssh_add_node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ssh_add_node
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ssh_remove_node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ssh_remove_node
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-security-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Security Rules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Security Rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#4-level-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4-Level System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#per-node-inheritance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-Node Inheritance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confirm-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confirm Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-command-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Command Audit
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Command Audit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cleanup-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cleanup Policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-web-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Web UI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Web UI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tech-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tech Stack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Views
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Views">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#view-1-activity-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View 1: Activity (default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view-2-security-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View 2: Security Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view-3-settings-slide-out-or-modal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View 3: Settings (slide-out or modal)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Endpoints
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-core-engine-unchanged-from-v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Core Engine (Unchanged from v1)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Core Engine (Unchanged from v1)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changes-to-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes to Core
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Project Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-migration-from-v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Migration from v1
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Migration from v1">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-stays" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What stays
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-new-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's new (frontend)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-removed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's removed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#known-v1-bugs-fixed-in-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known v1 bugs fixed in v2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+  
+
+
+<h1 id="shuttle-v2-design-spec">Shuttle v2 — Design Spec<a class="headerlink" href="#shuttle-v2-design-spec" title="Permanent link">&para;</a></h1>
+<p><strong>Date:</strong> 2026-03-20
+<strong>Status:</strong> Draft
+<strong>Supersedes:</strong> <code>2026-03-20-shuttle-design.md</code> (v1)</p>
+<hr />
+<h2 id="1-product-definition">1. Product Definition<a class="headerlink" href="#1-product-definition" title="Permanent link">&para;</a></h2>
+<h3 id="what-is-shuttle">What is Shuttle<a class="headerlink" href="#what-is-shuttle" title="Permanent link">&para;</a></h3>
+<p>Shuttle is an MCP server that bridges AI assistants (Claude Code, Cursor, etc.) to remote SSH servers. AI operates remote machines through Shuttle; Shuttle ensures this is <strong>safe, manageable, and auditable</strong>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Developer ↔ AI Assistant ↔ Shuttle (MCP) ↔ SSH ↔ Remote Servers
+</code></pre></div>
+<p>Shuttle is not an SSH client for humans. Humans don't SSH through Shuttle. AI does.</p>
+<h3 id="three-core-capabilities">Three Core Capabilities<a class="headerlink" href="#three-core-capabilities" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Connection Management</strong> — multi-node SSH with connection pooling, session isolation, jump host support</li>
+<li><strong>Security Control</strong> — 4-level command rules (block/confirm/warn/allow), global defaults + per-node overrides</li>
+<li><strong>Command Audit</strong> — every command logged to DB with full context, queryable per node and time range</li>
+</ol>
+<h3 id="target-user">Target User<a class="headerlink" href="#target-user" title="Permanent link">&para;</a></h3>
+<p>A developer working with AI coding assistants who has one or more remote servers (GPU machines, dev servers, staging environments). Single-user first; shared database enables team use later.</p>
+<hr />
+<h2 id="2-architecture">2. Architecture<a class="headerlink" href="#2-architecture" title="Permanent link">&para;</a></h2>
+<h3 id="two-running-modes">Two Running Modes<a class="headerlink" href="#two-running-modes" title="Permanent link">&para;</a></h3>
+<p><strong>Mode 1: CLI (stdio)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>.mcp.json: {&quot;shuttle&quot;: {&quot;command&quot;: &quot;uvx&quot;, &quot;args&quot;: [&quot;shuttle&quot;]}}
+</code></pre></div>
+<ul>
+<li>AI client spawns and manages the process</li>
+<li>Reads node config from DB, executes commands, logs to DB</li>
+<li>No HTTP server, no Web UI</li>
+<li>Lifecycle tied to AI client session</li>
+</ul>
+<p><strong>Mode 2: Service (streamable-http)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uvx<span class="w"> </span>shuttle<span class="w"> </span>serve<span class="w"> </span>--port<span class="w"> </span><span class="m">9876</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>.mcp.json: {&quot;shuttle&quot;: {&quot;url&quot;: &quot;http://localhost:9876/mcp&quot;}}
+</code></pre></div>
+<ul>
+<li>Independent HTTP service: MCP + API + Web on single port</li>
+<li>AI connects via streamable-http transport</li>
+<li>Browser opens <code>localhost:9876</code> for Web UI</li>
+<li>Lifecycle independent of AI client</li>
+</ul>
+<h3 id="single-process-architecture-service-mode">Single-Process Architecture (Service Mode)<a class="headerlink" href="#single-process-architecture-service-mode" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>uvx shuttle serve (:9876)
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>│
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>├── /mcp             → FastMCP streamable-http (AI clients)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>├── /api/*           → FastAPI REST (Web panel backend)
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>├── /                → React SPA (Web panel frontend)
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>│
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>└── Shared Runtime (single process, single event loop)
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    ├── ConnectionPool
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    ├── SessionManager
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    ├── CommandGuard
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    └── SQLAlchemy Engine
+</code></pre></div>
+<p><strong>ASGI Mount Strategy:</strong> FastAPI is the root ASGI application. FastMCP's streamable-http app is mounted as a sub-application at <code>/mcp</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastmcp</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastMCP</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># 1. Create core objects (single instances)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">engine</span> <span class="o">=</span> <span class="n">create_db_engine</span><span class="p">(</span><span class="n">db_url</span><span class="p">)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">pool</span> <span class="o">=</span> <span class="n">ConnectionPool</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="n">guard</span> <span class="o">=</span> <span class="n">CommandGuard</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">session_mgr</span> <span class="o">=</span> <span class="n">SessionManager</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># 2. Create FastMCP with tools (references shared core objects)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="n">mcp</span> <span class="o">=</span> <span class="n">FastMCP</span><span class="p">(</span><span class="s2">&quot;shuttle&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="n">register_tools</span><span class="p">(</span><span class="n">mcp</span><span class="p">,</span> <span class="n">pool</span><span class="p">,</span> <span class="n">guard</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># 3. Create FastAPI app (references same shared core objects via deps)</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="n">pool</span><span class="p">,</span> <span class="n">guard</span><span class="p">,</span> <span class="n">session_mgr</span><span class="p">)</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># 4. Mount FastMCP&#39;s HTTP app inside FastAPI</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="n">mcp_http</span> <span class="o">=</span> <span class="n">mcp</span><span class="o">.</span><span class="n">http_app</span><span class="p">()</span>  <span class="c1"># Returns StarletteWithLifespan</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="n">app</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s2">&quot;/mcp&quot;</span><span class="p">,</span> <span class="n">mcp_http</span><span class="p">)</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="c1"># 5. uvicorn runs the single FastAPI app</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Single engine, single pool.</strong> Both FastMCP tools and FastAPI routes use the same <code>engine</code>, <code>pool</code>, <code>guard</code>, and <code>session_mgr</code> instances — passed via constructor/closure, not module-level globals. The v1 <code>deps.py</code> module-level globals are refactored to accept injected instances in service mode.</p>
+<p><strong>Lifespan:</strong> <code>mcp.http_app()</code> returns a <code>StarletteWithLifespan</code> that has its own lifespan for MCP session management. FastAPI's lifespan handles Shuttle-specific init (DB tables, eviction loop, rule seeding). Both lifespans must run. Use FastAPI's lifespan to also invoke the MCP sub-app's lifespan:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nd">@asynccontextmanager</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">combined_lifespan</span><span class="p">(</span><span class="n">app</span><span class="p">:</span> <span class="n">FastAPI</span><span class="p">):</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="c1"># Shuttle init</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="k">await</span> <span class="n">init_db</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="k">await</span> <span class="n">seed_default_rules</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="n">pool</span><span class="o">.</span><span class="n">start_eviction_loop</span><span class="p">()</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="c1"># MCP sub-app lifespan</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="k">async</span> <span class="k">with</span> <span class="n">mcp_http</span><span class="o">.</span><span class="n">lifespan</span><span class="p">(</span><span class="n">mcp_http</span><span class="p">):</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>        <span class="k">yield</span>
+</code></pre></div>
+<h3 id="shared-database">Shared Database<a class="headerlink" href="#shared-database" title="Permanent link">&para;</a></h3>
+<p>Both modes read/write the same database. Default: <code>~/.shuttle/shuttle.db</code> (SQLite with WAL mode). Configurable via environment variable or CLI flag:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># PostgreSQL</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">SHUTTLE_DB_URL</span><span class="o">=</span>postgresql+asyncpg://user:pass@host:5432/shuttle<span class="w"> </span>uvx<span class="w"> </span>shuttle<span class="w"> </span>serve
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># MySQL</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nv">SHUTTLE_DB_URL</span><span class="o">=</span>mysql+aiomysql://user:pass@host:3306/shuttle<span class="w"> </span>uvx<span class="w"> </span>shuttle
+</code></pre></div>
+<p>SQLAlchemy ORM with async drivers. SQLite is zero-dependency; PostgreSQL/MySQL require optional extras:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">[project.optional-dependencies]</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">postgres</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;asyncpg&gt;=0.29.0&quot;</span><span class="p">]</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">mysql</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;aiomysql&gt;=0.2.0&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p>Commands logged in stdio mode are visible in Web UI when service mode is started (same DB).</p>
+<hr />
+<h2 id="3-cli-commands">3. CLI Commands<a class="headerlink" href="#3-cli-commands" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>uvx shuttle                          # Mode 1: stdio MCP (no Web)
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>uvx shuttle serve                    # Mode 2: HTTP service (MCP + Web)
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>uvx shuttle serve --port 8080        # Custom port (default: 9876)
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>uvx shuttle serve --host 0.0.0.0     # Bind to all interfaces (cloud deploy)
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>uvx shuttle serve --db-url &lt;url&gt;     # Custom database URL
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>shuttle node add                     # Interactive: add SSH node
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>shuttle node list                    # List all nodes with status
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>shuttle node test &lt;name&gt;             # Test SSH connectivity
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>shuttle node remove &lt;name&gt;           # Remove a node
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>shuttle node edit &lt;name&gt;             # Interactive edit (preserved from v1)
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>shuttle config show                  # Display current configuration
+</code></pre></div>
+<p><code>shuttle web</code> is removed. Web UI is only available via <code>shuttle serve</code>.</p>
+<hr />
+<h2 id="4-mcp-tools">4. MCP Tools<a class="headerlink" href="#4-mcp-tools" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+<th>New in v2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ssh_execute</code></td>
+<td>Execute command on a node</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ssh_upload</code></td>
+<td>SFTP upload</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ssh_download</code></td>
+<td>SFTP download</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ssh_list_nodes</code></td>
+<td>List all configured nodes</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ssh_session_start</code></td>
+<td>Create stateful session</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ssh_session_end</code></td>
+<td>Close session</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ssh_session_list</code></td>
+<td>List active sessions</td>
+<td></td>
+</tr>
+<tr>
+<td><strong><code>ssh_add_node</code></strong></td>
+<td>Add a new SSH node</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><strong><code>ssh_remove_node</code></strong></td>
+<td>Remove a node by name</td>
+<td>✓</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ssh_add_node">ssh_add_node<a class="headerlink" href="#ssh_add_node" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ssh_add_node</span><span class="p">(</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">22</span><span class="p">,</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="n">username</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="n">password</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="n">private_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    <span class="n">jump_host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># name of existing node to use as jump host</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>    <span class="n">tags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+</code></pre></div>
+<p>Encrypts credentials via CredentialManager, saves to DB. In service mode, also registers in the shared ConnectionPool immediately. In stdio mode, the pool is local to the process — the new node is registered in the current pool and persisted to DB for future sessions. Returns confirmation message.</p>
+<h3 id="ssh_remove_node">ssh_remove_node<a class="headerlink" href="#ssh_remove_node" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ssh_remove_node</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+</code></pre></div>
+<p>Closes idle connections for this node via <code>pool.close_node()</code>. Active (checked-out) connections are discarded on release. Removes from pool registry, deletes from DB. Returns confirmation.</p>
+<hr />
+<h2 id="5-security-rules">5. Security Rules<a class="headerlink" href="#5-security-rules" title="Permanent link">&para;</a></h2>
+<h3 id="4-level-system">4-Level System<a class="headerlink" href="#4-level-system" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Behavior</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>block</strong></td>
+<td>Reject immediately, return error</td>
+<td><code>rm -rf /</code>, <code>mkfs</code>, fork bomb</td>
+</tr>
+<tr>
+<td><strong>confirm</strong></td>
+<td>Return confirmation prompt; AI client shows to user; re-call with token to execute</td>
+<td><code>sudo .*</code>, <code>rm -rf</code>, <code>chmod 777</code>, <code>shutdown</code></td>
+</tr>
+<tr>
+<td><strong>warn</strong></td>
+<td>Execute but log as warning</td>
+<td><code>apt install</code>, <code>pip install</code>, <code>curl | bash</code></td>
+</tr>
+<tr>
+<td><strong>allow</strong></td>
+<td>Execute silently</td>
+<td>Everything else</td>
+</tr>
+</tbody>
+</table>
+<h3 id="per-node-inheritance">Per-Node Inheritance<a class="headerlink" href="#per-node-inheritance" title="Permanent link">&para;</a></h3>
+<p>Rules cascade: <strong>global defaults → node-specific overrides</strong>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Global Defaults
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>├── block: rm -rf /
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>├── confirm: sudo .*
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>├── warn: pip install
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>Node: gpu-server (inherits + overrides)
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>├── [inherited] block: rm -rf /
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>├── [override] sudo .* → allow        # trusted environment
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>├── [node-only] confirm: kill -9       # extra caution on GPU jobs
+</code></pre></div>
+<p>Data model:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">SecurityRule</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span>           <span class="c1"># regex</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="n">level</span><span class="p">:</span> <span class="nb">str</span>             <span class="c1"># block / confirm / warn / allow</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="n">node_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>    <span class="c1"># NULL = global default</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="n">source_rule_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>  <span class="c1"># if overridden from a default rule</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    <span class="n">priority</span><span class="p">:</span> <span class="nb">int</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span>
+</code></pre></div>
+<p><strong>Evaluation strategy:</strong> CommandGuard queries the DB on each <code>evaluate()</code> call to load the effective rule set (global + node-specific). This avoids stale in-memory caches — when rules are edited via Web UI or MCP, the next command evaluation sees the change immediately. The query is lightweight (typically &lt;20 rules) and async, so latency impact is negligible.</p>
+<p>Node-specific rules take precedence over global defaults when both match the same pattern (same pattern string, lower priority number wins; if tied, node-specific wins).</p>
+<h3 id="confirm-flow">Confirm Flow<a class="headerlink" href="#confirm-flow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>AI calls ssh_execute(&quot;sudo apt update&quot;, node=&quot;prod&quot;)
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  → CommandGuard: matches &quot;sudo .*&quot; → confirm
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  → Return: &quot;⚠️ CONFIRMATION REQUIRED\n...\nRe-call with confirm_token=&#39;abc123&#39;&quot;
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  → AI client shows this to the user
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  → User approves in terminal
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>  → AI calls ssh_execute(&quot;sudo apt update&quot;, node=&quot;prod&quot;, confirm_token=&quot;abc123&quot;)
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>  → Token validated (one-time, 300s TTL) → execute
+</code></pre></div>
+<p>No web-based approval. Confirmation happens in the AI client's terminal.</p>
+<hr />
+<h2 id="6-command-audit">6. Command Audit<a class="headerlink" href="#6-command-audit" title="Permanent link">&para;</a></h2>
+<p>Every <code>ssh_execute</code> call writes a <code>CommandLog</code> record to the database:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">CommandLog</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="n">session_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="n">node_id</span><span class="p">:</span> <span class="nb">str</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>    <span class="n">command</span><span class="p">:</span> <span class="nb">str</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    <span class="n">exit_code</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>    <span class="n">stdout</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>       <span class="c1"># truncated to 64KB for DB storage</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>    <span class="n">stderr</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    <span class="n">security_level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>    <span class="n">security_rule_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>    <span class="n">bypassed</span><span class="p">:</span> <span class="nb">bool</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>    <span class="n">duration_ms</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>    <span class="n">executed_at</span><span class="p">:</span> <span class="n">datetime</span>
+</code></pre></div>
+<p>Logging is inline (<code>await log_repo.create(...)</code>) within the command execution flow. This ensures logs are persisted before the response is returned. The latency overhead is minimal for async SQLite/PostgreSQL writes.</p>
+<p>Full command output is returned to the AI client. Only truncated output (first N bytes + <code>[truncated]</code> marker if &gt;64KB) is persisted to DB to prevent bloat.</p>
+<h3 id="cleanup-policy">Cleanup Policy<a class="headerlink" href="#cleanup-policy" title="Permanent link">&para;</a></h3>
+<p>Configurable retention via settings (stored in <code>app_config</code> table):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>command_logs_retention: 30 days (default)
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>closed_sessions_retention: 7 days (default)
+</code></pre></div>
+<hr />
+<h2 id="7-web-ui">7. Web UI<a class="headerlink" href="#7-web-ui" title="Permanent link">&para;</a></h2>
+<h3 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h3>
+<p>The Web UI serves two functions:</p>
+<ol>
+<li><strong>Audit</strong> — Browse command logs per node, filter by time range, review what AI did</li>
+<li><strong>Manage</strong> — Configure nodes (add/edit/remove), configure security rules (global defaults + per-node overrides), adjust settings</li>
+</ol>
+<p>The Web UI does not execute commands, does not provide a terminal, and does not do real-time streaming. It reads from the database.</p>
+<h3 id="tech-stack">Tech Stack<a class="headerlink" href="#tech-stack" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Backend:</strong> FastAPI (shares ASGI app with FastMCP in service mode)</li>
+<li><strong>Frontend:</strong> React 18, TypeScript, Vite, Tailwind CSS 4, Radix UI, Lucide icons, TanStack Query</li>
+<li><strong>Design:</strong> macOS-inspired — system font stack, subtle shadows, rounded corners, restrained palette</li>
+<li><strong>Packaging:</strong> React builds to <code>src/shuttle/web/static/</code>, served by FastAPI as static fallback</li>
+</ul>
+<h3 id="views">Views<a class="headerlink" href="#views" title="Permanent link">&para;</a></h3>
+<p><strong>3 views, not 8 pages:</strong></p>
+<h4 id="view-1-activity-default">View 1: Activity (default)<a class="headerlink" href="#view-1-activity-default" title="Permanent link">&para;</a></h4>
+<p>Per-node command log browser. This is the main view.</p>
+<ul>
+<li>Left sidebar: node list with status indicators (online/offline based on last command)</li>
+<li>Click a node → show that node's command history</li>
+<li>Click "All" → show all nodes' commands interleaved</li>
+<li>Each log entry: timestamp, command, exit code, duration, security level badge</li>
+<li>Expand to see stdout/stderr</li>
+<li>Filter by time range</li>
+<li>Paginated (50 per page default)</li>
+<li>Refresh button (or auto-refresh toggle, polling /api/logs)</li>
+</ul>
+<h4 id="view-2-security-rules">View 2: Security Rules<a class="headerlink" href="#view-2-security-rules" title="Permanent link">&para;</a></h4>
+<p>Global default rules + per-node overrides.</p>
+<ul>
+<li>Default rules table: pattern, level (color-coded badge), description, priority, enabled toggle</li>
+<li>Add / edit / delete rules</li>
+<li>Per-node section: select a node → see effective rules (inherited + overrides)</li>
+<li>"Override for this node" action: copies a default rule, lets you change the level</li>
+<li>"Add rule for this node" action: creates a node-specific rule</li>
+<li>Drag-to-reorder (or up/down buttons for v1)</li>
+</ul>
+<h4 id="view-3-settings-slide-out-or-modal">View 3: Settings (slide-out or modal)<a class="headerlink" href="#view-3-settings-slide-out-or-modal" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Connection pool: max_total, max_per_node, idle_timeout, max_lifetime</li>
+<li>Cleanup: command_logs_days, closed_sessions_days</li>
+<li>Database URL (read-only display)</li>
+<li>Save button</li>
+</ul>
+<p><strong>Node management</strong> is in the sidebar, not a separate view:</p>
+<ul>
+<li>"+" button opens Add Node form (dialog)</li>
+<li>Right-click or menu on a node → Edit / Remove / Test Connection</li>
+<li>Node edit is a dialog, not a separate page</li>
+</ul>
+<h3 id="api-endpoints">API Endpoints<a class="headerlink" href="#api-endpoints" title="Permanent link">&para;</a></h3>
+<p>Mostly preserved from v1:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a># Nodes
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>GET    /api/nodes              # List (with ?tag= filter)
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>POST   /api/nodes              # Create
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>GET    /api/nodes/:id          # Get
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>PUT    /api/nodes/:id          # Update
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>DELETE /api/nodes/:id          # Delete
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>POST   /api/nodes/:id/test     # Test connection
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a># Security Rules
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>GET    /api/rules              # List (ordered by priority)
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>POST   /api/rules              # Create
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>PUT    /api/rules/:id          # Update
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>DELETE /api/rules/:id          # Delete
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>POST   /api/rules/reorder      # Reorder priorities
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>GET    /api/rules/effective/:node_id  # NEW: Get effective rules for a node
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a># Command Logs
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>GET    /api/logs               # Paginated list (?page, ?page_size, ?node_id, ?session_id)
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>GET    /api/logs/export        # Export as JSON or CSV
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a># Settings
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>GET    /api/settings           # Get
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>PUT    /api/settings           # Update
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a># Stats
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>GET    /api/stats              # Dashboard counts
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a># Data
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>POST   /api/data/export        # Full export (nodes + rules + settings)
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>POST   /api/data/import        # Import
+</code></pre></div>
+<p>New endpoint: <code>GET /api/rules/effective/:node_id</code> returns the merged rule list (global defaults + node overrides) for a specific node.</p>
+<h3 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h3>
+<p>Bearer token required for all <code>/api/*</code> routes in service mode.</p>
+<ul>
+<li>Token generated on first <code>shuttle serve</code> run, saved to <code>~/.shuttle/web_token</code></li>
+<li>Displayed in terminal output on startup</li>
+<li>Frontend: Login page prompts for token, stores in localStorage</li>
+<li><code>verify_token</code> dependency skipped when no token configured (e.g., tests)</li>
+</ul>
+<hr />
+<h2 id="8-core-engine-unchanged-from-v1">8. Core Engine (Unchanged from v1)<a class="headerlink" href="#8-core-engine-unchanged-from-v1" title="Permanent link">&para;</a></h2>
+<p>These modules are stable and require no changes:</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>core/connection_pool.py</code></td>
+<td>SSH connection pooling with per-node limits, TTL eviction</td>
+</tr>
+<tr>
+<td><code>core/session.py</code></td>
+<td>Session isolation, working directory tracking</td>
+</tr>
+<tr>
+<td><code>core/security.py</code></td>
+<td>CommandGuard, SecurityLevel, ConfirmTokenStore</td>
+</tr>
+<tr>
+<td><code>core/proxy.py</code></td>
+<td>Jump host / SSH tunneling via asyncssh</td>
+</tr>
+<tr>
+<td><code>core/credentials.py</code></td>
+<td>Fernet encryption for stored passwords/keys</td>
+</tr>
+<tr>
+<td><code>core/config.py</code></td>
+<td>Pydantic Settings with <code>SHUTTLE_</code> env prefix</td>
+</tr>
+<tr>
+<td><code>db/models.py</code></td>
+<td>SQLAlchemy ORM models</td>
+</tr>
+<tr>
+<td><code>db/repository.py</code></td>
+<td>CRUD repositories</td>
+</tr>
+<tr>
+<td><code>db/engine.py</code></td>
+<td>Async engine creation, SQLite WAL pragma</td>
+</tr>
+<tr>
+<td><code>db/seeds.py</code></td>
+<td>Default security rule seeds</td>
+</tr>
+</tbody>
+</table>
+<h3 id="changes-to-core">Changes to Core<a class="headerlink" href="#changes-to-core" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong><code>core/security.py</code></strong> — Refactor <code>CommandGuard.evaluate()</code>:</li>
+<li>Change from <code>def evaluate(...)</code> to <code>async def evaluate(...)</code> (sync → async)</li>
+<li>Add <code>db_session: AsyncSession</code> parameter</li>
+<li>Query rules from DB per call (global + node-specific), instead of in-memory cache</li>
+<li>Remove <code>load_rules()</code> method; rules are always live from DB</li>
+<li>
+<p><strong>All callers must be updated:</strong> <code>_execute_command_logic()</code> in <code>tools.py</code> and all tests that call <code>evaluate()</code></p>
+</li>
+<li>
+<p><strong><code>db/models.py</code></strong> — Add <code>source_rule_id</code> nullable field to <code>SecurityRule</code> for tracking which default rule was overridden. <strong>Schema migration:</strong> Since <code>Base.metadata.create_all()</code> does not add columns to existing tables, add an explicit migration in <code>init_db()</code> that checks for the column and runs <code>ALTER TABLE security_rules ADD COLUMN source_rule_id VARCHAR(36)</code> if missing. This is safe for SQLite and PostgreSQL.</p>
+</li>
+<li>
+<p><strong><code>db/repository.py</code></strong> — Add <code>source_rule_id</code> parameter to <code>RuleRepo.create()</code>. Add <code>RuleRepo.list_effective(node_id)</code> method that returns merged global + node-specific rules ordered by priority.</p>
+</li>
+<li>
+<p><strong><code>web/schemas.py</code></strong> — Add <code>source_rule_id: str | None</code> to <code>RuleCreate</code>, <code>RuleResponse</code>.</p>
+</li>
+<li>
+<p><strong><code>mcp/tools.py</code></strong> — Fix pre-existing bug: <code>CommandLog.node_id</code> must store the node UUID, not the node name string. Resolve node name to <code>(name, uuid)</code> early; use name for pool/guard, uuid for DB logging.</p>
+</li>
+</ol>
+<hr />
+<h2 id="9-project-structure">9. Project Structure<a class="headerlink" href="#9-project-structure" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>src/shuttle/
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>├── __init__.py
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>├── __main__.py
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>├── cli.py                    # Typer: shuttle, shuttle serve, shuttle node *, shuttle config
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>├── core/
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>│   ├── config.py
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>│   ├── connection_pool.py
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>│   ├── credentials.py
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>│   ├── proxy.py
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>│   ├── security.py           # + per-node inheritance
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>│   └── session.py
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>├── db/
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>│   ├── engine.py
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>│   ├── models.py             # + source_rule_id on SecurityRule
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>│   ├── repository.py
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>│   └── seeds.py
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>├── mcp/
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>│   ├── server.py             # + streamable-http mode, ASGI mount
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a>│   └── tools.py              # + ssh_add_node, ssh_remove_node
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a>└── web/
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a>    ├── app.py                # FastAPI factory, mounts FastMCP in service mode
+<a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a>    ├── deps.py               # DB session, token auth
+<a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a>    ├── schemas.py
+<a id="__codelineno-18-24" name="__codelineno-18-24" href="#__codelineno-18-24"></a>    ├── routes/
+<a id="__codelineno-18-25" name="__codelineno-18-25" href="#__codelineno-18-25"></a>    │   ├── nodes.py
+<a id="__codelineno-18-26" name="__codelineno-18-26" href="#__codelineno-18-26"></a>    │   ├── rules.py          # + effective rules endpoint
+<a id="__codelineno-18-27" name="__codelineno-18-27" href="#__codelineno-18-27"></a>    │   ├── sessions.py
+<a id="__codelineno-18-28" name="__codelineno-18-28" href="#__codelineno-18-28"></a>    │   ├── logs.py
+<a id="__codelineno-18-29" name="__codelineno-18-29" href="#__codelineno-18-29"></a>    │   ├── settings.py
+<a id="__codelineno-18-30" name="__codelineno-18-30" href="#__codelineno-18-30"></a>    │   ├── stats.py
+<a id="__codelineno-18-31" name="__codelineno-18-31" href="#__codelineno-18-31"></a>    │   └── data.py
+<a id="__codelineno-18-32" name="__codelineno-18-32" href="#__codelineno-18-32"></a>    └── static/               # React build output
+<a id="__codelineno-18-33" name="__codelineno-18-33" href="#__codelineno-18-33"></a>
+<a id="__codelineno-18-34" name="__codelineno-18-34" href="#__codelineno-18-34"></a>web/                          # React source
+<a id="__codelineno-18-35" name="__codelineno-18-35" href="#__codelineno-18-35"></a>├── src/
+<a id="__codelineno-18-36" name="__codelineno-18-36" href="#__codelineno-18-36"></a>│   ├── App.tsx
+<a id="__codelineno-18-37" name="__codelineno-18-37" href="#__codelineno-18-37"></a>│   ├── api/client.ts
+<a id="__codelineno-18-38" name="__codelineno-18-38" href="#__codelineno-18-38"></a>│   ├── types/index.ts
+<a id="__codelineno-18-39" name="__codelineno-18-39" href="#__codelineno-18-39"></a>│   ├── components/           # Layout, Sidebar, Badge, DataTable, etc.
+<a id="__codelineno-18-40" name="__codelineno-18-40" href="#__codelineno-18-40"></a>│   └── pages/
+<a id="__codelineno-18-41" name="__codelineno-18-41" href="#__codelineno-18-41"></a>│       ├── Login.tsx
+<a id="__codelineno-18-42" name="__codelineno-18-42" href="#__codelineno-18-42"></a>│       ├── Activity.tsx      # Per-node command log browser (main view)
+<a id="__codelineno-18-43" name="__codelineno-18-43" href="#__codelineno-18-43"></a>│       ├── Rules.tsx         # Security rules with inheritance
+<a id="__codelineno-18-44" name="__codelineno-18-44" href="#__codelineno-18-44"></a>│       ├── RuleForm.tsx
+<a id="__codelineno-18-45" name="__codelineno-18-45" href="#__codelineno-18-45"></a>│       ├── NodeForm.tsx      # Add/edit node dialog
+<a id="__codelineno-18-46" name="__codelineno-18-46" href="#__codelineno-18-46"></a>│       └── Settings.tsx      # Settings modal
+</code></pre></div>
+<hr />
+<h2 id="10-migration-from-v1">10. Migration from v1<a class="headerlink" href="#10-migration-from-v1" title="Permanent link">&para;</a></h2>
+<h3 id="what-stays">What stays<a class="headerlink" href="#what-stays" title="Permanent link">&para;</a></h3>
+<ul>
+<li>All <code>core/*</code> modules (connection pool, session, proxy, credentials, config)</li>
+<li>All <code>db/*</code> modules (models, repository, engine, seeds)</li>
+<li>MCP tools (ssh_execute, ssh_upload, ssh_download, ssh_list_nodes, ssh_session_*)</li>
+<li>Web API routes (nodes, rules, sessions, logs, settings, stats, data)</li>
+<li>Web schemas</li>
+<li>Existing Python tests (with updates for changed interfaces)</li>
+<li>React components: Badge, DataTable, ConfirmDialog, EmptyState, Layout, Sidebar</li>
+<li>React pages: Login, NodeForm, RuleForm, Settings</li>
+<li>Existing <code>~/.shuttle/web_token</code> files are reused automatically</li>
+</ul>
+<h3 id="what-changes">What changes<a class="headerlink" href="#what-changes" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>cli.py</code> — remove <code>shuttle web</code>, add <code>shuttle serve</code> (wires FastMCP + FastAPI into single ASGI app)</li>
+<li><code>mcp/server.py</code> — add streamable-http startup, return ASGI sub-app for mounting</li>
+<li><code>mcp/tools.py</code> — add ssh_add_node, ssh_remove_node; fix node_id bug: resolve node name to <code>(node_name, node_uuid)</code> tuple early in <code>_execute_command_logic()</code>. Use <code>node_name</code> for pool/guard/token_store (they are keyed by name). Use <code>node_uuid</code> for <code>CommandLog.node_id</code> (FK to nodes.id). This keeps the pool's name-based keying intact while fixing the DB FK violation.</li>
+<li><code>web/app.py</code> — accept injected core objects; mount FastMCP sub-app in service mode</li>
+<li><code>web/deps.py</code> — refactor from module-level globals to accept injected engine/pool</li>
+<li><code>core/security.py</code> — refactor evaluate() to query DB per call (live rules, no cache)</li>
+<li><code>db/models.py</code> — add source_rule_id to SecurityRule + migration logic</li>
+<li><code>db/repository.py</code> — add RuleRepo.list_effective(node_id), add source_rule_id to RuleRepo.create()</li>
+<li><code>web/schemas.py</code> — add source_rule_id to RuleCreate/RuleResponse</li>
+<li><code>web/routes/rules.py</code> — add GET /api/rules/effective/:node_id</li>
+<li><code>db/models.py</code> — reconcile tags: change <code>Node.tags</code> type annotation from <code>dict | None</code> to <code>list | None</code> (JSON column stays the same — it's schema-agnostic). Update <code>NodeRepo.list_all()</code> filter to only handle lists: <code>tag in (n.tags or [])</code>. Existing rows with dict-format tags are treated as empty (no migration needed — this is a new product with minimal data).</li>
+</ul>
+<h3 id="whats-new-frontend">What's new (frontend)<a class="headerlink" href="#whats-new-frontend" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>pages/Activity.tsx</code> — replaces Dashboard + Sessions + Logs as the main view</li>
+<li><code>pages/Login.tsx</code> — already built in v1</li>
+<li>Sidebar refactor — node list with status, click to filter activity</li>
+</ul>
+<h3 id="whats-removed">What's removed<a class="headerlink" href="#whats-removed" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>shuttle web</code> CLI command (replaced by <code>shuttle serve</code>)</li>
+<li>Separate Dashboard, Sessions, Logs pages (merged into Activity)</li>
+<li>Independent web process concept</li>
+<li>In-memory rule caching in CommandGuard (replaced by per-call DB query)</li>
+</ul>
+<h3 id="known-v1-bugs-fixed-in-v2">Known v1 bugs fixed in v2<a class="headerlink" href="#known-v1-bugs-fixed-in-v2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>CommandLog.node_id</code> stored node name instead of UUID (FK violation on PostgreSQL)</li>
+<li><code>Node.tags</code> stored as <code>dict</code> wrapper but API expected <code>list</code> (inconsistent serialization)</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["navigation.instant","navigation.tracking","navigation.sections","content.code.copy","search.highlight"],"search":"../../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.c2b142ea.min.js"></script>
+      
+    
+  </body>
+</html>

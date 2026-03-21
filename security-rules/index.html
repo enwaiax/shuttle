@@ -1,0 +1,1200 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Secure SSH gateway for AI assistants">
+      
+      
+      
+        <link rel="canonical" href="https://enwaiax.github.io/shuttle/security-rules/">
+      
+      
+        <link rel="prev" href="../configuration/">
+      
+      
+        <link rel="next" href="../mcp-setup/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.28">
+    
+    
+      
+        <title>Security Rules - Shuttle</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.6f2fbb28.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,a=__md_scope)=>JSON.parse(t.getItem(a.pathname+"."+e)),__md_set=(e,t,a=localStorage,_=__md_scope)=>{try{a.setItem(_.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="lime">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#security-rules" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="./.." title="Shuttle" class="md-header__button md-logo" aria-label="Shuttle" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Shuttle
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Security Rules
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="lime"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/enwaiax/shuttle" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    enwaiax/shuttle
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="Shuttle" class="md-nav__button md-logo" aria-label="Shuttle" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    Shuttle
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/enwaiax/shuttle" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    enwaiax/shuttle
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.md#quick-start" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Rules
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#security-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Levels
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#regex-pattern-syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regex Pattern Syntax
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Regex Pattern Syntax">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#built-in-default-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in Default Rules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Built-in Default Rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#block-priority-1-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Block (priority 1--4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confirm-priority-10-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confirm (priority 10--15)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#warn-priority-20-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Warn (priority 20--23)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#per-node-rule-overrides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-Node Rule Overrides
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Per-Node Rule Overrides">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-inheritance-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Inheritance Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-node-overrides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Node Overrides
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#confirm-token-mechanism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confirm Token Mechanism
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Confirm Token Mechanism">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-bypass-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Bypass Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#token-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token Properties
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcp-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../web-panel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web Panel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#security-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Levels
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#regex-pattern-syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regex Pattern Syntax
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Regex Pattern Syntax">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#built-in-default-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in Default Rules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Built-in Default Rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#block-priority-1-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Block (priority 1--4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confirm-priority-10-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confirm (priority 10--15)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#warn-priority-20-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Warn (priority 20--23)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#per-node-rule-overrides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-Node Rule Overrides
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Per-Node Rule Overrides">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-inheritance-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Inheritance Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-node-overrides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Node Overrides
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#confirm-token-mechanism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confirm Token Mechanism
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Confirm Token Mechanism">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-bypass-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Bypass Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#token-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token Properties
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+  
+
+
+<h1 id="security-rules">Security Rules<a class="headerlink" href="#security-rules" title="Permanent link">&para;</a></h1>
+<p>Shuttle evaluates every command against a rule engine before execution. Rules use regex patterns and are organized into four severity levels. This guide covers how rules work, the built-in defaults, per-node overrides, and the confirmation bypass mechanism.</p>
+<h2 id="security-levels">Security Levels<a class="headerlink" href="#security-levels" title="Permanent link">&para;</a></h2>
+<p>Every rule has one of four levels. When a command matches a rule, Shuttle takes the corresponding action:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Behavior</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>block</strong></td>
+<td>Command is rejected immediately. Cannot be bypassed.</td>
+<td>Destructive, unrecoverable operations (wipe disk, fork bomb).</td>
+</tr>
+<tr>
+<td><strong>confirm</strong></td>
+<td>Execution paused. A one-time token is returned that the AI must re-submit to proceed.</td>
+<td>Privileged or risky operations that a human should approve (sudo, force delete, shutdown).</td>
+</tr>
+<tr>
+<td><strong>warn</strong></td>
+<td>Command executes, but the event is flagged in the audit log.</td>
+<td>Operations worth noting but not blocking (package installs, config changes).</td>
+</tr>
+<tr>
+<td><strong>allow</strong></td>
+<td>Command executes normally.</td>
+<td>The default — any command that does not match a higher-level rule.</td>
+</tr>
+</tbody>
+</table>
+<p>Rules are evaluated in <strong>priority order</strong> (lowest number first). The first matching rule determines the outcome. If no rule matches, the command is allowed.</p>
+<h2 id="regex-pattern-syntax">Regex Pattern Syntax<a class="headerlink" href="#regex-pattern-syntax" title="Permanent link">&para;</a></h2>
+<p>Rule patterns are Python-compatible regular expressions matched with <code>re.search()</code> (not <code>re.match()</code>), so they can match anywhere in the command string.</p>
+<h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Matches</th>
+<th>Does not match</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>^rm -rf /$</code></td>
+<td><code>rm -rf /</code> (exact)</td>
+<td><code>rm -rf /tmp</code></td>
+</tr>
+<tr>
+<td><code>sudo .*</code></td>
+<td><code>sudo apt update</code>, <code>sudo reboot</code></td>
+<td><code>visudo</code></td>
+</tr>
+<tr>
+<td><code>rm -rf</code></td>
+<td><code>rm -rf /tmp</code>, <code>rm -rf ~</code></td>
+<td><code>rm file.txt</code></td>
+</tr>
+<tr>
+<td><code>mkfs\.</code></td>
+<td><code>mkfs.ext4 /dev/sda1</code></td>
+<td><code>mkfsomething</code></td>
+</tr>
+<tr>
+<td><code>curl .* \| bash</code></td>
+<td><code>curl http://x.com/setup \| bash</code></td>
+<td><code>curl http://x.com/setup</code></td>
+</tr>
+<tr>
+<td><code>chmod 777</code></td>
+<td><code>chmod 777 /var/www</code></td>
+<td><code>chmod 755 /var/www</code></td>
+</tr>
+<tr>
+<td><code>:\(\)\{.*:\|:&amp;\};:</code></td>
+<td>Fork bomb pattern</td>
+<td>Normal commands</td>
+</tr>
+</tbody>
+</table>
+<p>Patterns are capped at 500 characters to prevent ReDoS attacks. Invalid regex patterns are silently skipped.</p>
+<h2 id="built-in-default-rules">Built-in Default Rules<a class="headerlink" href="#built-in-default-rules" title="Permanent link">&para;</a></h2>
+<p>These rules are seeded into the database on first startup (only if no rules exist yet). They provide a sensible baseline.</p>
+<h3 id="block-priority-1-4">Block (priority 1--4)<a class="headerlink" href="#block-priority-1-4" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Pattern</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>^rm -rf /$</code></td>
+<td>Remove root filesystem</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>mkfs\.</code></td>
+<td>Format filesystem</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>dd if=.* of=/dev/</code></td>
+<td>Raw disk write</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>:\(\)\{.*:\|:&amp;\};:</code></td>
+<td>Fork bomb</td>
+</tr>
+</tbody>
+</table>
+<h3 id="confirm-priority-10-15">Confirm (priority 10--15)<a class="headerlink" href="#confirm-priority-10-15" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Pattern</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10</td>
+<td><code>sudo .*</code></td>
+<td>Sudo commands</td>
+</tr>
+<tr>
+<td>11</td>
+<td><code>rm -rf</code></td>
+<td>Recursive force delete</td>
+</tr>
+<tr>
+<td>12</td>
+<td><code>chmod 777</code></td>
+<td>World-writable permissions</td>
+</tr>
+<tr>
+<td>13</td>
+<td><code>shutdown</code></td>
+<td>System shutdown</td>
+</tr>
+<tr>
+<td>14</td>
+<td><code>reboot</code></td>
+<td>System reboot</td>
+</tr>
+<tr>
+<td>15</td>
+<td><code>kill -9</code></td>
+<td>Force kill process</td>
+</tr>
+</tbody>
+</table>
+<h3 id="warn-priority-20-23">Warn (priority 20--23)<a class="headerlink" href="#warn-priority-20-23" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Pattern</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>20</td>
+<td><code>apt install</code></td>
+<td>APT package install</td>
+</tr>
+<tr>
+<td>21</td>
+<td><code>pip install</code></td>
+<td>Pip package install</td>
+</tr>
+<tr>
+<td>22</td>
+<td><code>npm install</code></td>
+<td>NPM package install</td>
+</tr>
+<tr>
+<td>23</td>
+<td><code>curl .* \| bash</code></td>
+<td>Piped remote script</td>
+</tr>
+</tbody>
+</table>
+<p>You can add, edit, disable, or delete these rules through the web panel or directly in the <code>security_rules</code> database table.</p>
+<h2 id="per-node-rule-overrides">Per-Node Rule Overrides<a class="headerlink" href="#per-node-rule-overrides" title="Permanent link">&para;</a></h2>
+<p>Rules can be <strong>global</strong> (apply to all nodes) or <strong>node-specific</strong> (apply to a single node).</p>
+<h3 id="how-inheritance-works">How Inheritance Works<a class="headerlink" href="#how-inheritance-works" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Global rules have <code>node_id = NULL</code>. They apply to every node.</li>
+<li>Node-specific rules have a <code>node_id</code> set. They apply only to that node.</li>
+<li>When a node-specific rule has the <strong>same pattern</strong> as a global rule, the node-specific rule <strong>overrides</strong> the global one for that node.</li>
+<li>Rules are sorted by priority (lowest first). The first match wins.</li>
+</ol>
+<h3 id="example-scenario">Example Scenario<a class="headerlink" href="#example-scenario" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Global rules:
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  sudo .*  → confirm  (priority 10)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  rm -rf   → confirm  (priority 11)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>GPU Server overrides:
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  sudo .*  → allow    (priority 10)   ← overrides global for this node
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Prod Server overrides:
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  DROP TABLE → block  (priority 5)    ← adds new rule for this node
+</code></pre></div>
+<p>Result:</p>
+<ul>
+<li><strong>GPU Server</strong>: <code>sudo apt update</code> is allowed (node override). <code>rm -rf /tmp</code> still requires confirmation (global rule, no override).</li>
+<li><strong>Prod Server</strong>: <code>DROP TABLE users</code> is blocked (node-specific rule). <code>sudo service restart</code> requires confirmation (global rule).</li>
+<li><strong>Other nodes</strong>: Both <code>sudo</code> and <code>rm -rf</code> require confirmation (global rules only).</li>
+</ul>
+<h3 id="creating-node-overrides">Creating Node Overrides<a class="headerlink" href="#creating-node-overrides" title="Permanent link">&para;</a></h3>
+<p>In the web panel, navigate to <strong>Security Rules</strong>, select a node, and add a rule with the same pattern but a different level. The <code>source_rule_id</code> field can optionally reference the global rule being overridden for traceability.</p>
+<h2 id="confirm-token-mechanism">Confirm Token Mechanism<a class="headerlink" href="#confirm-token-mechanism" title="Permanent link">&para;</a></h2>
+<p>When a command matches a <strong>confirm</strong>-level rule, Shuttle does not execute it. Instead, it returns a response containing:</p>
+<ul>
+<li>The matched rule description</li>
+<li>A one-time <strong>confirm token</strong></li>
+</ul>
+<h3 id="how-bypass-works">How Bypass Works<a class="headerlink" href="#how-bypass-works" title="Permanent link">&para;</a></h3>
+<ol>
+<li>The AI assistant receives the confirm response and presents it to the user.</li>
+<li>The user approves the command.</li>
+<li>The AI re-submits the same <code>ssh_execute</code> call with the <code>confirm_token</code> parameter.</li>
+<li>Shuttle validates the token:</li>
+<li>Token must exist in the in-memory store</li>
+<li>Token must match the exact same command and node</li>
+<li>Token must not be expired (default TTL: 300 seconds / 5 minutes)</li>
+<li>If valid, the token is consumed (one-time use) and the command executes.</li>
+<li>Block-level rules <strong>cannot</strong> be bypassed, even with a valid token.</li>
+</ol>
+<h3 id="token-properties">Token Properties<a class="headerlink" href="#token-properties" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Generated using <code>secrets.token_urlsafe(32)</code> (cryptographically random)</li>
+<li>Stored in-memory only (not persisted to database)</li>
+<li>Single-use: consumed on validation regardless of outcome</li>
+<li>TTL: 300 seconds by default</li>
+<li>Lazy cleanup: expired tokens are pruned when the store exceeds 100 entries</li>
+</ul>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>Start with the defaults.</strong> The built-in rules cover the most common dangerous operations. Add rules as you discover patterns specific to your environment.</p>
+</li>
+<li>
+<p><strong>Use block sparingly.</strong> Block rules cannot be bypassed. Reserve them for truly catastrophic commands (disk wipe, fork bomb). For most risky commands, confirm is a better choice.</p>
+</li>
+<li>
+<p><strong>Tighten prod, loosen dev.</strong> Use per-node overrides to allow <code>sudo</code> on development servers while keeping it at confirm on production.</p>
+</li>
+<li>
+<p><strong>Be specific with patterns.</strong> <code>rm -rf /</code> (with anchor) is better than <code>rm</code> (too broad). Test your regex against expected commands before deploying.</p>
+</li>
+<li>
+<p><strong>Use priority to control ordering.</strong> Lower numbers are evaluated first. Place block rules at low priorities (1--9), confirm rules in the middle (10--19), and warn rules higher (20+).</p>
+</li>
+<li>
+<p><strong>Review the Activity log.</strong> The web panel shows which rules were triggered and whether commands were bypassed. Use this data to tune your rules over time.</p>
+</li>
+<li>
+<p><strong>Disable rather than delete.</strong> Each rule has an <code>enabled</code> flag. Disable a rule to stop it from matching without losing the configuration.</p>
+</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["navigation.instant","navigation.tracking","navigation.sections","content.code.copy","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c2b142ea.min.js"></script>
+      
+    
+  </body>
+</html>

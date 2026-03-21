@@ -1,0 +1,1169 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Secure SSH gateway for AI assistants">
+      
+      
+      
+        <link rel="canonical" href="https://enwaiax.github.io/shuttle/PYPI_PUBLISHING_GUIDE/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.28">
+    
+    
+      
+        <title>📦 PyPI Publishing Guide - Shuttle</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.6f2fbb28.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,a=__md_scope)=>JSON.parse(t.getItem(a.pathname+"."+e)),__md_set=(e,t,a=localStorage,_=__md_scope)=>{try{a.setItem(_.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="lime">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pypi-publishing-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="./.." title="Shuttle" class="md-header__button md-logo" aria-label="Shuttle" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Shuttle
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              📦 PyPI Publishing Guide
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="lime"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/enwaiax/shuttle" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    enwaiax/shuttle
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="Shuttle" class="md-nav__button md-logo" aria-label="Shuttle" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    Shuttle
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/enwaiax/shuttle" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    enwaiax/shuttle
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.md#quick-start" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcp-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../web-panel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web Panel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Prerequisites
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Prerequisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-pypi-account-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. PyPI Account Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-github-repository-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. GitHub Repository Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-trusted-publishing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔐 Configure Trusted Publishing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔐 Configure Trusted Publishing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-pypi-trusted-publishing-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. PyPI Trusted Publishing Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. PyPI Trusted Publishing Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-production-pypi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Production PyPI:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-testpypi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For TestPyPI:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-github-environment-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. GitHub Environment Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. GitHub Environment Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#environment-pypi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment: pypi
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-testpypi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment: testpypi
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#publishing-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Publishing Process
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Publishing Process">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-1-automated-release-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 1: Automated Release (Recommended)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option 1: Automated Release (Recommended)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-prepare-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Prepare Release
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-create-release-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Create Release Tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-create-github-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Create GitHub Release
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-2-manual-workflow-trigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 2: Manual Workflow Trigger
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-3-local-publishing-not-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 3: Local Publishing (Not Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Verification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✅ Verification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-check-testpypi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Check TestPyPI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-test-installation-from-testpypi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Test Installation from TestPyPI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-check-pypi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Check PyPI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-test-production-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Test Production Installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-and-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔍 Monitoring and Maintenance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔍 Monitoring and Maintenance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#download-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Download Statistics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Updates
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛠️ Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-trusted-publishing-not-working" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Trusted Publishing Not Working
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-package-already-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Package Already Exists
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-test-failures-in-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Test Failures in CI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-build-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Build Failures
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debug-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debug Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-release-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📋 Pre-Release Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#success-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎉 Success Metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📞 Getting Help
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+  
+
+
+<h1 id="pypi-publishing-guide">📦 PyPI Publishing Guide<a class="headerlink" href="#pypi-publishing-guide" title="Permanent link">&para;</a></h1>
+<p>Complete guide for publishing SSH MCP Tools to PyPI using GitHub Actions and trusted publishing.</p>
+<h2 id="prerequisites">🎯 Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<h3 id="1-pypi-account-setup">1. PyPI Account Setup<a class="headerlink" href="#1-pypi-account-setup" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Create accounts on both <a href="https://pypi.org">PyPI</a> and <a href="https://test.pypi.org">TestPyPI</a></li>
+<li>Enable 2FA on both accounts</li>
+<li>Note your usernames for both platforms</li>
+</ol>
+<h3 id="2-github-repository-setup">2. GitHub Repository Setup<a class="headerlink" href="#2-github-repository-setup" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Ensure your repository is public (required for trusted publishing)</li>
+<li>Repository must be named exactly as specified in PyPI project settings</li>
+<li>Verify repository URL matches the one in <code>pyproject.toml</code></li>
+</ol>
+<h2 id="configure-trusted-publishing">🔐 Configure Trusted Publishing<a class="headerlink" href="#configure-trusted-publishing" title="Permanent link">&para;</a></h2>
+<h3 id="1-pypi-trusted-publishing-setup">1. PyPI Trusted Publishing Setup<a class="headerlink" href="#1-pypi-trusted-publishing-setup" title="Permanent link">&para;</a></h3>
+<h4 id="for-production-pypi">For Production PyPI:<a class="headerlink" href="#for-production-pypi" title="Permanent link">&para;</a></h4>
+<ol>
+<li>Go to <a href="https://pypi.org">PyPI</a> and log in</li>
+<li>Navigate to "Your projects" → "Manage" (or create new project)</li>
+<li>Go to "Settings" → "Publishing"</li>
+<li>Click "Add a new publisher"</li>
+<li>Fill in the details:</li>
+<li><strong>Repository name</strong>: <code>enwaiax/shuttle</code></li>
+<li><strong>Workflow filename</strong>: <code>publish-to-pypi.yml</code></li>
+<li><strong>Environment name</strong>: <code>pypi</code></li>
+</ol>
+<h4 id="for-testpypi">For TestPyPI:<a class="headerlink" href="#for-testpypi" title="Permanent link">&para;</a></h4>
+<ol>
+<li>Go to <a href="https://test.pypi.org">TestPyPI</a> and log in</li>
+<li>Follow the same steps as above but use:</li>
+<li><strong>Environment name</strong>: <code>testpypi</code></li>
+</ol>
+<h3 id="2-github-environment-setup">2. GitHub Environment Setup<a class="headerlink" href="#2-github-environment-setup" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Go to your GitHub repository</li>
+<li>Navigate to "Settings" → "Environments"</li>
+<li>Create two environments:</li>
+</ol>
+<h4 id="environment-pypi">Environment: <code>pypi</code><a class="headerlink" href="#environment-pypi" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Name</strong>: <code>pypi</code></li>
+<li><strong>Protection rules</strong>:</li>
+<li>✅ Required reviewers (optional, for extra safety)</li>
+<li>✅ Wait timer (optional, for staged releases)</li>
+</ul>
+<h4 id="environment-testpypi">Environment: <code>testpypi</code><a class="headerlink" href="#environment-testpypi" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Name</strong>: <code>testpypi</code></li>
+<li><strong>Protection rules</strong>: None required for testing</li>
+</ul>
+<h2 id="publishing-process">🚀 Publishing Process<a class="headerlink" href="#publishing-process" title="Permanent link">&para;</a></h2>
+<h3 id="option-1-automated-release-recommended">Option 1: Automated Release (Recommended)<a class="headerlink" href="#option-1-automated-release-recommended" title="Permanent link">&para;</a></h3>
+<h4 id="step-1-prepare-release">Step 1: Prepare Release<a class="headerlink" href="#step-1-prepare-release" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Update version in pyproject.toml</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;s/version = &quot;[^&quot;]*&quot;/version = &quot;1.0.0&quot;/&#39;</span><span class="w"> </span>pyproject.toml
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Update CHANGELOG.md</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Add release notes under ## [Unreleased] section</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Commit changes</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>git<span class="w"> </span>add<span class="w"> </span>pyproject.toml<span class="w"> </span>CHANGELOG.md
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;chore: prepare release v1.0.0&quot;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main
+</code></pre></div>
+<h4 id="step-2-create-release-tag">Step 2: Create Release Tag<a class="headerlink" href="#step-2-create-release-tag" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create and push tag</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>v1.0.0<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Release version 1.0.0&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>v1.0.0
+</code></pre></div>
+<h4 id="step-3-create-github-release">Step 3: Create GitHub Release<a class="headerlink" href="#step-3-create-github-release" title="Permanent link">&para;</a></h4>
+<ol>
+<li>Go to <a href="https://github.com/enwaiax/shuttle/releases">Releases</a></li>
+<li>Click "Create a new release"</li>
+<li>Select tag <code>v1.0.0</code></li>
+<li>Add release title: <code>SSH MCP Tools v1.0.0</code></li>
+<li>Add release notes from CHANGELOG.md</li>
+<li>Click "Publish release"</li>
+</ol>
+<p>This triggers the automated workflow that will:
+1. ✅ Run comprehensive tests
+2. ✅ Build the package
+3. ✅ Publish to TestPyPI
+4. ✅ Publish to PyPI (production)</p>
+<h3 id="option-2-manual-workflow-trigger">Option 2: Manual Workflow Trigger<a class="headerlink" href="#option-2-manual-workflow-trigger" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Go to "Actions" tab in your GitHub repository</li>
+<li>Select "Release" workflow</li>
+<li>Click "Run workflow"</li>
+<li>Enter version number (e.g., <code>1.0.0</code>)</li>
+<li>Select release type (patch/minor/major)</li>
+<li>Click "Run workflow"</li>
+</ol>
+<h3 id="option-3-local-publishing-not-recommended">Option 3: Local Publishing (Not Recommended)<a class="headerlink" href="#option-3-local-publishing-not-recommended" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Install build tools</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uv<span class="w"> </span>sync<span class="w"> </span>--dev
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Build package</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>uv<span class="w"> </span>build
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check package</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>uv<span class="w"> </span>run<span class="w"> </span>twine<span class="w"> </span>check<span class="w"> </span>dist/*
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Upload to TestPyPI first</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>uv<span class="w"> </span>run<span class="w"> </span>twine<span class="w"> </span>upload<span class="w"> </span>--repository<span class="w"> </span>testpypi<span class="w"> </span>dist/*
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># If successful, upload to PyPI</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>uv<span class="w"> </span>run<span class="w"> </span>twine<span class="w"> </span>upload<span class="w"> </span>dist/*
+</code></pre></div>
+<h2 id="verification">✅ Verification<a class="headerlink" href="#verification" title="Permanent link">&para;</a></h2>
+<h3 id="1-check-testpypi">1. Check TestPyPI<a class="headerlink" href="#1-check-testpypi" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Visit: https://test.pypi.org/project/fastmcp-ssh-server/</li>
+<li>Verify package information and files</li>
+</ul>
+<h3 id="2-test-installation-from-testpypi">2. Test Installation from TestPyPI<a class="headerlink" href="#2-test-installation-from-testpypi" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pip<span class="w"> </span>install<span class="w"> </span>--index-url<span class="w"> </span>https://test.pypi.org/simple/<span class="w"> </span>fastmcp-ssh-server
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>fastmcp-ssh-server<span class="w"> </span>--version
+</code></pre></div>
+<h3 id="3-check-pypi">3. Check PyPI<a class="headerlink" href="#3-check-pypi" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Visit: https://pypi.org/project/fastmcp-ssh-server/</li>
+<li>Verify package is available</li>
+</ul>
+<h3 id="4-test-production-installation">4. Test Production Installation<a class="headerlink" href="#4-test-production-installation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>pip<span class="w"> </span>install<span class="w"> </span>fastmcp-ssh-server
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>fastmcp-ssh-server<span class="w"> </span>--help
+</code></pre></div>
+<h2 id="monitoring-and-maintenance">🔍 Monitoring and Maintenance<a class="headerlink" href="#monitoring-and-maintenance" title="Permanent link">&para;</a></h2>
+<h3 id="download-statistics">Download Statistics<a class="headerlink" href="#download-statistics" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Check PyPI project page for download statistics</li>
+<li>Use tools like <a href="https://pypistats.org/">pypistats</a> for detailed analytics</li>
+</ul>
+<h3 id="version-management">Version Management<a class="headerlink" href="#version-management" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Follow <a href="https://semver.org/">Semantic Versioning</a></li>
+<li>Update <code>CHANGELOG.md</code> for each release</li>
+<li>Tag releases consistently (<code>v1.0.0</code>, <code>v1.1.0</code>, etc.)</li>
+</ul>
+<h3 id="security-updates">Security Updates<a class="headerlink" href="#security-updates" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Monitor dependencies for security vulnerabilities</li>
+<li>Update dependencies regularly</li>
+<li>Use <code>uv sync --upgrade</code> to update dependencies</li>
+</ul>
+<h2 id="troubleshooting">🛠️ Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
+<h4 id="1-trusted-publishing-not-working">1. Trusted Publishing Not Working<a class="headerlink" href="#1-trusted-publishing-not-working" title="Permanent link">&para;</a></h4>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Error: The user &#39;username&#39; isn&#39;t allowed to upload to project &#39;fastmcp-ssh-server&#39;
+</code></pre></div>
+<strong>Solution</strong>:
+- Verify trusted publishing is configured correctly on PyPI
+- Check that repository name, workflow file, and environment name match exactly
+- Ensure the GitHub environment exists and has proper permissions</p>
+<h4 id="2-package-already-exists">2. Package Already Exists<a class="headerlink" href="#2-package-already-exists" title="Permanent link">&para;</a></h4>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ERROR: File already exists
+</code></pre></div>
+<strong>Solution</strong>:
+- You cannot overwrite existing versions on PyPI
+- Bump the version number in <code>pyproject.toml</code>
+- Create a new release</p>
+<h4 id="3-test-failures-in-ci">3. Test Failures in CI<a class="headerlink" href="#3-test-failures-in-ci" title="Permanent link">&para;</a></h4>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Tests failed during GitHub Actions workflow
+</code></pre></div>
+<strong>Solution</strong>:
+- Check the Actions tab for detailed error logs
+- Fix failing tests locally first
+- Push fixes and re-trigger the workflow</p>
+<h4 id="4-build-failures">4. Build Failures<a class="headerlink" href="#4-build-failures" title="Permanent link">&para;</a></h4>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Package build failed
+</code></pre></div>
+<strong>Solution</strong>:
+- Check <code>pyproject.toml</code> for syntax errors
+- Ensure all required files are included
+- Test build locally: <code>uv build</code></p>
+<h3 id="debug-commands">Debug Commands<a class="headerlink" href="#debug-commands" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Validate package structure</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>tarfile<span class="w"> </span>-l<span class="w"> </span>dist/*.tar.gz
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Check package metadata</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import importlib.metadata; print(importlib.metadata.metadata(&#39;fastmcp-ssh-server&#39;))&quot;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Test package installation</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>dist/*.whl
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import python_ssh_mcp; print(&#39;Import successful&#39;)&quot;</span>
+</code></pre></div>
+<h2 id="pre-release-checklist">📋 Pre-Release Checklist<a class="headerlink" href="#pre-release-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] All tests pass locally: <code>uv run pytest</code></li>
+<li>[ ] Code quality checks pass: <code>uv run ruff check</code></li>
+<li>[ ] Type checking passes: <code>uv run mypy src/</code></li>
+<li>[ ] Documentation is updated</li>
+<li>[ ] <code>CHANGELOG.md</code> is updated</li>
+<li>[ ] Version bumped in <code>pyproject.toml</code></li>
+<li>[ ] Package builds successfully: <code>uv build</code></li>
+<li>[ ] Trusted publishing is configured on PyPI/TestPyPI</li>
+<li>[ ] GitHub environments exist and are configured</li>
+</ul>
+<h2 id="success-metrics">🎉 Success Metrics<a class="headerlink" href="#success-metrics" title="Permanent link">&para;</a></h2>
+<p>After successful publishing:
+- ✅ Package appears on PyPI
+- ✅ Installation works: <code>pip install fastmcp-ssh-server</code>
+- ✅ CLI works: <code>fastmcp-ssh-server --version</code>
+- ✅ Import works: <code>python -c "import python_ssh_mcp"</code>
+- ✅ All functionality operational</p>
+<h2 id="getting-help">📞 Getting Help<a class="headerlink" href="#getting-help" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>PyPI Issues</strong>: <a href="https://pypi.org/help/">PyPI Help</a></li>
+<li><strong>GitHub Actions</strong>: <a href="https://docs.github.com/en/actions">GitHub Actions Documentation</a></li>
+<li><strong>Trusted Publishing</strong>: <a href="https://docs.pypi.org/trusted-publishers/">PyPI Trusted Publishing</a></li>
+<li><strong>Project Issues</strong>: <a href="https://github.com/enwaiax/shuttle/issues">GitHub Issues</a></li>
+</ul>
+<hr />
+<p><em>Ready to publish? Follow the automated release process for the smoothest experience!</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["navigation.instant","navigation.tracking","navigation.sections","content.code.copy","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c2b142ea.min.js"></script>
+      
+    
+  </body>
+</html>
