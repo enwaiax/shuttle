@@ -154,21 +154,24 @@ async def test_node(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Node not found")
 
     try:
-        from shuttle.core.proxy import connect_ssh
+        from shuttle.core.proxy import NodeConnectInfo, connect_ssh
 
         cred_mgr = _get_cred_mgr()
         credential = cred_mgr.decrypt(node.encrypted_credential)
 
-        start = time.monotonic()
-        client = await connect_ssh(
-            host=node.host,
+        info = NodeConnectInfo(
+            node_id=node.id,
+            hostname=node.host,
             port=node.port,
             username=node.username,
-            auth_type=node.auth_type,
-            credential=credential,
+            password=credential if node.auth_type == "password" else None,
+            private_key=credential if node.auth_type == "key" else None,
         )
+
+        start = time.monotonic()
+        client = await connect_ssh(info)
         latency = (time.monotonic() - start) * 1000
         client.close()
-        return NodeTestResult(success=True, message="Connection successful", latency_ms=latency)
+        return NodeTestResult(success=True, message=f"Connection successful ({int(latency)}ms)", latency_ms=latency)
     except Exception as exc:
         return NodeTestResult(success=False, message=str(exc))
