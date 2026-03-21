@@ -4,10 +4,11 @@
 
 **Secure SSH gateway for AI assistants**
 
-[![Python](https://img.shields.io/badge/python-3.12+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
-[![FastMCP](https://img.shields.io/badge/MCP-2.0+-76B900?style=flat-square)](https://modelcontextprotocol.io)
-[![License](https://img.shields.io/badge/license-ISC-blue?style=flat-square)](LICENSE)
+[![CI](https://img.shields.io/github/actions/workflow/status/enwaiax/shuttle/test.yml?style=flat-square&label=CI)](https://github.com/enwaiax/shuttle/actions/workflows/test.yml)
+[![codecov](https://img.shields.io/codecov/c/github/enwaiax/shuttle?style=flat-square&color=76B900)](https://codecov.io/gh/enwaiax/shuttle)
 [![PyPI](https://img.shields.io/pypi/v/shuttle-mcp?style=flat-square&color=76B900)](https://pypi.org/project/shuttle-mcp)
+[![Python](https://img.shields.io/badge/python-3.12+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![License](https://img.shields.io/badge/license-ISC-blue?style=flat-square)](LICENSE)
 
 Shuttle lets AI assistants (Claude Code, Cursor, etc.) securely execute commands on your remote SSH servers — with connection pooling, session isolation, command safety rules, and a web audit panel.
 

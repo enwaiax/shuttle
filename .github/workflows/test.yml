@@ -14,10 +14,6 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.11", "3.12", "3.13"]
-
     steps:
       - uses: actions/checkout@v4
 
@@ -26,8 +22,8 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Set up Python ${{ matrix.python-version }}
-        run: uv python install ${{ matrix.python-version }}
+      - name: Set up Python
+        run: uv python install 3.12
 
       - name: Install dependencies
         run: uv sync --all-extras --dev
@@ -35,11 +31,16 @@ jobs:
       - name: Lint
         run: uv run ruff check src/shuttle/ tests/
 
-      - name: Type check (Python)
-        run: uv run python -c "import shuttle; print(f'shuttle {shuttle.__version__} OK')"
+      - name: Test with coverage
+        run: uv run pytest tests/ -v --tb=short --cov=src/shuttle --cov-report=xml --cov-report=term-missing
 
-      - name: Test
-        run: uv run pytest tests/ -v --tb=short
+      - name: Upload coverage to Codecov
+        if: github.ref == 'refs/heads/main'
+        uses: codecov/codecov-action@v5
+        with:
+          files: coverage.xml
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   frontend:
     runs-on: ubuntu-latest
