@@ -200,10 +200,11 @@ async def _execute_command_logic(
                 # Update node last_seen_at on successful execution
                 from datetime import datetime, timezone
                 node_repo = NodeRepo(db_sess)
-                await node_repo.update(resolved_node_id, {
-                    "last_seen_at": datetime.now(timezone.utc),
-                    "status": "active",
-                })
+                await node_repo.update(
+                    resolved_node_id,
+                    last_seen_at=datetime.now(timezone.utc),
+                    status="active",
+                )
         except Exception:
             logger.exception("Failed to persist command log")
 
