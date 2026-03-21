@@ -63,6 +63,18 @@ async def init_db(engine: AsyncEngine) -> None:
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
+        # Create indexes if they don't exist (idempotent for existing DBs)
+        for idx_sql in [
+            "CREATE INDEX IF NOT EXISTS ix_command_logs_node_executed ON command_logs (node_id, executed_at)",
+            "CREATE INDEX IF NOT EXISTS ix_command_logs_session ON command_logs (session_id)",
+            "CREATE INDEX IF NOT EXISTS ix_security_rules_node ON security_rules (node_id)",
+            "CREATE INDEX IF NOT EXISTS ix_sessions_node_status ON sessions (node_id, status)",
+        ]:
+            try:
+                await conn.execute(text(idx_sql))
+            except Exception:
+                pass  # Index might already exist or DB doesn't support IF NOT EXISTS
+
         # Migration: add source_rule_id if missing (v1 → v2)
         if "sqlite" in str(engine.url):
             result = await conn.execute(text("PRAGMA table_info(security_rules)"))

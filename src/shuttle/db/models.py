@@ -8,6 +8,7 @@ from sqlalchemy import (
     Boolean,
     DateTime,
     ForeignKey,
+    Index,
     Integer,
     String,
     Text,
@@ -76,6 +77,9 @@ class SecurityRule(Base):
     """Pattern-based security rule for command filtering."""
 
     __tablename__ = "security_rules"
+    __table_args__ = (
+        Index("ix_security_rules_node", "node_id"),
+    )
 
     id: Mapped[str] = mapped_column(
         String(36), primary_key=True, default=lambda: str(uuid.uuid4())
@@ -105,6 +109,9 @@ class Session(Base):
     """Active SSH session tracking."""
 
     __tablename__ = "sessions"
+    __table_args__ = (
+        Index("ix_sessions_node_status", "node_id", "status"),
+    )
 
     id: Mapped[str] = mapped_column(
         String(36), primary_key=True, default=lambda: str(uuid.uuid4())
@@ -135,6 +142,10 @@ class CommandLog(Base):
     """Log of executed commands."""
 
     __tablename__ = "command_logs"
+    __table_args__ = (
+        Index("ix_command_logs_node_executed", "node_id", "executed_at"),
+        Index("ix_command_logs_session", "session_id"),
+    )
 
     id: Mapped[str] = mapped_column(
         String(36), primary_key=True, default=lambda: str(uuid.uuid4())
