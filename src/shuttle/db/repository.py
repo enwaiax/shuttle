@@ -26,7 +26,7 @@ class NodeRepo:
         jump_host_id: str | None = None,
         tags: list | None = None,
         pool_config: dict | None = None,
-        status: str = "active",
+        status: str = "inactive",
     ) -> Node:
         node = Node(
             name=name,

@@ -135,21 +135,87 @@ def serve(
 # ── Node commands ─────────────────────────────────────────────────────────────
 
 @node_app.command("add")
-def node_add() -> None:
-    """Add a new SSH node interactively."""
-    name = typer.prompt("Node name")
-    host = typer.prompt("Host")
-    username = typer.prompt("Username")
-    port = typer.prompt("Port", default="22")
-    password = typer.prompt("Password (leave empty to use key file)", default="", hide_input=True)
+def node_add(
+    name: str = typer.Option(None, "--name", "-n", help="Node name"),
+    host: str = typer.Option(None, "--host", "-H", help="Hostname or IP"),
+    username: str = typer.Option(None, "--user", "-u", help="SSH username"),
+    port: int = typer.Option(22, "--port", "-p", help="SSH port"),
+    password: str = typer.Option(None, "--password", help="Password (or use --key-file)"),
+    key_file: str = typer.Option(None, "--key-file", "-k", help="Path to private key file"),
+) -> None:
+    """Add a new SSH node.
+
+    Pass all options for non-interactive mode, or omit them for interactive prompts.
+
+    \b
+    Examples:
+      shuttle node add                                          # interactive
+      shuttle node add -n myserver -H 10.0.0.1 -u root --password secret
+      shuttle node add -n myserver -H 10.0.0.1 -u root -k ~/.ssh/id_rsa
+    """
+    from rich.prompt import Prompt
+
+    def _ask_required(label: str, value: str | None) -> str:
+        while True:
+            result = value or Prompt.ask(f"  [bold]{label}[/bold]")
+            if result and result.strip():
+                return result.strip()
+            value = None
+            typer.secho(f"  {label} is required.", fg=typer.colors.RED, err=True)
+
+    interactive = not name
+    if interactive:
+        typer.echo()
+    name = _ask_required("Name", name)
+    host = _ask_required("Host", host)
+    username = _ask_required("User", username)
 
     if password:
         auth_type = "password"
         credential = password
-    else:
-        key_path = typer.prompt("Private key file path")
-        credential = Path(key_path).expanduser().read_text()
+    elif key_file:
+        key_path = Path(key_file).expanduser()
+        if not key_path.exists():
+            typer.secho(f"  Key file not found: {key_path}", fg=typer.colors.RED, err=True)
+            raise typer.Exit(1)
         auth_type = "key"
+        credential = key_path.read_text()
+    else:
+        pwd = Prompt.ask("  [bold]Password[/bold] [dim](enter to use key)[/dim]", password=True, default="")
+        if pwd:
+            auth_type = "password"
+            credential = pwd
+        else:
+            auth_type = "key"
+            typer.echo("  [dim]No password, using SSH key...[/dim]")
+            while True:
+                kp = Prompt.ask("  [bold]Key file[/bold]", default="~/.ssh/id_rsa")
+                key_path = Path(kp).expanduser()
+                if key_path.exists():
+                    credential = key_path.read_text()
+                    break
+                typer.secho(f"  File not found: {key_path}", fg=typer.colors.RED, err=True)
+
+    # Early duplicate check before asking for credentials in interactive mode
+    async def _check_exists(n: str) -> bool:
+        from shuttle.core.config import ShuttleConfig
+        from shuttle.db.engine import create_db_engine, create_session_factory, init_db
+        from shuttle.db.repository import NodeRepo
+        cfg = ShuttleConfig()
+        url = cfg.db_url
+        if ":///" in url and "~" in url:
+            url = url.replace("~", str(Path.home()))
+        eng = create_db_engine(url)
+        await init_db(eng)
+        sf = create_session_factory(eng)
+        async with sf() as s:
+            exists = await NodeRepo(s).get_by_name(n) is not None
+        await eng.dispose()
+        return exists
+
+    if asyncio.run(_check_exists(name)):
+        typer.secho(f"  ✗ Node '{name}' already exists.", fg=typer.colors.RED, err=True)
+        raise typer.Exit(1)
 
     async def _add() -> None:
         from shuttle.core.config import ShuttleConfig
@@ -173,11 +239,7 @@ def node_add() -> None:
 
         async with session_factory() as session:
             repo = NodeRepo(session)
-            existing = await repo.get_by_name(name)
-            if existing is not None:
-                typer.secho(f"Node '{name}' already exists.", fg=typer.colors.RED, err=True)
-                raise typer.Exit(1)
-            await repo.create(
+            node = await repo.create(
                 name=name,
                 host=host,
                 port=int(port),
@@ -186,10 +248,31 @@ def node_add() -> None:
                 encrypted_credential=encrypted,
             )
 
+            from shuttle.core.proxy import NodeConnectInfo, connect_ssh
+            info = NodeConnectInfo(
+                node_id=name,
+                hostname=host,
+                port=int(port),
+                username=username,
+                password=credential if auth_type == "password" else None,
+                private_key=credential if auth_type == "key" else None,
+            )
+            typer.echo(f"  ○ {name} created, testing connection...")
+            try:
+                conn = await connect_ssh(info)
+                result = await conn.run("echo ok", check=True)
+                conn.close()
+                if result.stdout.strip() == "ok":
+                    await repo.update(node.id, status="active")
+                    typer.echo(f"  ● {name} online ✓")
+                else:
+                    typer.echo(f"  ○ {name} added (connection returned unexpected output)")
+            except Exception as exc:
+                typer.secho(f"  ○ {name} added (offline — {exc})", fg=typer.colors.YELLOW, err=True)
+
         await engine.dispose()
 
     asyncio.run(_add())
-    typer.secho(f"Node '{name}' added successfully.", fg=typer.colors.GREEN)
 
 
 @node_app.command("list")
@@ -225,12 +308,12 @@ def node_list() -> None:
         table = Table(border_style="dim", show_lines=False, padding=(0, 1))
         table.add_column("Node", style="bold")
         table.add_column("Host", style="cyan")
-        table.add_column("Port", justify="right")
         table.add_column("User", style="dim")
+        table.add_column("Port", justify="right", style="dim")
 
         for node in nodes:
             dot = "[green]●[/green]" if node.status == "active" else "[red]●[/red]" if node.status == "error" else "[dim]○[/dim]"
-            table.add_row(f"{dot} {node.name}", node.host, str(node.port), node.username)
+            table.add_row(f"{dot} {node.name}", node.host, node.username, str(node.port))
 
         Console().print(table)
 
@@ -292,7 +375,7 @@ def node_edit(name: str = typer.Argument(..., help="Node name to edit")) -> None
         await engine.dispose()
 
     asyncio.run(_edit())
-    typer.secho(f"Node '{name}' updated successfully.", fg=typer.colors.GREEN)
+    typer.echo(f"  ● {name} updated ✓")
 
 
 @node_app.command("test")
@@ -364,7 +447,7 @@ def node_test(name: str = typer.Argument(..., help="Node name to test")) -> None
                 conn.close()
                 output = result.stdout.strip()
                 if output == "ok":
-                    typer.secho(f"Connection successful: {name}", fg=typer.colors.GREEN)
+                    typer.echo(f"  ● {name} connected ✓")
                     await repo.update(node.id, status="active")
                 else:
                     typer.secho(f"Unexpected output: {output!r}", fg=typer.colors.YELLOW)
@@ -416,9 +499,9 @@ def node_remove(
 
         await engine.dispose()
         if deleted:
-            typer.secho(f"Node '{name}' removed.", fg=typer.colors.GREEN)
+            typer.echo(f"  ○ {name} removed")
         else:
-            typer.secho(f"Failed to remove node '{name}'.", fg=typer.colors.RED, err=True)
+            typer.secho(f"  ✗ Failed to remove '{name}'", fg=typer.colors.RED, err=True)
 
     asyncio.run(_remove())
 
