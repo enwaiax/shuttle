@@ -42,6 +42,8 @@ class NodeResponse(BaseModel):
     jump_host_id: str | None
     tags: list[str] | None
     status: str
+    latency_ms: int | None = None
+    last_seen_at: datetime | None = None
     created_at: datetime
     updated_at: datetime
 

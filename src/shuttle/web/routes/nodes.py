@@ -172,6 +172,16 @@ async def test_node(
         client = await connect_ssh(info)
         latency = (time.monotonic() - start) * 1000
         client.close()
+
+        # Persist latency + last_seen to DB
+        from datetime import datetime, timezone
+        await repo.update(node_id, {
+            "latency_ms": int(latency),
+            "last_seen_at": datetime.now(timezone.utc),
+            "status": "active",
+        })
+
         return NodeTestResult(success=True, message=f"Connection successful ({int(latency)}ms)", latency_ms=latency)
     except Exception as exc:
+        await repo.update(node_id, {"status": "offline"})
         return NodeTestResult(success=False, message=str(exc))

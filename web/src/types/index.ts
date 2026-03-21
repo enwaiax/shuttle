@@ -10,6 +10,8 @@ export interface NodeResponse {
   jump_host_id: string | null;
   tags: string[] | null;
   status: string;
+  latency_ms: number | null;
+  last_seen_at: string | null;
   created_at: string;
   updated_at: string;
 }

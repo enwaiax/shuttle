@@ -39,6 +39,10 @@ class Node(Base):
     tags: Mapped[list | None] = mapped_column(JSON, nullable=True)
     pool_config: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     status: Mapped[str] = mapped_column(String(50), nullable=False, default="active")
+    latency_ms: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    last_seen_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,

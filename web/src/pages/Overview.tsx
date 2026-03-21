@@ -1,6 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Server, Terminal, Plus, Activity, Cpu, Pencil, Plug, Loader2, CheckCircle2, XCircle, Trash2 } from "lucide-react";
+
+function formatTimeAgo(date: Date): string {
+  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+  if (seconds < 60) return "just now";
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
+}
 import { toast } from "sonner";
 import { useNodes, useStats, useLogs, useTestNode, useDeleteNode } from "../api/client";
 import type { NodeResponse } from "../types";
@@ -96,8 +107,13 @@ function NodeCard({
   onDelete: () => void;
   index: number;
 }) {
-  const isActive = node.status === "active";
-  const [latencyMs, setLatencyMs] = useState<number | null>(null);
+  const isOffline = node.status === "offline";
+  const [latencyMs, setLatencyMs] = useState<number | null>(node.latency_ms);
+
+  // Format "last seen" as relative time
+  const lastSeen = node.last_seen_at
+    ? formatTimeAgo(new Date(node.last_seen_at))
+    : null;
 
   return (
     <div
@@ -108,18 +124,18 @@ function NodeCard({
         <span
           className={clsx(
             "h-2 w-2 rounded-full",
-            isActive ? "bg-[var(--green)] animate-pulse-green" : "bg-[var(--text-muted)]",
+            isOffline ? "bg-[var(--red)]" : latencyMs != null ? "bg-[var(--green)] animate-pulse-green" : "bg-[var(--text-quaternary)]",
           )}
         />
         <span className="text-[14px] font-semibold text-[var(--text-primary)]">
           {node.name}
         </span>
-        {latencyMs !== null ? (
+        {isOffline ? (
+          <span className="text-[10px] font-medium text-[var(--red)]">unreachable</span>
+        ) : latencyMs != null ? (
           <span className="text-[10px] tabular-nums font-medium text-[var(--green)]" style={{ fontFamily: "var(--font-mono)" }}>
             {latencyMs}ms
           </span>
-        ) : isActive ? (
-          <span className="text-[10px] font-medium text-[var(--text-tertiary)]">connected</span>
         ) : null}
         <div className="ml-auto flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
           <NodeCardTestButton nodeId={node.id} onLatency={setLatencyMs} />
@@ -144,6 +160,7 @@ function NodeCard({
         style={{ fontFamily: "var(--font-mono)" }}
       >
         {node.username}@{node.host}:{node.port}
+        {lastSeen && <span className="text-[var(--text-muted)]"> · {lastSeen}</span>}
       </p>
       {node.tags && node.tags.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-1.5">
