@@ -3,6 +3,7 @@ site_description: Secure SSH gateway for AI assistants
 site_url: https://enwaiax.github.io/ssh-mcp/
 repo_url: https://github.com/enwaiax/ssh-mcp
 repo_name: enwaiax/ssh-mcp
+site_dir: site
 
 theme:
   name: material

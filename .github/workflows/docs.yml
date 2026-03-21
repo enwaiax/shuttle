@@ -23,7 +23,7 @@ jobs:
 
       - run: pip install zensical
 
-      - run: zensical build --site-dir site
+      - run: zensical build
 
       - uses: peaceiris/actions-gh-pages@v4
         with:
