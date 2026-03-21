@@ -85,6 +85,21 @@ async def create_mcp_server(
     if seeded:
         logger.info("Seeded {n} default security rules", n=seeded)
 
+    # ── 3b. Cleanup old logs/sessions based on retention policy ───
+    from shuttle.db.repository import ConfigRepo, cleanup_old_data
+    async with session_factory() as db_session:
+        config_repo = ConfigRepo(db_session)
+        log_days = (await config_repo.get("cleanup_command_logs_days")) or 30
+        session_days = (await config_repo.get("cleanup_closed_sessions_days")) or 7
+    async with session_factory() as db_session:
+        cleaned = await cleanup_old_data(db_session, log_days, session_days)
+        if cleaned["command_logs"] or cleaned["sessions"]:
+            logger.info(
+                "Cleanup: deleted {logs} old logs, {sess} closed sessions",
+                logs=cleaned["command_logs"],
+                sess=cleaned["sessions"],
+            )
+
     # ── 4. Security guard (rules queried per-call from DB) ──────────
     guard = CommandGuard()
 
@@ -249,6 +264,21 @@ async def create_service_app(
             seeded = await seed_default_rules(db_sess)
             if seeded:
                 logger.info("Seeded {n} default security rules", n=seeded)
+
+        # Cleanup old logs/sessions on startup
+        from shuttle.db.repository import ConfigRepo, cleanup_old_data
+        async with session_factory() as db_sess:
+            cfg_repo = ConfigRepo(db_sess)
+            log_days = (await cfg_repo.get("cleanup_command_logs_days")) or 30
+            sess_days = (await cfg_repo.get("cleanup_closed_sessions_days")) or 7
+        async with session_factory() as db_sess:
+            cleaned = await cleanup_old_data(db_sess, log_days, sess_days)
+            if cleaned["command_logs"] or cleaned["sessions"]:
+                logger.info(
+                    "Cleanup: deleted {logs} old logs, {sess} closed sessions",
+                    logs=cleaned["command_logs"],
+                    sess=cleaned["sessions"],
+                )
 
         # Register nodes from DB
         async with session_factory() as db_sess:

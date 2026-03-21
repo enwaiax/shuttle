@@ -1,6 +1,6 @@
 """Repository layer — CRUD operations for Shuttle ORM models."""
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from sqlalchemy import select
@@ -295,6 +295,39 @@ class LogRepo:
             .offset(offset)
         )
         return list(result.scalars().all())
+
+
+async def cleanup_old_data(
+    session: AsyncSession,
+    command_log_days: int = 30,
+    closed_session_days: int = 7,
+) -> dict[str, int]:
+    """Delete old command logs and closed sessions based on retention policy.
+
+    Returns dict with counts of deleted records.
+    """
+    from sqlalchemy import delete
+
+    cutoff_logs = datetime.now(timezone.utc) - timedelta(days=command_log_days)
+    cutoff_sessions = datetime.now(timezone.utc) - timedelta(days=closed_session_days)
+
+    # Delete old command logs
+    result_logs = await session.execute(
+        delete(CommandLog).where(CommandLog.executed_at < cutoff_logs)
+    )
+    deleted_logs = result_logs.rowcount or 0
+
+    # Delete old closed sessions
+    result_sessions = await session.execute(
+        delete(Session).where(
+            Session.status == "closed",
+            Session.closed_at < cutoff_sessions,
+        )
+    )
+    deleted_sessions = result_sessions.rowcount or 0
+
+    await session.commit()
+    return {"command_logs": deleted_logs, "sessions": deleted_sessions}
 
 
 class ConfigRepo:
