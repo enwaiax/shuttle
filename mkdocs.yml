@@ -1,0 +1,48 @@
+site_name: Shuttle
+site_description: Secure SSH gateway for AI assistants
+site_url: https://enwaiax.github.io/ssh-mcp/
+repo_url: https://github.com/enwaiax/ssh-mcp
+repo_name: enwaiax/ssh-mcp
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: custom
+      accent: lime
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: custom
+      accent: lime
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - content.code.copy
+    - search.highlight
+
+extra_css:
+  - stylesheets/extra.css
+
+nav:
+  - Home: index.md
+  - Getting Started: index.md#quick-start
+  - Configuration: configuration.md
+  - Security Rules: security-rules.md
+  - MCP Setup: mcp-setup.md
+  - Web Panel: web-panel.md
+
+markdown_extensions:
+  - tables
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - toc:
+      permalink: true
