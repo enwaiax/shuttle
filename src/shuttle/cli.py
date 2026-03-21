@@ -115,9 +115,6 @@ def serve(
         server = uvicorn.Server(uvi_config)
         await server.serve()
 
-    # Suppress KeyboardInterrupt traceback
-    original_sigint = signal.getsignal(signal.SIGINT)
-
     try:
         asyncio.run(_run())
     except (KeyboardInterrupt, SystemExit):
