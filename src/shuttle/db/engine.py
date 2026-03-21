@@ -73,6 +73,18 @@ async def init_db(engine: AsyncEngine) -> None:
                         "ALTER TABLE security_rules ADD COLUMN source_rule_id VARCHAR(36)"
                     )
                 )
+
+            # Migration: add latency_ms + last_seen_at to nodes
+            result2 = await conn.execute(text("PRAGMA table_info(nodes)"))
+            node_columns = [row[1] for row in result2]
+            if "latency_ms" not in node_columns:
+                await conn.execute(
+                    text("ALTER TABLE nodes ADD COLUMN latency_ms INTEGER")
+                )
+            if "last_seen_at" not in node_columns:
+                await conn.execute(
+                    text("ALTER TABLE nodes ADD COLUMN last_seen_at DATETIME")
+                )
         else:
             result = await conn.execute(
                 text(
@@ -85,4 +97,19 @@ async def init_db(engine: AsyncEngine) -> None:
                     text(
                         "ALTER TABLE security_rules ADD COLUMN source_rule_id VARCHAR(36)"
                     )
+                )
+
+            # Migration: add latency_ms + last_seen_at to nodes
+            result2 = await conn.execute(
+                text(
+                    "SELECT column_name FROM information_schema.columns "
+                    "WHERE table_name = 'nodes' AND column_name = 'latency_ms'"
+                )
+            )
+            if not result2.fetchone():
+                await conn.execute(
+                    text("ALTER TABLE nodes ADD COLUMN latency_ms INTEGER")
+                )
+                await conn.execute(
+                    text("ALTER TABLE nodes ADD COLUMN last_seen_at TIMESTAMP WITH TIME ZONE")
                 )

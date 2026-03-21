@@ -81,7 +81,7 @@ async def _execute_command_logic(
     str
         Command output or a security/error message.
     """
-    from shuttle.db.repository import LogRepo
+    from shuttle.db.repository import LogRepo, NodeRepo
 
     # ── 1. Resolve target node ──────────────────────────────────────
     resolved_node: Optional[str] = node
@@ -197,6 +197,13 @@ async def _execute_command_logic(
                     bypassed=bool(confirm_token),
                     duration_ms=elapsed_ms,
                 )
+                # Update node last_seen_at on successful execution
+                from datetime import datetime, timezone
+                node_repo = NodeRepo(db_sess)
+                await node_repo.update(resolved_node_id, {
+                    "last_seen_at": datetime.now(timezone.utc),
+                    "status": "active",
+                })
         except Exception:
             logger.exception("Failed to persist command log")
 
