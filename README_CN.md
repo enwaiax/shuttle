@@ -202,7 +202,7 @@ SHUTTLE_DB_URL=postgresql+asyncpg://user:pass@host:5432/shuttle shuttle serve
 
 ```bash
 # 克隆并安装
-git clone https://github.com/enwaiax/ssh-mcp.git
+git clone https://github.com/enwaiax/shuttle.git
 cd ssh-mcp
 uv sync
 

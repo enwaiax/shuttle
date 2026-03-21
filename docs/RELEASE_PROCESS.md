@@ -79,7 +79,7 @@ git push origin v1.0.0
 
 ### 3. Create GitHub Release
 
-1. Go to [GitHub Releases](https://github.com/enwaiax/ssh-mcp/releases)
+1. Go to [GitHub Releases](https://github.com/enwaiax/shuttle/releases)
 2. Click "Create a new release"
 3. Select the tag you just created
 4. Fill in release title: `v1.0.0`

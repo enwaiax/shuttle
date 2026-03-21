@@ -85,7 +85,7 @@ jobs:
 
             ### What's new
 
-            See [CHANGELOG.md](https://github.com/enwaiax/ssh-mcp/blob/main/CHANGELOG.md) for details.
+            See [CHANGELOG.md](https://github.com/enwaiax/shuttle/blob/main/CHANGELOG.md) for details.
           draft: false
           prerelease: false
           files: dist/*

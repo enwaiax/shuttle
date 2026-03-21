@@ -201,7 +201,7 @@ Requires: `pip install asyncpg`
 
 ```bash
 # Clone and install
-git clone https://github.com/enwaiax/ssh-mcp.git
+git clone https://github.com/enwaiax/shuttle.git
 cd ssh-mcp
 uv sync
 

@@ -24,7 +24,7 @@ Complete guide for publishing SSH MCP Tools to PyPI using GitHub Actions and tru
 3. Go to "Settings" → "Publishing"
 4. Click "Add a new publisher"
 5. Fill in the details:
-   - **Repository name**: `enwaiax/ssh-mcp`
+   - **Repository name**: `enwaiax/shuttle`
    - **Workflow filename**: `publish-to-pypi.yml`
    - **Environment name**: `pypi`
 
@@ -75,7 +75,7 @@ git push origin v1.0.0
 ```
 
 #### Step 3: Create GitHub Release
-1. Go to [Releases](https://github.com/enwaiax/ssh-mcp/releases)
+1. Go to [Releases](https://github.com/enwaiax/shuttle/releases)
 2. Click "Create a new release"
 3. Select tag `v1.0.0`
 4. Add release title: `SSH MCP Tools v1.0.0`
@@ -234,7 +234,7 @@ After successful publishing:
 - **PyPI Issues**: [PyPI Help](https://pypi.org/help/)
 - **GitHub Actions**: [GitHub Actions Documentation](https://docs.github.com/en/actions)
 - **Trusted Publishing**: [PyPI Trusted Publishing](https://docs.pypi.org/trusted-publishers/)
-- **Project Issues**: [GitHub Issues](https://github.com/enwaiax/ssh-mcp/issues)
+- **Project Issues**: [GitHub Issues](https://github.com/enwaiax/shuttle/issues)
 
 ---
 

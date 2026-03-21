@@ -78,5 +78,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Performance**: <5% overhead for enhanced features
 - **Documentation**: Complete migration and feature guides
 
-[Unreleased]: https://github.com/enwaiax/ssh-mcp/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/enwaiax/ssh-mcp/releases/tag/v0.1.0
+[Unreleased]: https://github.com/enwaiax/shuttle/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/enwaiax/shuttle/releases/tag/v0.1.0
