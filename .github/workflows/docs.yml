@@ -2,12 +2,15 @@ name: Deploy Docs
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
       - "docs/**"
       - "mkdocs.yml"
   workflow_dispatch:
+
+concurrency:
+  group: docs
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -22,11 +25,14 @@ jobs:
         with:
           python-version: "3.12"
 
-      - run: pip install zensical
+      - name: Install zensical
+        run: pip install zensical
 
-      - run: zensical build
+      - name: Build docs
+        run: zensical build
 
-      - uses: peaceiris/actions-gh-pages@v4
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./site

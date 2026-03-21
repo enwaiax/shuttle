@@ -1,23 +1,30 @@
-name: Tests
+name: CI
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.12", "3.13"]
+        python-version: ["3.11", "3.12", "3.13"]
 
     steps:
       - uses: actions/checkout@v4
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
 
       - name: Set up Python ${{ matrix.python-version }}
         run: uv python install ${{ matrix.python-version }}
@@ -26,10 +33,75 @@ jobs:
         run: uv sync --all-extras --dev
 
       - name: Lint
-        run: uv run ruff check src/ tests/
+        run: uv run ruff check src/shuttle/ tests/
+
+      - name: Type check (Python)
+        run: uv run python -c "import shuttle; print(f'shuttle {shuttle.__version__} OK')"
 
       - name: Test
         run: uv run pytest tests/ -v --tb=short
 
-      - name: Build check
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install
+        run: cd web && npm ci
+
+      - name: Type check
+        run: cd web && npx tsc --noEmit
+
+      - name: Build
+        run: cd web && npm run build
+
+  build:
+    needs: [test, frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: web/package-lock.json
+
+      - name: Build frontend
+        run: cd web && npm ci && npm run build
+
+      - name: Build wheel
         run: uv build
+
+      - name: Verify wheel contents
+        run: |
+          python3 -c "
+          import zipfile; from pathlib import Path
+          whl = list(Path('dist').glob('*.whl'))[0]
+          with zipfile.ZipFile(whl) as z:
+              statics = [n for n in z.namelist() if 'static' in n]
+              assert len(statics) >= 3, f'Expected >=3 static files, got {len(statics)}'
+              print(f'Wheel OK: {whl.name} ({len(z.namelist())} files, {len(statics)} static)')
+          "
+
+      - name: Upload wheel artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
