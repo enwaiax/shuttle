@@ -284,8 +284,12 @@ async def create_service_app(
         async with mcp_http.lifespan(mcp_http):
             yield
 
-        # Shutdown
-        await pool.close_all()
+        # Shutdown — close pool with timeout to avoid hanging on Ctrl+C
+        import asyncio
+        try:
+            await asyncio.wait_for(pool.close_all(), timeout=3.0)
+        except asyncio.TimeoutError:
+            logger.warning("Connection pool close timed out — forcing shutdown")
         await engine.dispose()
 
     # ── Inject shared deps into web layer ────────────────────────────
