@@ -42,6 +42,11 @@ jobs:
       - name: Set up Python
         run: uv python install 3.12
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
       - name: Build frontend
         run: |
           cd web
