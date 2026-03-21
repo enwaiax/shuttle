@@ -46,6 +46,8 @@ def _to_response(node) -> dict:
         "jump_host_id": node.jump_host_id,
         "tags": tags,
         "status": node.status,
+        "latency_ms": node.latency_ms,
+        "last_seen_at": node.last_seen_at,
         "created_at": node.created_at,
         "updated_at": node.updated_at,
     }

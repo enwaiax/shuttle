@@ -281,16 +281,21 @@ async def create_service_app(
         await pool.start_eviction_loop()
 
         # Run MCP lifespan within the combined lifespan
+        import asyncio
+
         async with mcp_http.lifespan(mcp_http):
             yield
 
-        # Shutdown — close pool with timeout to avoid hanging on Ctrl+C
-        import asyncio
+        # Shutdown — force close everything with timeout
+        async def _shutdown():
+            await pool.close_all()
+            await engine.dispose()
+
         try:
-            await asyncio.wait_for(pool.close_all(), timeout=3.0)
-        except asyncio.TimeoutError:
-            logger.warning("Connection pool close timed out — forcing shutdown")
-        await engine.dispose()
+            await asyncio.wait_for(_shutdown(), timeout=3.0)
+        except (asyncio.TimeoutError, asyncio.CancelledError):
+            logger.warning("Shutdown timed out — forcing exit")
+            await engine.dispose()
 
     # ── Inject shared deps into web layer ────────────────────────────
     init_db_deps(api_token=api_token, engine=engine, session_factory=session_factory)
