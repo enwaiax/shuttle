@@ -118,27 +118,45 @@ async def create_mcp_server(
         node_repo = NodeRepo(db_sess)
         nodes = await node_repo.list_all()
 
+    # Build a lookup by node ID for jump host resolution
+    nodes_by_id = {n.id: n for n in nodes}
+
+    def _build_node_connect_info(node, _seen=None):
+        """Build NodeConnectInfo with recursive jump host resolution."""
+        if _seen is None:
+            _seen = set()
+        if node.id in _seen:
+            return None  # Prevent circular jump host references
+        _seen.add(node.id)
+
+        password = None
+        private_key = None
+        if node.encrypted_credential:
+            decrypted = cred_mgr.decrypt(node.encrypted_credential)
+            if node.auth_type == "key":
+                private_key = decrypted
+            else:
+                password = decrypted
+
+        jump_host_info = None
+        if node.jump_host_id and node.jump_host_id in nodes_by_id:
+            jump_host_info = _build_node_connect_info(nodes_by_id[node.jump_host_id], _seen)
+
+        return NodeConnectInfo(
+            node_id=node.name,
+            hostname=node.host,
+            port=node.port,
+            username=node.username,
+            password=password,
+            private_key=private_key,
+            jump_host=jump_host_info,
+        )
+
     for node in nodes:
         try:
-            # Decrypt the credential
-            password = None
-            private_key = None
-            if node.encrypted_credential:
-                decrypted = cred_mgr.decrypt(node.encrypted_credential)
-                if node.auth_type == "key":
-                    private_key = decrypted
-                else:
-                    password = decrypted
-
-            info = NodeConnectInfo(
-                node_id=node.name,
-                hostname=node.host,
-                port=node.port,
-                username=node.username,
-                password=password,
-                private_key=private_key,
-            )
-            pool.register_node(info)
+            info = _build_node_connect_info(node)
+            if info is not None:
+                pool.register_node(info)
         except Exception:
             logger.warning(
                 "Failed to register node '{name}' — skipping",
@@ -285,25 +303,44 @@ async def create_service_app(
             node_repo = NodeRepo(db_sess)
             nodes = await node_repo.list_all()
 
+        # Build a lookup by node ID for jump host resolution
+        nodes_by_id = {n.id: n for n in nodes}
+
+        def _build_node_info(node, _seen=None):
+            if _seen is None:
+                _seen = set()
+            if node.id in _seen:
+                return None
+            _seen.add(node.id)
+
+            pw = None
+            pk = None
+            if node.encrypted_credential:
+                dec = cred_mgr.decrypt(node.encrypted_credential)
+                if node.auth_type == "key":
+                    pk = dec
+                else:
+                    pw = dec
+
+            jh_info = None
+            if node.jump_host_id and node.jump_host_id in nodes_by_id:
+                jh_info = _build_node_info(nodes_by_id[node.jump_host_id], _seen)
+
+            return NodeConnectInfo(
+                node_id=node.name,
+                hostname=node.host,
+                port=node.port,
+                username=node.username,
+                password=pw,
+                private_key=pk,
+                jump_host=jh_info,
+            )
+
         for node in nodes:
             try:
-                password = None
-                private_key = None
-                if node.encrypted_credential:
-                    decrypted = cred_mgr.decrypt(node.encrypted_credential)
-                    if node.auth_type == "key":
-                        private_key = decrypted
-                    else:
-                        password = decrypted
-                info = NodeConnectInfo(
-                    node_id=node.name,
-                    hostname=node.host,
-                    port=node.port,
-                    username=node.username,
-                    password=password,
-                    private_key=private_key,
-                )
-                pool.register_node(info)
+                info = _build_node_info(node)
+                if info is not None:
+                    pool.register_node(info)
             except Exception:
                 logger.warning("Failed to register node '{name}' — skipping", name=node.name)
 

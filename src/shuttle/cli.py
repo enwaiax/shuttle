@@ -76,10 +76,19 @@ def serve(
         token_path.write_text(api_token)
         token_path.chmod(0o600)
 
-    typer.echo(f"Shuttle service starting at http://{host}:{port}")
-    typer.echo(f"  MCP endpoint: http://{host}:{port}/mcp")
-    typer.echo(f"  Web panel:    http://{host}:{port}")
-    typer.echo(f"  API token:    {api_token}")
+    from rich.console import Console
+    from rich.panel import Panel
+    from rich.text import Text
+
+    console = Console()
+    info = Text()
+    info.append("  MCP endpoint  ", style="dim")
+    info.append(f"http://{host}:{port}/mcp\n", style="cyan")
+    info.append("  Web panel     ", style="dim")
+    info.append(f"http://{host}:{port}\n", style="cyan")
+    info.append("  API token     ", style="dim")
+    info.append(api_token, style="green bold")
+    console.print(Panel(info, title="[bold green]Shuttle[/bold green]", subtitle=f"http://{host}:{port}", border_style="green"))
 
     import logging
 
@@ -210,14 +219,20 @@ def node_list() -> None:
             typer.echo("No nodes configured. Use 'shuttle node add' to add one.")
             return
 
-        typer.echo(f"{'NAME':<20} {'HOST':<30} {'PORT':<6} {'USER':<16} {'STATUS':<10}")
-        typer.echo("-" * 84)
+        from rich.console import Console
+        from rich.table import Table
+
+        table = Table(border_style="dim", show_lines=False, padding=(0, 1))
+        table.add_column("Node", style="bold")
+        table.add_column("Host", style="cyan")
+        table.add_column("Port", justify="right")
+        table.add_column("User", style="dim")
+
         for node in nodes:
-            status_icon = "✓" if node.status == "active" else "✗"
-            typer.echo(
-                f"{node.name:<20} {node.host:<30} {node.port:<6} {node.username:<16} "
-                f"{status_icon} {node.status}"
-            )
+            dot = "[green]●[/green]" if node.status == "active" else "[red]●[/red]" if node.status == "error" else "[dim]○[/dim]"
+            table.add_row(f"{dot} {node.name}", node.host, str(node.port), node.username)
+
+        Console().print(table)
 
     asyncio.run(_list())
 
@@ -317,6 +332,21 @@ def node_test(name: str = typer.Argument(..., help="Node name to test")) -> None
                 else:
                     password = decrypted
 
+            # Resolve jump host if configured
+            jump_host_info = None
+            if node.jump_host_id:
+                jh_node = await repo.get_by_id(node.jump_host_id)
+                if jh_node and jh_node.encrypted_credential:
+                    jh_dec = cred_mgr.decrypt(jh_node.encrypted_credential)
+                    jump_host_info = NodeConnectInfo(
+                        node_id=jh_node.name,
+                        hostname=jh_node.host,
+                        port=jh_node.port,
+                        username=jh_node.username,
+                        password=jh_dec if jh_node.auth_type == "password" else None,
+                        private_key=jh_dec if jh_node.auth_type == "key" else None,
+                    )
+
             info = NodeConnectInfo(
                 node_id=node.name,
                 hostname=node.host,
@@ -324,6 +354,7 @@ def node_test(name: str = typer.Argument(..., help="Node name to test")) -> None
                 username=node.username,
                 password=password,
                 private_key=private_key,
+                jump_host=jump_host_info,
             )
 
             typer.echo(f"Testing connection to '{name}' ({node.host}:{node.port})...")
@@ -400,12 +431,21 @@ def config_show() -> None:
     from shuttle import __version__
     from shuttle.core.config import ShuttleConfig
 
+    from rich.console import Console
+    from rich.table import Table
+
     config = ShuttleConfig()
-    typer.echo(f"Shuttle version : {__version__}")
-    typer.echo(f"Shuttle dir     : {config.shuttle_dir}")
-    typer.echo(f"DB URL          : {config.db_url}")
-    typer.echo(f"Web             : {config.web_host}:{config.web_port}")
-    typer.echo(f"Pool max total  : {config.pool_max_total}")
-    typer.echo(f"Pool max/node   : {config.pool_max_per_node}")
-    typer.echo(f"Pool idle timeout   : {config.pool_idle_timeout}s")
-    typer.echo(f"Pool max lifetime   : {config.pool_max_lifetime}s")
+    table = Table(title="Shuttle Configuration", border_style="dim", show_header=False, padding=(0, 2))
+    table.add_column("Key", style="dim")
+    table.add_column("Value", style="bold")
+
+    table.add_row("Version", f"[green]{__version__}[/green]")
+    table.add_row("Shuttle dir", str(config.shuttle_dir))
+    table.add_row("Database", config.db_url)
+    table.add_row("Web", f"{config.web_host}:{config.web_port}")
+    table.add_row("Pool max total", str(config.pool_max_total))
+    table.add_row("Pool max/node", str(config.pool_max_per_node))
+    table.add_row("Pool idle timeout", f"{config.pool_idle_timeout}s")
+    table.add_row("Pool max lifetime", f"{config.pool_max_lifetime}s")
+
+    Console().print(table)

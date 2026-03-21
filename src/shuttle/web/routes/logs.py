@@ -5,7 +5,7 @@ import io
 from datetime import datetime
 from typing import Literal
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -76,8 +76,14 @@ async def list_logs(
     db: AsyncSession = Depends(get_db_session),
 ):
     """Paginated list of command logs with optional filters."""
-    since_dt = datetime.fromisoformat(since) if since else None
-    until_dt = datetime.fromisoformat(until) if until else None
+    try:
+        since_dt = datetime.fromisoformat(since) if since else None
+    except ValueError:
+        raise HTTPException(status_code=400, detail=f"Invalid 'since' datetime format: {since!r}. Use ISO 8601 format (e.g. 2025-01-01T00:00:00).")
+    try:
+        until_dt = datetime.fromisoformat(until) if until else None
+    except ValueError:
+        raise HTTPException(status_code=400, detail=f"Invalid 'until' datetime format: {until!r}. Use ISO 8601 format (e.g. 2025-01-01T00:00:00).")
 
     # Total count
     count_stmt = select(func.count(CommandLog.id))
@@ -113,11 +119,16 @@ async def export_logs(
     session_id: str | None = None,
     db: AsyncSession = Depends(get_db_session),
 ):
-    """Export all matching logs as JSON or CSV."""
-    stmt = select(CommandLog).order_by(CommandLog.executed_at.desc())
+    """Export all matching logs as JSON or CSV (max 50,000 rows)."""
+    MAX_EXPORT_ROWS = 50_000
+    stmt = select(CommandLog).order_by(CommandLog.executed_at.desc()).limit(MAX_EXPORT_ROWS + 1)
     stmt = _build_filter_stmt(stmt, node_id, session_id)
     result = await db.execute(stmt)
     logs = list(result.scalars().all())
+
+    truncated = len(logs) > MAX_EXPORT_ROWS
+    if truncated:
+        logs = logs[:MAX_EXPORT_ROWS]
 
     node_ids = {log.node_id for log in logs}
     node_names = await _batch_node_names(db, node_ids)
@@ -136,6 +147,8 @@ async def export_logs(
                     for k, v in item.items()
                 }
                 writer.writerow(row)
+        if truncated:
+            output.write(f"\n# NOTE: Export truncated to {MAX_EXPORT_ROWS} rows. Apply filters to narrow results.\n")
         content = output.getvalue()
         return StreamingResponse(
             iter([content]),
@@ -153,4 +166,10 @@ async def export_logs(
         }
         json_items.append(json_item)
 
+    if truncated:
+        return {
+            "items": json_items,
+            "truncated": True,
+            "note": f"Export truncated to {MAX_EXPORT_ROWS} rows. Apply filters to narrow results.",
+        }
     return json_items

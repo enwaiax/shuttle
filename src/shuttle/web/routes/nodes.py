@@ -161,6 +161,21 @@ async def test_node(
         cred_mgr = _get_cred_mgr()
         credential = cred_mgr.decrypt(node.encrypted_credential)
 
+        # Resolve jump host if configured
+        jump_host_info = None
+        if node.jump_host_id:
+            jh_node = await repo.get_by_id(node.jump_host_id)
+            if jh_node and jh_node.encrypted_credential:
+                jh_dec = cred_mgr.decrypt(jh_node.encrypted_credential)
+                jump_host_info = NodeConnectInfo(
+                    node_id=jh_node.id,
+                    hostname=jh_node.host,
+                    port=jh_node.port,
+                    username=jh_node.username,
+                    password=jh_dec if jh_node.auth_type == "password" else None,
+                    private_key=jh_dec if jh_node.auth_type == "key" else None,
+                )
+
         info = NodeConnectInfo(
             node_id=node.id,
             hostname=node.host,
@@ -168,6 +183,7 @@ async def test_node(
             username=node.username,
             password=credential if node.auth_type == "password" else None,
             private_key=credential if node.auth_type == "key" else None,
+            jump_host=jump_host_info,
         )
 
         start = time.monotonic()

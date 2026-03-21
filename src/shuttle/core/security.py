@@ -140,7 +140,11 @@ class CommandGuard:
 
         for rule in sorted(seen_patterns.values(), key=lambda r: r.priority):
             try:
-                if re.search(rule.pattern, command):
+                # Limit pattern length to prevent ReDoS
+                if len(rule.pattern) > 500:
+                    continue
+                compiled = re.compile(rule.pattern)
+                if compiled.search(command):
                     level = SecurityLevel(rule.level)
                     if level == SecurityLevel.BLOCK:
                         return SecurityDecision(

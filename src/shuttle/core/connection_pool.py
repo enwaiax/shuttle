@@ -351,3 +351,9 @@ class ConnectionPool:
                 async with self._global_lock:
                     if self._global_active > 0:
                         self._global_active -= 1
+
+        # Clean up per-node tracking structures
+        self._idle.pop(node_id, None)
+        self._locks.pop(node_id, None)
+        self._active.pop(node_id, None)
+        self._registry.pop(node_id, None)

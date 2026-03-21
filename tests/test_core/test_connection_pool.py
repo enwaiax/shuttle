@@ -281,7 +281,7 @@ async def test_close_all_closes_idle_connections():
 
     await pool.close_all()
 
-    assert len(pool._idle["test-node"]) == 0
+    assert "test-node" not in pool._idle or len(pool._idle["test-node"]) == 0
     mock_conn.close.assert_called()
 
 

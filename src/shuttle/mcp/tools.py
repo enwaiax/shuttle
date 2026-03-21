@@ -383,14 +383,14 @@ def register_tools(
         from shuttle.core.proxy import NodeConnectInfo
 
         # Validate credentials
-        if not password and not private_key:
+        if password is None and private_key is None:
             return "Error: either 'password' or 'private_key' must be provided."
 
         if cred_mgr is None:
             return "Error: credential manager not available — cannot encrypt credentials."
 
         # Determine auth type and encrypt credential
-        if private_key:
+        if private_key is not None:
             auth_type = "key"
             encrypted = cred_mgr.encrypt(private_key)
         else:
@@ -428,6 +428,23 @@ def register_tools(
                 tags=tags,
             )
 
+        # Resolve jump host connection info if present
+        jump_host_info: NodeConnectInfo | None = None
+        if jump_host_id is not None:
+            async with db_session_ctx() as db_sess:
+                repo = node_repo_factory(db_sess)
+                jh_node = await repo.get_by_id(jump_host_id)
+            if jh_node is not None and jh_node.encrypted_credential and cred_mgr:
+                jh_decrypted = cred_mgr.decrypt(jh_node.encrypted_credential)
+                jump_host_info = NodeConnectInfo(
+                    node_id=jh_node.name,
+                    hostname=jh_node.host,
+                    port=jh_node.port,
+                    username=jh_node.username,
+                    password=jh_decrypted if jh_node.auth_type == "password" else None,
+                    private_key=jh_decrypted if jh_node.auth_type == "key" else None,
+                )
+
         # Register in connection pool
         info = NodeConnectInfo(
             node_id=name,
@@ -436,6 +453,7 @@ def register_tools(
             username=username,
             password=password if auth_type == "password" else None,
             private_key=private_key if auth_type == "key" else None,
+            jump_host=jump_host_info,
         )
         pool.register_node(info)
 
