@@ -81,30 +81,21 @@ def serve(
     typer.echo(f"  Web panel:    http://{host}:{port}")
     typer.echo(f"  API token:    {api_token}")
 
-    import signal
-    import sys
-
     async def _run():
         from shuttle.mcp.server import create_service_app
 
         service_app = await create_service_app(
             host=host, port=port, api_token=api_token, db_url=db_url,
         )
-        uvi_config = uvicorn.Config(service_app, host=host, port=port, log_level="info")
+        uvi_config = uvicorn.Config(
+            service_app,
+            host=host,
+            port=port,
+            log_level="info",
+            timeout_graceful_shutdown=3,  # Force close after 3s on Ctrl+C
+        )
         server = uvicorn.Server(uvi_config)
         await server.serve()
-
-    # Second Ctrl+C forces immediate exit (first triggers graceful shutdown)
-    _interrupted = False
-
-    def _force_exit(*_):
-        nonlocal _interrupted
-        if _interrupted:
-            typer.echo("\nForce exit.")
-            sys.exit(0)
-        _interrupted = True
-
-    signal.signal(signal.SIGINT, _force_exit)
 
     try:
         asyncio.run(_run())
