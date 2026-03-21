@@ -211,7 +211,7 @@ function Entry({ log }: { log: CommandLogResponse }) {
 
 function DateSeparator({ label }: { label: string }) {
   return (
-    <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)] px-5 py-2.5">
+    <div className="glass-toolbar sticky top-0 z-10 flex items-center gap-3 border-b border-[var(--border-subtle)] px-5 py-2.5">
       <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--text-tertiary)]">
         {label}
       </span>
@@ -414,7 +414,7 @@ export default function Activity() {
   return (
     <div className="flex h-full flex-col bg-[var(--bg-primary)]">
       {/* Breadcrumb */}
-      <div className="select-none-chrome flex h-10 items-center gap-2 border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)] px-5">
+      <div className="glass-toolbar select-none-chrome flex h-10 items-center gap-2 border-b border-[var(--border-subtle)] px-5">
         <button
           onClick={() => navigate("/")}
           className="flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[12px] text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-hover)] hover:text-[var(--text-secondary)]"
@@ -432,7 +432,7 @@ export default function Activity() {
       <div className="h-[1px]" style={{ background: "var(--brand-line)" }} />
 
       {/* Toolbar */}
-      <div className="select-none-chrome flex h-11 items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)] px-5">
+      <div className="glass-toolbar select-none-chrome flex h-11 items-center justify-between border-b border-[var(--border-subtle)] px-5">
         <div className="flex items-center gap-5">
           <div className="flex items-center gap-2.5">
             <span
@@ -523,7 +523,7 @@ export default function Activity() {
 
       {/* Search & Filter bar */}
       {(searchOpen || levelFilter !== "all") && (
-        <div className="select-none-chrome animate-slide-down flex items-center gap-3 border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)] px-5 py-2">
+        <div className="glass-toolbar select-none-chrome animate-slide-down flex items-center gap-3 border-b border-[var(--border-subtle)] px-5 py-2">
           {searchOpen && (
             <div className="relative flex-1">
               <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
