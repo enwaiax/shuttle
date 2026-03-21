@@ -34,6 +34,7 @@ async def create_rule(
         description=body.description,
         priority=body.priority,
         enabled=body.enabled,
+        source_rule_id=body.source_rule_id,
     )
     return rule
 

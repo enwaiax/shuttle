@@ -303,9 +303,11 @@ async def create_service_app(
     # ── FastAPI app ──────────────────────────────────────────────────
     # Note: verify_token is applied per-router (not globally) so that
     # /mcp/* endpoints are not gated by the web panel token.
+    from shuttle import __version__
+
     app = FastAPI(
         title="Shuttle",
-        version="0.2.0",
+        version=__version__,
         lifespan=combined_lifespan,
     )
 

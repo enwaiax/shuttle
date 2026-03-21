@@ -2,6 +2,7 @@
 
 import csv
 import io
+from datetime import datetime
 from typing import Literal
 
 from fastapi import APIRouter, Depends, Query
@@ -45,12 +46,22 @@ def _log_to_response(log: CommandLog, node_names: dict[str, str]) -> dict:
     }
 
 
-def _build_filter_stmt(stmt, node_id: str | None, session_id: str | None):
+def _build_filter_stmt(
+    stmt,
+    node_id: str | None,
+    session_id: str | None,
+    since: datetime | None = None,
+    until: datetime | None = None,
+):
     """Apply optional filters to a select statement."""
     if node_id is not None:
         stmt = stmt.where(CommandLog.node_id == node_id)
     if session_id is not None:
         stmt = stmt.where(CommandLog.session_id == session_id)
+    if since is not None:
+        stmt = stmt.where(CommandLog.executed_at >= since)
+    if until is not None:
+        stmt = stmt.where(CommandLog.executed_at <= until)
     return stmt
 
 
@@ -60,12 +71,17 @@ async def list_logs(
     page_size: int = Query(50, ge=1, le=200),
     node_id: str | None = None,
     session_id: str | None = None,
+    since: str | None = None,
+    until: str | None = None,
     db: AsyncSession = Depends(get_db_session),
 ):
     """Paginated list of command logs with optional filters."""
+    since_dt = datetime.fromisoformat(since) if since else None
+    until_dt = datetime.fromisoformat(until) if until else None
+
     # Total count
     count_stmt = select(func.count(CommandLog.id))
-    count_stmt = _build_filter_stmt(count_stmt, node_id, session_id)
+    count_stmt = _build_filter_stmt(count_stmt, node_id, session_id, since_dt, until_dt)
     total = (await db.execute(count_stmt)).scalar_one()
 
     # Paginated items
@@ -75,7 +91,7 @@ async def list_logs(
         .offset((page - 1) * page_size)
         .limit(page_size)
     )
-    items_stmt = _build_filter_stmt(items_stmt, node_id, session_id)
+    items_stmt = _build_filter_stmt(items_stmt, node_id, session_id, since_dt, until_dt)
     result = await db.execute(items_stmt)
     logs = list(result.scalars().all())
 

@@ -30,8 +30,14 @@ export function useRecentNodes() {
 
   const track = useCallback((node: RecentNode) => {
     setRecent((prev) => {
-      const filtered = prev.filter((n) => n.id !== node.id);
-      const next = [node, ...filtered].slice(0, MAX_RECENT);
+      const existing = prev.find((n) => n.id === node.id);
+      if (existing) {
+        if (existing.status === node.status && existing.name === node.name) return prev;
+        const updated = prev.map((n) => (n.id === node.id ? node : n));
+        save(updated);
+        return updated;
+      }
+      const next = [node, ...prev].slice(0, MAX_RECENT);
       save(next);
       return next;
     });
