@@ -9,6 +9,7 @@ import type {
   NodeUpdate,
   RuleResponse,
   RuleCreate,
+  RuleUpdate,
   SessionResponse,
   CommandLogResponse,
   LogListResponse,
@@ -124,6 +125,18 @@ export function useUpdateNode(id: string) {
   });
 }
 
+export interface TestNodeResult {
+  success: boolean;
+  message: string;
+}
+
+export function useTestNode() {
+  return useMutation<TestNodeResult, Error, string>({
+    mutationFn: (id) =>
+      apiFetch(`/nodes/${id}/test`, { method: "POST" }),
+  });
+}
+
 export function useDeleteNode() {
   const qc = useQueryClient();
   return useMutation<void, Error, string>({
@@ -149,6 +162,17 @@ export function useCreateRule() {
   return useMutation<RuleResponse, Error, RuleCreate>({
     mutationFn: (body) =>
       apiFetch("/rules", { method: "POST", body: JSON.stringify(body) }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: keys.rules });
+    },
+  });
+}
+
+export function useUpdateRule(id: string) {
+  const qc = useQueryClient();
+  return useMutation<RuleResponse, Error, RuleUpdate>({
+    mutationFn: (body) =>
+      apiFetch(`/rules/${id}`, { method: "PUT", body: JSON.stringify(body) }),
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: keys.rules });
     },
@@ -209,6 +233,8 @@ export interface LogParams {
   page_size?: number;
   node_id?: string;
   session_id?: string;
+  since?: string;
+  until?: string;
 }
 
 export function useLogs(params?: LogParams) {
@@ -220,9 +246,36 @@ export function useLogs(params?: LogParams) {
       if (params?.page_size) search.set("page_size", String(params.page_size));
       if (params?.node_id) search.set("node_id", params.node_id);
       if (params?.session_id) search.set("session_id", params.session_id);
+      if (params?.since) search.set("since", params.since);
+      if (params?.until) search.set("until", params.until);
       const qs = search.toString();
       return apiFetch(`/logs${qs ? `?${qs}` : ""}`);
     },
+  });
+}
+
+// ── Data Export / Import ──────────────────────────
+
+export async function exportData(): Promise<Blob> {
+  const token = getToken();
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+  const res = await fetch(`${BASE}/data/export`, { method: "POST", headers });
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`${res.status}: ${body}`);
+  }
+  return res.blob();
+}
+
+export async function importData(data: unknown): Promise<{ message: string }> {
+  return apiFetch("/data/import", {
+    method: "POST",
+    body: JSON.stringify(data),
   });
 }
 

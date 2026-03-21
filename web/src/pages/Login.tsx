@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { setToken } from "../api/client";
 
 interface Props {
@@ -9,6 +10,7 @@ export default function Login({ onLogin }: Props) {
   const [token, setTokenValue] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showToken, setShowToken] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,17 +24,17 @@ export default function Login({ onLogin }: Props) {
         setToken(token);
         onLogin();
       } else {
-        setError("Invalid token");
+        setError("Invalid token — please check and try again");
       }
     } catch {
-      setError("Cannot reach server");
+      setError("Cannot reach server — is shuttle serve running?");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[var(--bg-primary)]">
       {/* Grid background — NVIDIA style */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.04]"
@@ -45,7 +47,7 @@ export default function Login({ onLogin }: Props) {
         }}
       />
 
-      {/* Radial green glow from center */}
+      {/* Radial green glow */}
       <div
         className="pointer-events-none absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full"
         style={{
@@ -54,7 +56,6 @@ export default function Login({ onLogin }: Props) {
         }}
       />
 
-      {/* Login card */}
       <div className="animate-slide-up relative z-10 w-full max-w-[380px] px-6">
         {/* Logo */}
         <div className="mb-12 flex flex-col items-center">
@@ -76,23 +77,47 @@ export default function Login({ onLogin }: Props) {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-2 block text-[12px] font-medium text-[var(--text-secondary)]">
+            <label
+              htmlFor="token-input"
+              className="mb-2 block text-[12px] font-medium text-[var(--text-secondary)]"
+            >
               API Token
             </label>
-            <input
-              type="password"
-              value={token}
-              onChange={(e) => setTokenValue(e.target.value)}
-              placeholder="shuttle-xxxxxxxxxxxx"
-              autoFocus
-              required
-              className="focus-ring h-11 w-full rounded-xl border border-[var(--border-default)] bg-[var(--bg-tertiary)] px-4 text-[13px] text-[var(--text-primary)] outline-none transition-all duration-200 placeholder:text-[var(--text-muted)] hover:border-[var(--border-strong)]"
-              style={{ fontFamily: "var(--font-mono)" }}
-            />
+            <div className="relative">
+              <input
+                id="token-input"
+                type={showToken ? "text" : "password"}
+                value={token}
+                onChange={(e) => setTokenValue(e.target.value)}
+                placeholder="shuttle-xxxxxxxxxxxx"
+                autoFocus
+                required
+                autoComplete="current-password"
+                aria-describedby={error ? "login-error" : undefined}
+                className="focus-ring h-11 w-full rounded-xl border border-[var(--border-default)] bg-[var(--bg-tertiary)] px-4 pr-11 text-[13px] text-[var(--text-primary)] outline-none transition-all duration-200 placeholder:text-[var(--text-muted)] hover:border-[var(--border-strong)]"
+                style={{ fontFamily: "var(--font-mono)" }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowToken((v) => !v)}
+                aria-label={showToken ? "Hide token" : "Show token"}
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-[var(--text-quaternary)] transition-colors hover:text-[var(--text-secondary)]"
+              >
+                {showToken ? (
+                  <EyeOff size={15} strokeWidth={1.5} />
+                ) : (
+                  <Eye size={15} strokeWidth={1.5} />
+                )}
+              </button>
+            </div>
           </div>
 
           {error && (
-            <div className="animate-slide-up rounded-lg bg-[var(--red-subtle)] px-4 py-2.5 text-[12px] font-medium text-[var(--red)]">
+            <div
+              id="login-error"
+              role="alert"
+              className="animate-slide-up rounded-lg bg-[var(--red-subtle)] px-4 py-2.5 text-[12px] font-medium text-[var(--red)]"
+            >
               {error}
             </div>
           )}
@@ -102,7 +127,32 @@ export default function Login({ onLogin }: Props) {
             disabled={loading || !token}
             className="h-11 w-full rounded-xl bg-[var(--green)] text-[14px] font-semibold text-black transition-all duration-200 hover:bg-[var(--green-light)] hover:shadow-[0_0_24px_rgba(118,185,0,0.3)] disabled:opacity-30 disabled:hover:shadow-none"
           >
-            {loading ? "Verifying…" : "Connect"}
+            {loading ? (
+              <span className="inline-flex items-center gap-2">
+                <svg
+                  className="h-4 w-4 animate-spin"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  />
+                </svg>
+                Verifying…
+              </span>
+            ) : (
+              "Connect"
+            )}
           </button>
         </form>
 

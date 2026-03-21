@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { useSettings, useUpdateSettings } from "../api/client";
+import { useEffect, useState, useRef } from "react";
+import { useSettings, useUpdateSettings, exportData, importData } from "../api/client";
 import type { SettingsUpdate } from "../types";
-import { Settings as SettingsIcon, Check } from "lucide-react";
+import { Settings as SettingsIcon, Check, Download, Upload, Database, AlertCircle } from "lucide-react";
 
 const inputCls =
   "focus-ring w-full rounded-xl border border-[var(--border-default)] bg-[var(--bg-tertiary)] px-4 py-2.5 text-[13px] tabular-nums text-[var(--text-primary)] outline-none transition-all duration-200 hover:border-[var(--border-strong)]";
@@ -11,6 +11,10 @@ export default function Settings() {
   const update = useUpdateSettings();
   const [form, setForm] = useState<SettingsUpdate>({});
   const [saved, setSaved] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const [dataMsg, setDataMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (settings) {
@@ -65,7 +69,7 @@ export default function Settings() {
   }
 
   return (
-    <div className="h-full overflow-y-auto bg-black p-8">
+    <div className="h-full overflow-y-auto bg-[var(--bg-primary)] p-8">
       <div className="max-w-2xl">
         <div className="flex items-center gap-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--green-subtle)]">
@@ -135,6 +139,100 @@ export default function Settings() {
             )}
           </div>
         </form>
+
+        <section className="mt-8 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-secondary)] p-6">
+          <div className="flex items-center gap-2">
+            <Database size={15} className="text-[var(--text-quaternary)]" />
+            <h2 className="text-[14px] font-semibold text-[var(--text-primary)]">
+              Data Management
+            </h2>
+          </div>
+          <p className="mt-1 text-[12px] text-[var(--text-quaternary)]">
+            Export or import your configuration data as JSON
+          </p>
+
+          <div className="mt-5 flex items-center gap-3">
+            <button
+              type="button"
+              disabled={exporting}
+              onClick={async () => {
+                setExporting(true);
+                setDataMsg(null);
+                try {
+                  const blob = await exportData();
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.download = `shuttle-export-${new Date().toISOString().slice(0, 10)}.json`;
+                  document.body.appendChild(a);
+                  a.click();
+                  a.remove();
+                  URL.revokeObjectURL(url);
+                  setDataMsg({ type: "success", text: "Export downloaded successfully" });
+                } catch (err) {
+                  setDataMsg({ type: "error", text: err instanceof Error ? err.message : "Export failed" });
+                } finally {
+                  setExporting(false);
+                }
+              }}
+              className="inline-flex items-center gap-2 rounded-xl border border-[var(--border-default)] bg-[var(--bg-tertiary)] px-4 py-2.5 text-[13px] font-medium text-[var(--text-secondary)] transition-all duration-200 hover:bg-[var(--bg-hover)] disabled:opacity-30"
+            >
+              <Download size={14} strokeWidth={1.8} />
+              {exporting ? "Exporting…" : "Export"}
+            </button>
+
+            <button
+              type="button"
+              disabled={importing}
+              onClick={() => fileInputRef.current?.click()}
+              className="inline-flex items-center gap-2 rounded-xl border border-[var(--border-default)] bg-[var(--bg-tertiary)] px-4 py-2.5 text-[13px] font-medium text-[var(--text-secondary)] transition-all duration-200 hover:bg-[var(--bg-hover)] disabled:opacity-30"
+            >
+              <Upload size={14} strokeWidth={1.8} />
+              {importing ? "Importing…" : "Import"}
+            </button>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json,application/json"
+              className="hidden"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                setImporting(true);
+                setDataMsg(null);
+                try {
+                  const text = await file.text();
+                  const json = JSON.parse(text);
+                  const result = await importData(json);
+                  setDataMsg({ type: "success", text: result.message || "Import completed successfully" });
+                } catch (err) {
+                  setDataMsg({
+                    type: "error",
+                    text: err instanceof Error ? err.message : "Import failed",
+                  });
+                } finally {
+                  setImporting(false);
+                  // Reset file input so the same file can be re-selected
+                  if (fileInputRef.current) fileInputRef.current.value = "";
+                }
+              }}
+            />
+          </div>
+
+          {dataMsg && (
+            <div
+              className={`mt-4 flex items-center gap-2 rounded-lg px-4 py-2.5 text-[12px] font-medium ${
+                dataMsg.type === "success"
+                  ? "bg-[var(--green-subtle)] text-[var(--green)]"
+                  : "bg-[var(--red-subtle)] text-[var(--red)]"
+              }`}
+            >
+              {dataMsg.type === "success" ? <Check size={14} /> : <AlertCircle size={14} />}
+              {dataMsg.text}
+            </div>
+          )}
+        </section>
       </div>
     </div>
   );

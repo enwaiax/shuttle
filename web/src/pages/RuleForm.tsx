@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
-import { useCreateRule } from "../api/client";
+import { useCreateRule, useUpdateRule } from "../api/client";
+import type { RuleResponse } from "../types";
 
 interface RuleFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  rule?: RuleResponse | null;
 }
 
 const levels = ["block", "confirm", "warn", "allow"] as const;
@@ -15,12 +17,28 @@ const inputCls =
 
 const labelCls = "mb-2 block text-[12px] font-medium text-[var(--text-secondary)]";
 
-export default function RuleForm({ open, onOpenChange }: RuleFormProps) {
+export default function RuleForm({ open, onOpenChange, rule }: RuleFormProps) {
+  const isEdit = !!rule;
   const [pattern, setPattern] = useState("");
   const [level, setLevel] = useState<string>("block");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("100");
   const create = useCreateRule();
+  const update = useUpdateRule(rule?.id ?? "");
+
+  useEffect(() => {
+    if (rule) {
+      setPattern(rule.pattern);
+      setLevel(rule.level);
+      setDescription(rule.description ?? "");
+      setPriority(String(rule.priority));
+    } else {
+      setPattern("");
+      setLevel("block");
+      setDescription("");
+      setPriority("100");
+    }
+  }, [rule]);
 
   function reset() {
     setPattern("");
@@ -31,21 +49,31 @@ export default function RuleForm({ open, onOpenChange }: RuleFormProps) {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    create.mutate(
-      {
-        pattern,
-        level,
-        description: description || undefined,
-        priority: Number(priority),
-      },
-      {
+    const payload = {
+      pattern,
+      level,
+      description: description || undefined,
+      priority: Number(priority),
+    };
+
+    if (isEdit) {
+      update.mutate(payload, {
         onSuccess: () => {
           reset();
           onOpenChange(false);
         },
-      },
-    );
+      });
+    } else {
+      create.mutate(payload, {
+        onSuccess: () => {
+          reset();
+          onOpenChange(false);
+        },
+      });
+    }
   }
+
+  const isPending = isEdit ? update.isPending : create.isPending;
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -54,7 +82,7 @@ export default function RuleForm({ open, onOpenChange }: RuleFormProps) {
         <Dialog.Content className="animate-scale-in fixed left-1/2 top-1/2 w-full max-w-md rounded-2xl border border-[var(--border-default)] bg-[var(--bg-elevated)] p-6 shadow-2xl focus:outline-none">
           <div className="flex items-start justify-between">
             <Dialog.Title className="text-[15px] font-semibold text-[var(--text-primary)]">
-              Add Rule
+              {isEdit ? "Edit Rule" : "Add Rule"}
             </Dialog.Title>
             <Dialog.Close className="rounded-lg p-1.5 text-[var(--text-quaternary)] transition-colors hover:bg-[var(--bg-hover)] hover:text-[var(--text-secondary)]">
               <X size={14} />
@@ -125,10 +153,16 @@ export default function RuleForm({ open, onOpenChange }: RuleFormProps) {
               </Dialog.Close>
               <button
                 type="submit"
-                disabled={create.isPending}
+                disabled={isPending}
                 className="rounded-xl bg-[var(--green)] px-5 py-2.5 text-[13px] font-semibold text-black transition-all duration-200 hover:bg-[var(--green-light)] disabled:opacity-30"
               >
-                {create.isPending ? "Creating…" : "Create Rule"}
+                {isPending
+                  ? isEdit
+                    ? "Saving…"
+                    : "Creating…"
+                  : isEdit
+                    ? "Save Changes"
+                    : "Create Rule"}
               </button>
             </div>
           </form>

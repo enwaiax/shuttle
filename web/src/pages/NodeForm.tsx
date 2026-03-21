@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
-import { useCreateNode } from "../api/client";
+import { useCreateNode, useUpdateNode, useNode } from "../api/client";
 
 interface NodeFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** When provided, the form enters edit mode and pre-fills with the node's data. */
+  nodeId?: string | null;
 }
 
 const inputCls =
@@ -13,13 +15,29 @@ const inputCls =
 
 const labelCls = "mb-2 block text-[12px] font-medium text-[var(--text-secondary)]";
 
-export default function NodeForm({ open, onOpenChange }: NodeFormProps) {
+export default function NodeForm({ open, onOpenChange, nodeId }: NodeFormProps) {
+  const isEdit = !!nodeId;
+  const { data: existingNode } = useNode(nodeId ?? "");
+
   const [name, setName] = useState("");
   const [host, setHost] = useState("");
   const [port, setPort] = useState("22");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
   const create = useCreateNode();
+  const update = useUpdateNode(nodeId ?? "");
+
+  // Pre-fill the form when editing an existing node
+  useEffect(() => {
+    if (isEdit && existingNode) {
+      setName(existingNode.name);
+      setHost(existingNode.host);
+      setPort(String(existingNode.port));
+      setUsername(existingNode.username);
+      setPassword("");
+    }
+  }, [isEdit, existingNode]);
 
   function reset() {
     setName("");
@@ -31,23 +49,43 @@ export default function NodeForm({ open, onOpenChange }: NodeFormProps) {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    create.mutate(
-      {
-        name,
-        host,
-        port: Number(port),
-        username,
-        auth_type: "password",
-        credential: password,
-      },
-      {
-        onSuccess: () => {
-          reset();
-          onOpenChange(false);
+    if (isEdit) {
+      update.mutate(
+        {
+          name,
+          host,
+          port: Number(port),
+          username,
+          ...(password ? { credential: password, auth_type: "password" } : {}),
         },
-      },
-    );
+        {
+          onSuccess: () => {
+            reset();
+            onOpenChange(false);
+          },
+        },
+      );
+    } else {
+      create.mutate(
+        {
+          name,
+          host,
+          port: Number(port),
+          username,
+          auth_type: "password",
+          credential: password,
+        },
+        {
+          onSuccess: () => {
+            reset();
+            onOpenChange(false);
+          },
+        },
+      );
+    }
   }
+
+  const isPending = isEdit ? update.isPending : create.isPending;
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -56,7 +94,7 @@ export default function NodeForm({ open, onOpenChange }: NodeFormProps) {
         <Dialog.Content className="animate-scale-in fixed left-1/2 top-1/2 w-full max-w-md rounded-2xl border border-[var(--border-default)] bg-[var(--bg-elevated)] p-6 shadow-2xl focus:outline-none">
           <div className="flex items-start justify-between">
             <Dialog.Title className="text-[15px] font-semibold text-[var(--text-primary)]">
-              Add Node
+              {isEdit ? "Edit Node" : "Add Node"}
             </Dialog.Title>
             <Dialog.Close className="rounded-lg p-1.5 text-[var(--text-quaternary)] transition-colors hover:bg-[var(--bg-hover)] hover:text-[var(--text-secondary)]">
               <X size={14} />
@@ -110,9 +148,11 @@ export default function NodeForm({ open, onOpenChange }: NodeFormProps) {
               />
             </div>
             <div>
-              <label className={labelCls}>Password</label>
+              <label className={labelCls}>
+                Password{isEdit ? " (leave blank to keep current)" : ""}
+              </label>
               <input
-                required
+                required={!isEdit}
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -126,10 +166,16 @@ export default function NodeForm({ open, onOpenChange }: NodeFormProps) {
               </Dialog.Close>
               <button
                 type="submit"
-                disabled={create.isPending}
+                disabled={isPending}
                 className="rounded-xl bg-[var(--green)] px-5 py-2.5 text-[13px] font-semibold text-black transition-all duration-200 hover:bg-[var(--green-light)] disabled:opacity-30"
               >
-                {create.isPending ? "Creating…" : "Create Node"}
+                {isPending
+                  ? isEdit
+                    ? "Saving..."
+                    : "Creating..."
+                  : isEdit
+                    ? "Save Changes"
+                    : "Create Node"}
               </button>
             </div>
           </form>

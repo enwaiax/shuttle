@@ -58,6 +58,15 @@ export interface RuleCreate {
   enabled?: boolean;
 }
 
+export interface RuleUpdate {
+  pattern?: string;
+  level?: string;
+  node_id?: string | null;
+  description?: string | null;
+  priority?: number;
+  enabled?: boolean;
+}
+
 // ── Sessions ───────────────────────────────────────
 
 export interface SessionResponse {
