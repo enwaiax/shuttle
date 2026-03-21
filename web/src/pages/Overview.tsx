@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Server, Terminal, Plus, Activity, Cpu, Pencil, Plug, Loader2, CheckCircle2, XCircle } from "lucide-react";
-import { useNodes, useStats, useLogs, useTestNode } from "../api/client";
+import { Server, Terminal, Plus, Activity, Cpu, Pencil, Plug, Loader2, CheckCircle2, XCircle, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import { useNodes, useStats, useLogs, useTestNode, useDeleteNode } from "../api/client";
 import type { NodeResponse } from "../types";
 import type { CommandLogResponse } from "../api/client";
 import { StatCardSkeleton, NodeCardSkeleton } from "../components/Skeleton";
@@ -82,11 +83,13 @@ function NodeCard({
   node,
   onClick,
   onEdit,
+  onDelete,
   index,
 }: {
   node: NodeResponse;
   onClick: () => void;
   onEdit: () => void;
+  onDelete: () => void;
   index: number;
 }) {
   const isActive = node.status === "active";
@@ -117,6 +120,13 @@ function NodeCard({
             className="rounded-lg p-1.5 text-[var(--text-quaternary)] transition-colors hover:bg-[var(--bg-hover)] hover:text-[var(--text-secondary)]"
           >
             <Pencil size={13} strokeWidth={1.5} />
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); onDelete(); }}
+            title="Delete node"
+            className="rounded-lg p-1.5 text-[var(--text-quaternary)] transition-colors hover:bg-[var(--red)]/10 hover:text-[var(--red)]"
+          >
+            <Trash2 size={13} strokeWidth={1.5} />
           </button>
         </div>
       </div>
@@ -206,12 +216,21 @@ export default function Overview() {
   const navigate = useNavigate();
   const [showForm, setShowForm] = useState(false);
   const [editNodeId, setEditNodeId] = useState<string | null>(null);
+  const deleteNode = useDeleteNode();
 
   const nodeList = nodes ?? [];
 
   function openEditForm(nodeId: string) {
     setEditNodeId(nodeId);
     setShowForm(true);
+  }
+
+  function handleDelete(node: NodeResponse) {
+    if (!confirm(`Delete node "${node.name}"? This cannot be undone.`)) return;
+    deleteNode.mutate(node.id, {
+      onSuccess: () => toast.success(`Node "${node.name}" deleted`),
+      onError: (err) => toast.error(`Failed to delete: ${err.message}`),
+    });
   }
 
   function handleFormClose(open: boolean) {
@@ -325,6 +344,7 @@ export default function Overview() {
                     node={node}
                     onClick={() => navigate(`/nodes/${node.id}`)}
                     onEdit={() => openEditForm(node.id)}
+                    onDelete={() => handleDelete(node)}
                     index={i}
                   />
                 ))}

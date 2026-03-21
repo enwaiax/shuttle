@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { X, Server, ChevronDown } from "lucide-react";
+import { toast } from "sonner";
 import { useCreateNode, useUpdateNode, useNode, useNodes } from "../api/client";
 
 interface NodeFormProps {
@@ -77,7 +78,7 @@ export default function NodeForm({ open, onOpenChange, nodeId }: NodeFormProps) 
           tags: parsedTags.length > 0 ? parsedTags : null,
           ...(password ? { credential: password, auth_type: authType } : {}),
         },
-        { onSuccess: () => { reset(); onOpenChange(false); } },
+        { onSuccess: () => { toast.success(`Node "${name}" updated`); reset(); onOpenChange(false); }, onError: (err) => toast.error(err.message) },
       );
     } else {
       create.mutate(
@@ -91,7 +92,7 @@ export default function NodeForm({ open, onOpenChange, nodeId }: NodeFormProps) 
           jump_host_id: jumpHostId || null,
           tags: parsedTags.length > 0 ? parsedTags : null,
         },
-        { onSuccess: () => { reset(); onOpenChange(false); } },
+        { onSuccess: () => { toast.success(`Node "${name}" created`); reset(); onOpenChange(false); }, onError: (err) => toast.error(err.message) },
       );
     }
   }

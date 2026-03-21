@@ -7,8 +7,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <script>
+      (function() {
+        var t = localStorage.getItem("shuttle_theme") || "dark";
+        document.documentElement.setAttribute("data-theme", t);
+      })();
+    </script>
   </head>
-  <body class="bg-black text-[#f5f5f7] antialiased">
+  <body class="antialiased">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

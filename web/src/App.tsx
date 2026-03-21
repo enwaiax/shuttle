@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
+import { Toaster } from "sonner";
 import { getToken } from "./api/client";
 import { AppProvider } from "./hooks/AppContext";
 import Layout from "./components/Layout";
@@ -15,6 +16,18 @@ export default function App() {
 
   return (
     <AppProvider>
+      <Toaster
+        theme="dark"
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            background: "var(--bg-elevated)",
+            border: "1px solid var(--border-default)",
+            color: "var(--text-primary)",
+            fontSize: "13px",
+          },
+        }}
+      />
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Overview />} />
