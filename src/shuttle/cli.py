@@ -81,26 +81,45 @@ def serve(
     typer.echo(f"  Web panel:    http://{host}:{port}")
     typer.echo(f"  API token:    {api_token}")
 
+    import logging
+    import signal
+
     async def _run():
         from shuttle.mcp.server import create_service_app
 
         service_app = await create_service_app(
             host=host, port=port, api_token=api_token, db_url=db_url,
         )
+
+        # Suppress noisy shutdown errors (CancelledError tracebacks from
+        # uvicorn/starlette/anyio during graceful shutdown)
+        class _ShutdownFilter(logging.Filter):
+            _NOISE = ("CancelledError", "ASGI callable returned", "Cancel", "timeout graceful")
+            def filter(self, record: logging.LogRecord) -> bool:
+                msg = record.getMessage()
+                return not any(n in msg for n in self._NOISE)
+
+        logging.getLogger("uvicorn.error").addFilter(_ShutdownFilter())
+
         uvi_config = uvicorn.Config(
             service_app,
             host=host,
             port=port,
             log_level="info",
-            timeout_graceful_shutdown=3,  # Force close after 3s on Ctrl+C
+            timeout_graceful_shutdown=3,
         )
         server = uvicorn.Server(uvi_config)
         await server.serve()
+
+    # Suppress KeyboardInterrupt traceback
+    original_sigint = signal.getsignal(signal.SIGINT)
 
     try:
         asyncio.run(_run())
     except (KeyboardInterrupt, SystemExit):
         pass
+
+    typer.echo("Shuttle stopped.")
 
 
 # ── Node commands ─────────────────────────────────────────────────────────────
