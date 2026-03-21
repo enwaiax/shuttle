@@ -43,6 +43,10 @@ export default function NodeForm({ open, onOpenChange, nodeId }: NodeFormProps) 
       setPassword("");
       setJumpHostId(existingNode.jump_host_id ?? "");
       setTags(existingNode.tags?.join(", ") ?? "");
+    } else if (!isEdit) {
+      // Reset all fields when opening in create mode
+      setName(""); setHost(""); setPort("22"); setUsername("");
+      setAuthType("password"); setPassword(""); setJumpHostId(""); setTags("");
     }
   }, [isEdit, existingNode]);
 

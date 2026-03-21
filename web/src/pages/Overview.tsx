@@ -38,7 +38,7 @@ function StatCard({
   );
 }
 
-function NodeCardTestButton({ nodeId }: { nodeId: string }) {
+function NodeCardTestButton({ nodeId, onLatency }: { nodeId: string; onLatency?: (ms: number | null) => void }) {
   const testNode = useTestNode();
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
 
@@ -48,11 +48,15 @@ function NodeCardTestButton({ nodeId }: { nodeId: string }) {
     testNode.mutate(nodeId, {
       onSuccess: (data) => {
         setResult(data);
-        setTimeout(() => setResult(null), 3000);
+        // Try to extract latency from message like "Connection successful (12ms)"
+        const match = data.message?.match(/\((\d+)ms\)/);
+        if (match && onLatency) onLatency(Number(match[1]));
+        setTimeout(() => setResult(null), 5000);
       },
       onError: (err) => {
         setResult({ success: false, message: err.message });
-        setTimeout(() => setResult(null), 3000);
+        if (onLatency) onLatency(null);
+        setTimeout(() => setResult(null), 5000);
       },
     });
   }
@@ -93,6 +97,7 @@ function NodeCard({
   index: number;
 }) {
   const isActive = node.status === "active";
+  const [latencyMs, setLatencyMs] = useState<number | null>(null);
 
   return (
     <div
@@ -109,11 +114,15 @@ function NodeCard({
         <span className="text-[14px] font-semibold text-[var(--text-primary)]">
           {node.name}
         </span>
-        {isActive && (
-          <span className="text-[10px] font-medium text-[var(--green)]">online</span>
-        )}
+        {latencyMs !== null ? (
+          <span className="text-[10px] tabular-nums font-medium text-[var(--green)]" style={{ fontFamily: "var(--font-mono)" }}>
+            {latencyMs}ms
+          </span>
+        ) : isActive ? (
+          <span className="text-[10px] font-medium text-[var(--text-tertiary)]">connected</span>
+        ) : null}
         <div className="ml-auto flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
-          <NodeCardTestButton nodeId={node.id} />
+          <NodeCardTestButton nodeId={node.id} onLatency={setLatencyMs} />
           <button
             onClick={(e) => { e.stopPropagation(); onEdit(); }}
             title="Edit node"
@@ -324,7 +333,7 @@ export default function Overview() {
                 Add a node to start monitoring SSH activity
               </p>
               <button
-                onClick={() => setShowForm(true)}
+                onClick={() => { setEditNodeId(null); setShowForm(true); }}
                 className="mt-5 rounded-xl bg-[var(--green)] px-5 py-2.5 text-[13px] font-semibold text-black transition-all duration-200 hover:bg-[var(--green-light)] hover:shadow-[0_0_24px_rgba(118,185,0,0.3)]"
               >
                 Add Node
@@ -349,7 +358,7 @@ export default function Overview() {
                   />
                 ))}
                 <button
-                  onClick={() => setShowForm(true)}
+                  onClick={() => { setEditNodeId(null); setShowForm(true); }}
                   aria-label="Add new node"
                   className="animate-slide-up flex flex-col items-center justify-center rounded-2xl border border-dashed border-[var(--border-default)] p-5 text-[var(--text-quaternary)] transition-all duration-300 hover:border-[var(--green)]/30 hover:text-[var(--green)]"
                   style={{ animationDelay: `${0.1 + nodeList.length * 0.05}s` }}
