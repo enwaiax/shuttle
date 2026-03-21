@@ -82,7 +82,6 @@ def serve(
     typer.echo(f"  API token:    {api_token}")
 
     import logging
-    import signal
 
     async def _run():
         from shuttle.mcp.server import create_service_app
@@ -91,13 +90,18 @@ def serve(
             host=host, port=port, api_token=api_token, db_url=db_url,
         )
 
-        # Suppress noisy shutdown errors (CancelledError tracebacks from
-        # uvicorn/starlette/anyio during graceful shutdown)
+        # Suppress noisy shutdown tracebacks. uvicorn/starlette/anyio emit
+        # ERROR-level CancelledError tracebacks during graceful shutdown —
+        # normal behavior but alarming to users. We filter them out.
         class _ShutdownFilter(logging.Filter):
-            _NOISE = ("CancelledError", "ASGI callable returned", "Cancel", "timeout graceful")
+            shutting_down = False
             def filter(self, record: logging.LogRecord) -> bool:
                 msg = record.getMessage()
-                return not any(n in msg for n in self._NOISE)
+                if "Shutting down" in msg:
+                    self.shutting_down = True
+                if self.shutting_down and record.levelno >= logging.ERROR:
+                    return False
+                return True
 
         logging.getLogger("uvicorn.error").addFilter(_ShutdownFilter())
 
