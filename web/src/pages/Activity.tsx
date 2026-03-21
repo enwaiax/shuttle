@@ -21,6 +21,8 @@ import clsx from "clsx";
 
 const PAGE_SIZE = 50;
 const PREVIEW_LINES = 15;
+const MAX_EXPANDED_LINES = 200;
+const MAX_ITEMS_IN_DOM = 200;
 
 const mono = { fontFamily: "var(--font-mono)" };
 
@@ -53,8 +55,18 @@ function fmtDuration(ms: number | null): string {
 
 function truncate(text: string) {
   const lines = text.split("\n");
-  if (lines.length <= PREVIEW_LINES) return { text, truncated: false };
-  return { text: lines.slice(0, PREVIEW_LINES).join("\n"), truncated: true };
+  if (lines.length <= PREVIEW_LINES) return { text, truncated: false, totalLines: lines.length };
+  return { text: lines.slice(0, PREVIEW_LINES).join("\n"), truncated: true, totalLines: lines.length };
+}
+
+function expandedText(text: string): { text: string; capped: boolean; totalLines: number } {
+  const lines = text.split("\n");
+  if (lines.length <= MAX_EXPANDED_LINES) return { text, capped: false, totalLines: lines.length };
+  return {
+    text: lines.slice(0, MAX_EXPANDED_LINES).join("\n"),
+    capped: true,
+    totalLines: lines.length,
+  };
 }
 
 function formatLogAsText(log: CommandLogResponse): string {
@@ -127,6 +139,8 @@ function Entry({ log }: { log: CommandLogResponse }) {
   const stdoutT = truncate(stdout);
   const stderrT = truncate(stderr);
   const needsExpand = stdoutT.truncated || stderrT.truncated;
+  const stdoutE = expandedText(stdout);
+  const stderrE = expandedText(stderr);
 
   return (
     <div
@@ -179,7 +193,7 @@ function Entry({ log }: { log: CommandLogResponse }) {
           <div className="border-l-2 border-[var(--green)]/30">
             {stdout && (
               <pre className="overflow-x-auto px-4 py-2.5 text-[12px] leading-[1.7] text-[var(--text-tertiary)]" style={mono}>
-                {expanded ? stdout : stdoutT.text}
+                {expanded ? stdoutE.text : stdoutT.text}
               </pre>
             )}
             {stderr && (
@@ -190,7 +204,7 @@ function Entry({ log }: { log: CommandLogResponse }) {
                 )}
                 style={mono}
               >
-                {expanded ? stderr : stderrT.text}
+                {expanded ? stderrE.text : stderrT.text}
               </pre>
             )}
           </div>
@@ -200,8 +214,13 @@ function Entry({ log }: { log: CommandLogResponse }) {
               className="flex w-full items-center gap-1.5 border-t border-[var(--border-subtle)] px-4 py-2 text-[11px] text-[var(--text-quaternary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-tertiary)]"
             >
               <ChevronRight size={10} />
-              {stdout.split("\n").length + stderr.split("\n").length} lines total
+              {stdoutT.totalLines + stderrT.totalLines} lines total
             </button>
+          )}
+          {expanded && (stdoutE.capped || stderrE.capped) && (
+            <div className="border-t border-[var(--border-subtle)] px-4 py-2 text-[11px] text-[var(--text-muted)]">
+              Showing first {MAX_EXPANDED_LINES} of {stdoutE.totalLines + stderrE.totalLines} lines
+            </div>
           )}
         </div>
       )}
@@ -307,7 +326,9 @@ export default function Activity() {
     } else {
       setItems((prev) => {
         const seen = new Set(prev.map((i) => i.id));
-        return [...prev, ...data.items.filter((i) => !seen.has(i.id))];
+        const merged = [...prev, ...data.items.filter((i) => !seen.has(i.id))];
+        // Cap DOM items to prevent memory bloat on long scroll sessions
+        return merged.slice(-MAX_ITEMS_IN_DOM);
       });
     }
   }, [data, page]);
