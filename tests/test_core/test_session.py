@@ -288,3 +288,62 @@ async def test_list_active_returns_only_active():
     active = manager.list_active()
     assert len(active) == 1
     assert active[0].session_id == s2.session_id
+
+
+@pytest.mark.asyncio
+async def test_execute_truncates_huge_stdout(monkeypatch):
+    monkeypatch.setattr("shuttle.core.session.MAX_OUTPUT_BYTES", 8)
+    pool = make_mock_pool()
+    manager = SessionManager(pool=pool)
+    session = await manager.create("node-1")
+
+    big = "a" * 20
+    execute_result = MagicMock()
+    execute_result.stdout = f"{big}\n{PWD_SENTINEL}\n/home/x\n"
+
+    pooled_conn = MagicMock()
+    pooled_conn.conn.run = AsyncMock(return_value=execute_result)
+    pool.connection = MagicMock(
+        return_value=AsyncMock(
+            __aenter__=AsyncMock(return_value=pooled_conn),
+            __aexit__=AsyncMock(return_value=False),
+        )
+    )
+
+    result = await manager.execute(session.session_id, "cmd")
+    assert len(result["stdout"].encode()) <= 8
+
+
+@pytest.mark.asyncio
+async def test_execute_keeps_working_directory_when_sentinel_has_no_pwd():
+    pool = make_mock_pool()
+    manager = SessionManager(pool=pool)
+    session = await manager.create("node-1")
+    prev = session.working_directory
+
+    execute_result = MagicMock()
+    execute_result.stdout = f"out\n{PWD_SENTINEL}\n"
+
+    pooled_conn = MagicMock()
+    pooled_conn.conn.run = AsyncMock(return_value=execute_result)
+    pool.connection = MagicMock(
+        return_value=AsyncMock(
+            __aenter__=AsyncMock(return_value=pooled_conn),
+            __aexit__=AsyncMock(return_value=False),
+        )
+    )
+
+    await manager.execute(session.session_id, "cmd")
+    assert session.working_directory == prev
+
+
+@pytest.mark.asyncio
+async def test_persist_hooks_noop_without_db_factory():
+    pool = make_mock_pool()
+    manager = SessionManager(pool=pool, db_session_factory=None)
+    session = await manager.create("node-1")
+    await manager.execute(
+        session.session_id,
+        "echo",
+    )
+    await manager.close(session.session_id)

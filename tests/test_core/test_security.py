@@ -271,3 +271,63 @@ def test_token_expired():
     token = store.create("sudo reboot", "node42")
     time.sleep(0.05)
     assert store.validate(token, "sudo reboot", "node42") is False
+
+
+def test_token_store_cleanup_when_many_entries(monkeypatch):
+    """Expired entries should be pruned once the store grows past the threshold."""
+    store = ConfirmTokenStore(ttl=0.01)
+    monkeypatch.setattr(
+        "shuttle.core.security._CLEANUP_THRESHOLD",
+        3,
+    )
+    for i in range(4):
+        tok = store.create(f"cmd-{i}", "n")
+        store._store[tok] = (f"cmd-{i}", "n", time.monotonic() - 1.0)
+    store.create("fresh", "n")
+    assert len(store._store) == 1
+    assert any(v[0] == "fresh" for v in store._store.values())
+
+
+@pytest.mark.asyncio
+async def test_evaluate_skips_overlong_regex_pattern(guard_db_session):
+    """Patterns longer than 500 chars are ignored (ReDoS guard)."""
+    long_pat = "x" * 501
+    guard_db_session.add(
+        SecurityRule(
+            pattern=long_pat,
+            level="block",
+            priority=1,
+            enabled=True,
+        )
+    )
+    await guard_db_session.commit()
+    guard = CommandGuard()
+    decision = await guard.evaluate("xxx", "node1", guard_db_session)
+    assert decision.level == SecurityLevel.ALLOW
+
+
+@pytest.mark.asyncio
+async def test_evaluate_duplicate_pattern_prefers_node_specific(guard_db_session):
+    """When two rules share a pattern, the node-scoped rule wins over global."""
+    guard_db_session.add_all(
+        [
+            SecurityRule(
+                pattern=r"^uniquepat\b",
+                level="warn",
+                priority=5,
+                enabled=True,
+                node_id=None,
+            ),
+            SecurityRule(
+                pattern=r"^uniquepat\b",
+                level="block",
+                priority=5,
+                enabled=True,
+                node_id="node1",
+            ),
+        ]
+    )
+    await guard_db_session.commit()
+    guard = CommandGuard()
+    decision = await guard.evaluate("uniquepat foo", "node1", guard_db_session)
+    assert decision.level == SecurityLevel.BLOCK
