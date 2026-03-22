@@ -78,7 +78,9 @@ class ConfirmTokenStore:
         del self._store[token]
         if time.monotonic() > expires_at:
             return False
-        return stored_command == command and stored_node_id == node_id
+        return secrets.compare_digest(
+            stored_command, command
+        ) and secrets.compare_digest(stored_node_id, node_id)
 
 
 # ---------------------------------------------------------------------------
