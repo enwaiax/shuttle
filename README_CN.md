@@ -185,7 +185,7 @@ shuttle config show          # 显示当前配置
 
 | 变量 | 默认值 | 说明 |
 |------|--------|------|
-| `SHUTTLE_DB_URL` | `sqlite:///~/.shuttle/shuttle.db` | 数据库 URL |
+| `SHUTTLE_DB_URL` | `sqlite+aiosqlite:///~/.shuttle/shuttle.db` | 数据库 URL |
 | `SHUTTLE_WEB_PORT` | `9876` | Web 面板端口 |
 | `SHUTTLE_POOL_MAX_TOTAL` | `50` | 最大 SSH 连接总数 |
 | `SHUTTLE_POOL_MAX_PER_NODE` | `5` | 每节点最大连接数 |

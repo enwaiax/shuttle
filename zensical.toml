@@ -39,3 +39,9 @@ Configuration = "configuration.md"
 
 [[project.nav]]
 "Web Panel" = "web-panel.md"
+
+[[project.nav]]
+"API Reference" = "api.md"
+
+[[project.nav]]
+Troubleshooting = "troubleshooting.md"
