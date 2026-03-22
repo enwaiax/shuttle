@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "shuttle-mcp"
-version = "0.2.0"
+version = "0.2.1"
 description = "Secure SSH gateway for AI assistants — MCP server with connection pooling, session isolation, and command safety"
 authors = [{ name = "enwaiax", email = "enwaiax@users.noreply.github.com" }]
 readme = "README.md"
