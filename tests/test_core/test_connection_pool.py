@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import time
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -338,3 +339,123 @@ async def test_evict_expired_keeps_fresh_connections():
     evicted = await pool.evict_expired()
     assert evicted == 0
     assert len(pool._idle["test-node"]) == 1
+
+
+@pytest.mark.asyncio
+async def test_unregister_node_removes_registry_entry():
+    pool = ConnectionPool()
+    pool.register_node(make_info("n1"))
+    pool.unregister_node("n1")
+    assert "n1" not in pool._registry
+
+
+@pytest.mark.asyncio
+async def test_acquire_skips_closed_idle_connection():
+    pool = ConnectionPool(PoolConfig(max_per_node=2))
+    pool.register_node(make_info())
+    dead = make_mock_conn(closing=True)
+    alive = make_mock_conn()
+
+    with patch(
+        "shuttle.core.connection_pool.connect_ssh",
+        new_callable=AsyncMock,
+        return_value=alive,
+    ) as mock_ssh:
+        pc1 = await pool.acquire("test-node")
+        await pool.release(pc1)
+        pool._idle["test-node"][0].conn = dead
+
+        pc2 = await pool.acquire("test-node")
+
+    assert pc2.conn is alive
+    assert mock_ssh.await_count >= 1
+
+
+@pytest.mark.asyncio
+async def test_acquire_connection_failure_unreserves_slots():
+    pool = ConnectionPool(PoolConfig(max_per_node=2))
+    pool.register_node(make_info())
+
+    with patch(
+        "shuttle.core.connection_pool.connect_ssh",
+        new_callable=AsyncMock,
+        side_effect=OSError("boom"),
+    ):
+        with pytest.raises(OSError, match="boom"):
+            await pool.acquire("test-node")
+
+    assert pool._active["test-node"] == 0
+    assert pool._global_active == 0
+
+
+@pytest.mark.asyncio
+async def test_release_unknown_node_id_closes_connection():
+    """When per-node lock map has no entry, release closes the connection only."""
+    pool = ConnectionPool()
+    pc = make_pooled(node_id="never-registered")
+    await pool.release(pc)
+    pc.conn.close.assert_called_once()
+
+
+@pytest.mark.asyncio
+async def test_release_expired_connection_closes_and_decrements_global(monkeypatch):
+    pool = ConnectionPool(PoolConfig(idle_timeout=1.0, max_lifetime=3600.0))
+    pool.register_node(make_info())
+    mock_conn = make_mock_conn()
+    with patch(
+        "shuttle.core.connection_pool.connect_ssh",
+        new_callable=AsyncMock,
+        return_value=mock_conn,
+    ):
+        pc = await pool.acquire("test-node")
+
+    monkeypatch.setattr(time, "monotonic", lambda: pc.last_used_at + 10)
+    await pool.release(pc)
+
+    mock_conn.close.assert_called()
+    assert pool._global_active == 0
+
+
+@pytest.mark.asyncio
+async def test_evict_expired_counts_closed_idle():
+    pool = ConnectionPool()
+    pool.register_node(make_info())
+    pc = make_pooled(closing=True)
+    pool._idle["test-node"].append(pc)
+    pool._global_active = 1
+    n = await pool.evict_expired()
+    assert n == 1
+
+
+@pytest.mark.asyncio
+async def test_start_eviction_loop_runs_one_tick():
+    pool = ConnectionPool()
+    pool.register_node(make_info())
+    real_sleep = asyncio.sleep
+
+    async def short_sleep(_delay: float) -> None:
+        await real_sleep(0.01)
+
+    with patch("shuttle.core.connection_pool.asyncio.sleep", side_effect=short_sleep):
+        await pool.start_eviction_loop(interval=0.01)
+        await real_sleep(0.05)
+
+    assert pool._eviction_task is not None
+    await pool.close_all()
+    assert pool._eviction_task is None
+
+
+@pytest.mark.asyncio
+async def test_close_node_clears_idle_and_registry():
+    pool = ConnectionPool()
+    pool.register_node(make_info())
+    mock_conn = make_mock_conn()
+    with patch(
+        "shuttle.core.connection_pool.connect_ssh",
+        new_callable=AsyncMock,
+        return_value=mock_conn,
+    ):
+        pc = await pool.acquire("test-node")
+        await pool.release(pc)
+    await pool.close_node("test-node")
+    assert "test-node" not in pool._registry
