@@ -186,7 +186,7 @@ All settings can be overridden with environment variables (prefix `SHUTTLE_`):
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `SHUTTLE_DB_URL` | `sqlite:///~/.shuttle/shuttle.db` | Database URL |
+| `SHUTTLE_DB_URL` | `sqlite+aiosqlite:///~/.shuttle/shuttle.db` | Database URL |
 | `SHUTTLE_WEB_PORT` | `9876` | Web panel port |
 | `SHUTTLE_POOL_MAX_TOTAL` | `50` | Max total SSH connections |
 | `SHUTTLE_POOL_MAX_PER_NODE` | `5` | Max connections per node |

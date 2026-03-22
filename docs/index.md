@@ -88,4 +88,4 @@ Developer <-> AI Assistant <-> Shuttle (MCP) <-> SSH <-> Remote Servers
 
 ## License
 
-[ISC](https://github.com/enwaiax/shuttle/blob/main/LICENSE)
+[MIT](https://github.com/enwaiax/shuttle/blob/main/LICENSE)
