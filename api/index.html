@@ -13,6 +13,10 @@
         <link rel="canonical" href="https://enwaiax.github.io/shuttle/api/">
       
       
+        <link rel="prev" href="../web-panel/">
+      
+      
+        <link rel="next" href="../troubleshooting/">
       
       
         
@@ -23,7 +27,7 @@
     
     
       
-        <title>{{RIPER-5: - Shuttle</title>
+        <title>MCP Tools API Reference - Shuttle</title>
       
     
     
@@ -81,7 +85,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#riper-5" class="md-skip">
+        <a href="#mcp-tools-api-reference" class="md-skip">
           Skip to content
         </a>
       
@@ -117,7 +121,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              {{RIPER-5:
+              MCP Tools API Reference
             
           </span>
         </div>
@@ -342,6 +346,207 @@
   
 
     
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ssh_execute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ssh_execute
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh_list_nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ssh_list_nodes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh_session_start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ssh_session_start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh_session_end" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ssh_session_end
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh_session_list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ssh_session_list
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh_upload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ssh_upload
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh_download" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ssh_download
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh_add_node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ssh_add_node
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh_remove_node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ssh_remove_node
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -363,6 +568,113 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ssh_execute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ssh_execute
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh_list_nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ssh_list_nodes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh_session_start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ssh_session_start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh_session_end" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ssh_session_end
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh_session_list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ssh_session_list
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh_upload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ssh_upload
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh_download" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ssh_download
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh_add_node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ssh_add_node
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh_remove_node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ssh_remove_node
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -376,22 +688,10 @@
                 
                   
 
-<h1 id="riper-5">{{RIPER-5:<a class="headerlink" href="#riper-5" title="Permanent link">&para;</a></h1>
-<h1 id="action-added">Action: "Added"<a class="headerlink" href="#action-added" title="Permanent link">&para;</a></h1>
-<h1 id="task_id-3702898f-86db-43bb-aae0-0161b6a8eedf">Task_ID: "3702898f-86db-43bb-aae0-0161b6a8eedf"<a class="headerlink" href="#task_id-3702898f-86db-43bb-aae0-0161b6a8eedf" title="Permanent link">&para;</a></h1>
-<h1 id="timestamp-2025-08-05t2123200800">Timestamp: "2025-08-05T21:23:20+08:00"<a class="headerlink" href="#timestamp-2025-08-05t2123200800" title="Permanent link">&para;</a></h1>
-<h1 id="authoring_role-ld">Authoring_Role: "LD"<a class="headerlink" href="#authoring_role-ld" title="Permanent link">&para;</a></h1>
-<h1 id="principle_applied-api">Principle_Applied: "文档即代码 + API规范化"<a class="headerlink" href="#principle_applied-api" title="Permanent link">&para;</a></h1>
-<h1 id="quality_check-api">Quality_Check: "完整的API文档，详细的接口说明，丰富的使用示例"<a class="headerlink" href="#quality_check-api" title="Permanent link">&para;</a></h1>
-<h1 id="_1">}}<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
-<h1 id="start_modifications">{{START_MODIFICATIONS}}<a class="headerlink" href="#start_modifications" title="Permanent link">&para;</a></h1>
-<h1 id="fastmcp-ssh-server-api-documentation">FastMCP SSH Server - API Documentation<a class="headerlink" href="#fastmcp-ssh-server-api-documentation" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>The FastMCP SSH Server provides four core MCP tools for SSH operations. All tools follow the Model Context Protocol (MCP) specification and provide consistent error handling and response formats.</p>
-<h2 id="mcp-tools">MCP Tools<a class="headerlink" href="#mcp-tools" title="Permanent link">&para;</a></h2>
-<h3 id="1-execute-command">1. execute-command<a class="headerlink" href="#1-execute-command" title="Permanent link">&para;</a></h3>
-<p>Execute commands on remote SSH servers with security validation.</p>
-<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h4>
+<h1 id="mcp-tools-api-reference">MCP Tools API Reference<a class="headerlink" href="#mcp-tools-api-reference" title="Permanent link">&para;</a></h1>
+<p>Shuttle exposes 9 MCP tools that AI assistants call automatically. This page documents every tool's parameters, return format, and usage examples.</p>
+<h2 id="ssh_execute">ssh_execute<a class="headerlink" href="#ssh_execute" title="Permanent link">&para;</a></h2>
+<p>Run a shell command on a remote SSH node. Supports stateless and session-based (stateful) execution with 4-level security checks.</p>
 <table>
 <thead>
 <tr>
@@ -404,469 +704,329 @@
 </thead>
 <tbody>
 <tr>
-<td><code>cmdString</code></td>
+<td><code>command</code></td>
 <td>string</td>
-<td>✅</td>
-<td>-</td>
-<td>Command to execute on the remote server</td>
+<td>yes</td>
+<td>—</td>
+<td>Shell command to execute</td>
 </tr>
 <tr>
-<td><code>serverName</code></td>
+<td><code>node</code></td>
 <td>string</td>
-<td>❌</td>
-<td>"default"</td>
-<td>Name of the SSH server to execute on</td>
+<td>no</td>
+<td>—</td>
+<td>Node name (required if no <code>session_id</code>)</td>
+</tr>
+<tr>
+<td><code>session_id</code></td>
+<td>string</td>
+<td>no</td>
+<td>—</td>
+<td>Session ID for stateful execution</td>
 </tr>
 <tr>
 <td><code>timeout</code></td>
-<td>integer</td>
-<td>❌</td>
-<td>30</td>
+<td>float</td>
+<td>no</td>
+<td>30.0</td>
 <td>Command timeout in seconds</td>
 </tr>
-</tbody>
-</table>
-<h4 id="request-example">Request Example<a class="headerlink" href="#request-example" title="Permanent link">&para;</a></h4>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;tool&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;execute-command&quot;</span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">&quot;arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">&quot;cmdString&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ls -la /home/user&quot;</span><span class="p">,</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">&quot;serverName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;production&quot;</span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">&quot;timeout&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">}</span>
-</span></code></pre></div>
-<h4 id="response-format">Response Format<a class="headerlink" href="#response-format" title="Permanent link">&para;</a></h4>
-<p><strong>Success Response:</strong>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;stdout&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;total 24\ndrwxr-xr-x 3 user user 4096 Aug  5 13:23 .\ndrwxr-xr-x 3 root root 4096 Aug  1 10:15 ..&quot;</span><span class="p">,</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&quot;stderr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&quot;exitCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">&quot;serverName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Error Response:</strong>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;isError&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">&quot;error_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SSHCommandError&quot;</span><span class="p">,</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Command denied by security policy: rm not allowed&quot;</span><span class="p">,</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-08-05T21:23:20+08:00&quot;</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Command execution failed: Command denied by security policy&quot;</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<h4 id="security-validation">Security Validation<a class="headerlink" href="#security-validation" title="Permanent link">&para;</a></h4>
-<p>Commands are validated against the configured whitelist and blacklist:</p>
-<ul>
-<li><strong>Whitelist</strong>: Commands must match at least one pattern</li>
-<li><strong>Blacklist</strong>: Commands must not match any pattern</li>
-<li><strong>Patterns</strong>: Support regular expressions</li>
-</ul>
-<p><strong>Example Security Configurations:</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Allow only safe commands</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>--whitelist<span class="w"> </span><span class="s2">&quot;ls.*,pwd,echo.*,cat.*&quot;</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Deny dangerous commands</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>--blacklist<span class="w"> </span><span class="s2">&quot;rm.*,sudo.*,chmod.*,dd.*&quot;</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Complex patterns</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>--whitelist<span class="w"> </span><span class="s2">&quot;git (status|log|show).*&quot;</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>--blacklist<span class="w"> </span><span class="s2">&quot;git (reset --hard|push --force).*&quot;</span>
-</span></code></pre></div>
-<h3 id="2-upload">2. upload<a class="headerlink" href="#2-upload" title="Permanent link">&para;</a></h3>
-<p>Upload files to remote SSH servers via SFTP.</p>
-<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">&para;</a></h4>
-<table>
-<thead>
 <tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Required</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>localPath</code></td>
+<td><code>confirm_token</code></td>
 <td>string</td>
-<td>✅</td>
-<td>-</td>
-<td>Local file path to upload</td>
+<td>no</td>
+<td>—</td>
+<td>Token to confirm a CONFIRM-level command</td>
 </tr>
 <tr>
-<td><code>remotePath</code></td>
+<td><code>bypass_scope</code></td>
 <td>string</td>
-<td>✅</td>
-<td>-</td>
-<td>Remote destination path</td>
-</tr>
-<tr>
-<td><code>serverName</code></td>
-<td>string</td>
-<td>❌</td>
-<td>"default"</td>
-<td>Name of the SSH server</td>
+<td>no</td>
+<td>—</td>
+<td>Bypass scope for session commands</td>
 </tr>
 </tbody>
 </table>
-<h4 id="request-example_1">Request Example<a class="headerlink" href="#request-example_1" title="Permanent link">&para;</a></h4>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;tool&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;upload&quot;</span><span class="p">,</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">&quot;arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">&quot;localPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/local/config.json&quot;</span><span class="p">,</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nt">&quot;remotePath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/remote/app/config.json&quot;</span><span class="p">,</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nt">&quot;serverName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;staging&quot;</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="p">}</span>
-</span></code></pre></div>
-<h4 id="response-format_1">Response Format<a class="headerlink" href="#response-format_1" title="Permanent link">&para;</a></h4>
-<p><strong>Success Response:</strong>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;File uploaded successfully from /local/config.json to staging:/remote/app/config.json&quot;</span><span class="p">,</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">&quot;localPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/local/config.json&quot;</span><span class="p">,</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nt">&quot;remotePath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/remote/app/config.json&quot;</span><span class="p">,</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="nt">&quot;serverName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;staging&quot;</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Error Response:</strong>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">&quot;isError&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="nt">&quot;error_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SFTPError&quot;</span><span class="p">,</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Local file not found: /local/missing.json&quot;</span><span class="p">,</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-08-05T21:23:20+08:00&quot;</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Upload failed: Local file not found&quot;</span>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<h4 id="file-path-handling">File Path Handling<a class="headerlink" href="#file-path-handling" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>Local Paths</strong>: Supports absolute and relative paths, tilde expansion</li>
-<li><strong>Remote Paths</strong>: Absolute paths recommended, relative to user home if relative</li>
-<li><strong>Permissions</strong>: Inherits parent directory permissions on remote</li>
-<li><strong>Overwrite</strong>: Existing files are overwritten without warning</li>
-</ul>
-<h3 id="3-download">3. download<a class="headerlink" href="#3-download" title="Permanent link">&para;</a></h3>
-<p>Download files from remote SSH servers via SFTP.</p>
-<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">&para;</a></h4>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Required</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>remotePath</code></td>
-<td>string</td>
-<td>✅</td>
-<td>-</td>
-<td>Remote file path to download</td>
-</tr>
-<tr>
-<td><code>localPath</code></td>
-<td>string</td>
-<td>✅</td>
-<td>-</td>
-<td>Local destination path</td>
-</tr>
-<tr>
-<td><code>serverName</code></td>
-<td>string</td>
-<td>❌</td>
-<td>"default"</td>
-<td>Name of the SSH server</td>
-</tr>
-</tbody>
-</table>
-<h4 id="request-example_2">Request Example<a class="headerlink" href="#request-example_2" title="Permanent link">&para;</a></h4>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">&quot;tool&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;download&quot;</span><span class="p">,</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">&quot;arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="nt">&quot;remotePath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/remote/logs/app.log&quot;</span><span class="p">,</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="nt">&quot;localPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/local/logs/app.log&quot;</span><span class="p">,</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="nt">&quot;serverName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="p">}</span>
-</span></code></pre></div>
-<h4 id="response-format_2">Response Format<a class="headerlink" href="#response-format_2" title="Permanent link">&para;</a></h4>
-<p><strong>Success Response:</strong>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;File downloaded successfully from production:/remote/logs/app.log to /local/logs/app.log&quot;</span><span class="p">,</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nt">&quot;remotePath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/remote/logs/app.log&quot;</span><span class="p">,</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nt">&quot;localPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/local/logs/app.log&quot;</span><span class="p">,</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="nt">&quot;serverName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Error Response:</strong>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nt">&quot;isError&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="nt">&quot;error_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SFTPError&quot;</span><span class="p">,</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Remote file not found: /remote/missing.log&quot;</span><span class="p">,</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-08-05T21:23:20+08:00&quot;</span>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Download failed: Remote file not found&quot;</span>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<h4 id="file-path-handling_1">File Path Handling<a class="headerlink" href="#file-path-handling_1" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>Remote Paths</strong>: Must be accessible by the SSH user</li>
-<li><strong>Local Paths</strong>: Parent directories are created automatically</li>
-<li><strong>Permissions</strong>: Downloaded files inherit local umask</li>
-<li><strong>Overwrite</strong>: Existing local files are overwritten</li>
-</ul>
-<h3 id="4-list-servers">4. list-servers<a class="headerlink" href="#4-list-servers" title="Permanent link">&para;</a></h3>
-<p>List all configured SSH servers and their connection status.</p>
-<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">&para;</a></h4>
-<p>No parameters required.</p>
-<h4 id="request-example_3">Request Example<a class="headerlink" href="#request-example_3" title="Permanent link">&para;</a></h4>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">&quot;tool&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;list-servers&quot;</span><span class="p">,</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">&quot;arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="p">}</span>
-</span></code></pre></div>
-<h4 id="response-format_3">Response Format<a class="headerlink" href="#response-format_3" title="Permanent link">&para;</a></h4>
-<p><strong>Success Response:</strong>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="p">[</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="p">{</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;production&quot;</span><span class="p">,</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;prod.example.com&quot;</span><span class="p">,</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">22</span><span class="p">,</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">    </span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;deploy&quot;</span><span class="p">,</span>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">    </span><span class="nt">&quot;authentication&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;key&quot;</span><span class="p">,</span>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;connected&quot;</span><span class="p">,</span>
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">    </span><span class="nt">&quot;whitelist&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;git.*&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;npm.*&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;node.*&quot;</span><span class="p">],</span>
-</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">    </span><span class="nt">&quot;blacklist&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;rm.*&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;sudo.*&quot;</span><span class="p">]</span>
-</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">  </span><span class="p">{</span>
-</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;staging&quot;</span><span class="p">,</span>
-</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">    </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;staging.example.com&quot;</span><span class="p">,</span>
-</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">    </span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2222</span><span class="p">,</span>
-</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="w">    </span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span><span class="p">,</span>
-</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="w">    </span><span class="nt">&quot;authentication&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;password&quot;</span><span class="p">,</span>
-</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;disconnected&quot;</span><span class="p">,</span>
-</span><span id="__span-11-19"><a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="w">    </span><span class="nt">&quot;whitelist&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
-</span><span id="__span-11-20"><a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="w">    </span><span class="nt">&quot;blacklist&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;rm -rf.*&quot;</span><span class="p">]</span>
-</span><span id="__span-11-21"><a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-11-22"><a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="p">]</span>
-</span></code></pre></div></p>
-<p><strong>Error Response:</strong>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="p">{</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="nt">&quot;isError&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="nt">&quot;error_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;RuntimeError&quot;</span><span class="p">,</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SSH manager not initialized&quot;</span><span class="p">,</span>
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-08-05T21:23:20+08:00&quot;</span>
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Server listing failed: SSH manager not initialized&quot;</span>
-</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<h4 id="server-status-values">Server Status Values<a class="headerlink" href="#server-status-values" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong><code>connected</code></strong>: Active SSH connection established</li>
-<li><strong><code>disconnected</code></strong>: No active connection</li>
-<li><strong><code>error</code></strong>: Connection failed or authentication error</li>
-<li><strong><code>unknown</code></strong>: Status not yet determined</li>
-</ul>
-<h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
-<h3 id="common-error-types">Common Error Types<a class="headerlink" href="#common-error-types" title="Permanent link">&para;</a></h3>
-<h4 id="sshconnectionerror">SSHConnectionError<a class="headerlink" href="#sshconnectionerror" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>Cause</strong>: Network connectivity issues, incorrect host/port</li>
-<li><strong>Resolution</strong>: Verify network connectivity and server details</li>
-</ul>
-<h4 id="sshauthenticationerror">SSHAuthenticationError<a class="headerlink" href="#sshauthenticationerror" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>Cause</strong>: Invalid credentials, missing/incorrect private key</li>
-<li><strong>Resolution</strong>: Verify username, password, or private key</li>
-</ul>
-<h4 id="sshcommanderror">SSHCommandError<a class="headerlink" href="#sshcommanderror" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>Cause</strong>: Command denied by security policy, command not found</li>
-<li><strong>Resolution</strong>: Check whitelist/blacklist configuration</li>
-</ul>
-<h4 id="sftperror">SFTPError<a class="headerlink" href="#sftperror" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>Cause</strong>: File not found, permission denied, disk space</li>
-<li><strong>Resolution</strong>: Verify file paths and permissions</li>
-</ul>
-<h4 id="configurationerror">ConfigurationError<a class="headerlink" href="#configurationerror" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>Cause</strong>: Invalid configuration parameters</li>
-<li><strong>Resolution</strong>: Check CLI arguments and configuration</li>
-</ul>
-<h3 id="error-response-format">Error Response Format<a class="headerlink" href="#error-response-format" title="Permanent link">&para;</a></h3>
-<p>All errors follow a consistent format:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">{</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nt">&quot;isError&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">    </span><span class="nt">&quot;error_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ErrorClassName&quot;</span><span class="p">,</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Detailed error description&quot;</span><span class="p">,</span>
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ISO 8601 timestamp&quot;</span><span class="p">,</span>
-</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span><span class="nt">&quot;context&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">      </span><span class="nt">&quot;additional&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;context information&quot;</span>
-</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;User-friendly error message&quot;</span>
-</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="p">}</span>
-</span></code></pre></div>
-<h2 id="usage-examples">Usage Examples<a class="headerlink" href="#usage-examples" title="Permanent link">&para;</a></h2>
-<h3 id="basic-command-execution">Basic Command Execution<a class="headerlink" href="#basic-command-execution" title="Permanent link">&para;</a></h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Using Python MCP client</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">mcp</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClientSession</span>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_command</span><span class="p">():</span>
-</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    <span class="k">async</span> <span class="k">with</span> <span class="n">ClientSession</span><span class="p">(</span><span class="s2">&quot;fastmcp-ssh-server&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
-</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span>
-</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>            <span class="s2">&quot;execute-command&quot;</span><span class="p">,</span>
-</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>            <span class="n">cmdString</span><span class="o">=</span><span class="s2">&quot;uptime&quot;</span><span class="p">,</span>
-</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>            <span class="n">serverName</span><span class="o">=</span><span class="s2">&quot;production&quot;</span>
-</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>        <span class="p">)</span>
-</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Server uptime: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;stdout&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
-</span><span id="__span-14-14"><a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">execute_command</span><span class="p">())</span>
-</span></code></pre></div>
-<h3 id="file-operations">File Operations<a class="headerlink" href="#file-operations" title="Permanent link">&para;</a></h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">backup_logs</span><span class="p">():</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="k">async</span> <span class="k">with</span> <span class="n">ClientSession</span><span class="p">(</span><span class="s2">&quot;fastmcp-ssh-server&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>        <span class="c1"># Download current log</span>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>        <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>            <span class="s2">&quot;download&quot;</span><span class="p">,</span>
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>            <span class="n">remotePath</span><span class="o">=</span><span class="s2">&quot;/var/log/app.log&quot;</span><span class="p">,</span>
-</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>            <span class="n">localPath</span><span class="o">=</span><span class="s2">&quot;./backup/app.log&quot;</span><span class="p">,</span>
-</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>            <span class="n">serverName</span><span class="o">=</span><span class="s2">&quot;production&quot;</span>
-</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>        <span class="p">)</span>
-</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
-</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>        <span class="c1"># Upload new configuration</span>
-</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>        <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span>
-</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>            <span class="s2">&quot;upload&quot;</span><span class="p">,</span>
-</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>            <span class="n">localPath</span><span class="o">=</span><span class="s2">&quot;./config/new-app.conf&quot;</span><span class="p">,</span>
-</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>            <span class="n">remotePath</span><span class="o">=</span><span class="s2">&quot;/etc/app/app.conf&quot;</span><span class="p">,</span>
-</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>            <span class="n">serverName</span><span class="o">=</span><span class="s2">&quot;production&quot;</span>
-</span><span id="__span-15-17"><a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>        <span class="p">)</span>
-</span><span id="__span-15-18"><a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>
-</span><span id="__span-15-19"><a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">backup_logs</span><span class="p">())</span>
-</span></code></pre></div>
-<h3 id="server-management">Server Management<a class="headerlink" href="#server-management" title="Permanent link">&para;</a></h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">check_servers</span><span class="p">():</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="k">async</span> <span class="k">with</span> <span class="n">ClientSession</span><span class="p">(</span><span class="s2">&quot;fastmcp-ssh-server&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>        <span class="n">servers</span> <span class="o">=</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span><span class="s2">&quot;list-servers&quot;</span><span class="p">)</span>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>        <span class="k">for</span> <span class="n">server</span> <span class="ow">in</span> <span class="n">servers</span><span class="p">:</span>
-</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Server: </span><span class="si">{</span><span class="n">server</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Status: </span><span class="si">{</span><span class="n">server</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Host: </span><span class="si">{</span><span class="n">server</span><span class="p">[</span><span class="s1">&#39;host&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">server</span><span class="p">[</span><span class="s1">&#39;port&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---&quot;</span><span class="p">)</span>
-</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>
-</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">check_servers</span><span class="p">())</span>
-</span></code></pre></div>
-<h2 id="rate-limiting-and-timeouts">Rate Limiting and Timeouts<a class="headerlink" href="#rate-limiting-and-timeouts" title="Permanent link">&para;</a></h2>
-<h3 id="default-timeouts">Default Timeouts<a class="headerlink" href="#default-timeouts" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Command Execution</strong>: 30 seconds (configurable)</li>
-<li><strong>File Upload</strong>: No timeout (depends on file size)</li>
-<li><strong>File Download</strong>: No timeout (depends on file size)</li>
-<li><strong>Connection Establishment</strong>: 10 seconds</li>
-</ul>
-<h3 id="timeout-configuration">Timeout Configuration<a class="headerlink" href="#timeout-configuration" title="Permanent link">&para;</a></h3>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="p">{</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span><span class="nt">&quot;tool&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;execute-command&quot;</span><span class="p">,</span>
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="nt">&quot;arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">    </span><span class="nt">&quot;cmdString&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;long-running-task&quot;</span><span class="p">,</span>
-</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">    </span><span class="nt">&quot;timeout&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">300</span><span class="w">  </span><span class="c1">// 5 minutes</span>
-</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="p">}</span>
-</span></code></pre></div>
-<h3 id="connection-pooling">Connection Pooling<a class="headerlink" href="#connection-pooling" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Connections are reused across multiple tool calls</li>
-<li>Idle connections are maintained for 5 minutes</li>
-<li>Maximum of 10 concurrent connections per server</li>
-<li>Automatic reconnection on connection loss</li>
-</ul>
-<h2 id="security-considerations">Security Considerations<a class="headerlink" href="#security-considerations" title="Permanent link">&para;</a></h2>
-<h3 id="command-security">Command Security<a class="headerlink" href="#command-security" title="Permanent link">&para;</a></h3>
+<p><strong>Returns:</strong> Command output (stdout), or an error/security message.</p>
+<p><strong>Security flow:</strong></p>
 <ol>
-<li><strong>Always use whitelist patterns</strong> for production environments</li>
-<li><strong>Avoid overly permissive patterns</strong> like <code>.*</code> or <code>*</code></li>
-<li><strong>Test security policies</strong> before deployment</li>
-<li><strong>Regular audit</strong> of allowed commands</li>
+<li>Command is evaluated against security rules</li>
+<li><code>block</code> → rejected immediately</li>
+<li><code>confirm</code> → returns a token; re-call with <code>confirm_token</code> to proceed</li>
+<li><code>warn</code> → executes with warning logged</li>
+<li><code>allow</code> → executes normally</li>
 </ol>
-<h3 id="authentication-security">Authentication Security<a class="headerlink" href="#authentication-security" title="Permanent link">&para;</a></h3>
-<ol>
-<li><strong>Use private key authentication</strong> for production</li>
-<li><strong>Protect private keys</strong> with strong passphrases</li>
-<li><strong>Rotate credentials</strong> regularly</li>
-<li><strong>Limit SSH user permissions</strong> on target servers</li>
-</ol>
-<h3 id="network-security">Network Security<a class="headerlink" href="#network-security" title="Permanent link">&para;</a></h3>
-<ol>
-<li><strong>Use SSH key-based authentication</strong></li>
-<li><strong>Disable password authentication</strong> on SSH servers</li>
-<li><strong>Use non-standard SSH ports</strong> when possible</li>
-<li><strong>Implement network firewalls</strong></li>
-</ol>
-<h2 id="performance-optimization">Performance Optimization<a class="headerlink" href="#performance-optimization" title="Permanent link">&para;</a></h2>
-<h3 id="connection-management">Connection Management<a class="headerlink" href="#connection-management" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Reuse connections</strong> for multiple operations</li>
-<li><strong>Configure appropriate timeouts</strong> based on use case</li>
-<li><strong>Monitor connection health</strong> regularly</li>
-</ul>
-<h3 id="file-transfer-optimization">File Transfer Optimization<a class="headerlink" href="#file-transfer-optimization" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Use streaming</strong> for large files</li>
-<li><strong>Compress files</strong> before transfer when possible</li>
-<li><strong>Parallel transfers</strong> for multiple files</li>
-</ul>
-<h3 id="command-execution">Command Execution<a class="headerlink" href="#command-execution" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Batch related commands</strong> when possible</li>
-<li><strong>Use efficient commands</strong> (avoid unnecessary verbosity)</li>
-<li><strong>Cache frequently accessed data</strong></li>
-</ul>
-<h2 id="debugging-and-logging">Debugging and Logging<a class="headerlink" href="#debugging-and-logging" title="Permanent link">&para;</a></h2>
-<h3 id="enable-debug-logging">Enable Debug Logging<a class="headerlink" href="#enable-debug-logging" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Set log level to debug</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">PYTHONPATH</span><span class="o">=</span>src
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="s2">from ssh_mcp.utils import setup_logger</span>
-</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="s2">setup_logger(level=&#39;debug&#39;, enable_console=True)</span>
-</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="s2">&quot;</span>
-</span></code></pre></div>
-<h3 id="log-levels">Log Levels<a class="headerlink" href="#log-levels" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>DEBUG</strong>: Detailed operation information</li>
-<li><strong>INFO</strong>: General operation status</li>
-<li><strong>WARNING</strong>: Recoverable issues</li>
-<li><strong>ERROR</strong>: Operation failures</li>
-<li><strong>CRITICAL</strong>: System failures</li>
-</ul>
-<h3 id="common-debug-scenarios">Common Debug Scenarios<a class="headerlink" href="#common-debug-scenarios" title="Permanent link">&para;</a></h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Enable verbose SSH debugging</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;asyncssh&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
-</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
-</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="c1"># Custom error handler</span>
-</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ssh_mcp.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Logger</span>
-</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>
-</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="k">def</span><span class="w"> </span><span class="nf">debug_tool_call</span><span class="p">(</span><span class="n">tool_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>    <span class="n">Logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calling tool: </span><span class="si">{</span><span class="n">tool_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
-</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>    <span class="c1"># Your tool call here</span>
+<p><strong>Example:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>AI → ssh_execute(node=&quot;gpu-server&quot;, command=&quot;nvidia-smi&quot;)
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>AI ← &quot;Fri Mar 21 17:07:21 2026\n+---------------------+\n| NVIDIA-SMI 580.105 ...&quot;
 </span></code></pre></div>
 <hr />
-<p>For more examples and advanced usage patterns, see the <a href="../../examples/">examples/</a> directory.</p>
-<h1 id="end_modifications">{{END_MODIFICATIONS}}<a class="headerlink" href="#end_modifications" title="Permanent link">&para;</a></h1>
+<h2 id="ssh_list_nodes">ssh_list_nodes<a class="headerlink" href="#ssh_list_nodes" title="Permanent link">&para;</a></h2>
+<p>List all configured SSH nodes with their connection status.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>(none)</em></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> One line per node with status icon, name, host, port, and username.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>[OK] gpu-server  (10.0.0.1:22, user=root)
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>[OK] staging     (staging.example.com:22, user=deploy)
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>[--] dev-box     (192.168.1.10:22, user=dev)
+</span></code></pre></div>
+<p>Status icons: <code>[OK]</code> = active, <code>[--]</code> = inactive, <code>[!!]</code> = error.</p>
+<hr />
+<h2 id="ssh_session_start">ssh_session_start<a class="headerlink" href="#ssh_session_start" title="Permanent link">&para;</a></h2>
+<p>Start a stateful SSH session on a node. Sessions preserve the working directory across commands.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>node</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Node name</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> Session ID and initial working directory.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Session started.
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  session_id: a1b2c3d4
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  node: gpu-server
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  cwd: /home/root
+</span></code></pre></div>
+<hr />
+<h2 id="ssh_session_end">ssh_session_end<a class="headerlink" href="#ssh_session_end" title="Permanent link">&para;</a></h2>
+<p>Close an active SSH session and release its resources.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>session_id</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Session ID to close</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> Confirmation message.</p>
+<hr />
+<h2 id="ssh_session_list">ssh_session_list<a class="headerlink" href="#ssh_session_list" title="Permanent link">&para;</a></h2>
+<p>List all active SSH sessions.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>(none)</em></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> One line per session with session ID, node, and current working directory.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>  a1b2c3d4  node=gpu-server  cwd=/workspace/training
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  e5f6g7h8  node=staging     cwd=/var/www/app
+</span></code></pre></div>
+<hr />
+<h2 id="ssh_upload">ssh_upload<a class="headerlink" href="#ssh_upload" title="Permanent link">&para;</a></h2>
+<p>Upload a file to a remote node via SFTP.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>node</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Node name</td>
+</tr>
+<tr>
+<td><code>local_path</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Local file path</td>
+</tr>
+<tr>
+<td><code>remote_path</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Remote destination path</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> Confirmation or error message.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Uploaded /tmp/model.pt -&gt; gpu-server:/workspace/model.pt
+</span></code></pre></div>
+<hr />
+<h2 id="ssh_download">ssh_download<a class="headerlink" href="#ssh_download" title="Permanent link">&para;</a></h2>
+<p>Download a file from a remote node via SFTP.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>node</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Node name</td>
+</tr>
+<tr>
+<td><code>remote_path</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Remote file path</td>
+</tr>
+<tr>
+<td><code>local_path</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Local destination path</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> Confirmation or error message.</p>
+<hr />
+<h2 id="ssh_add_node">ssh_add_node<a class="headerlink" href="#ssh_add_node" title="Permanent link">&para;</a></h2>
+<p>Add a new SSH node to the Shuttle configuration. The node is registered in the database and connection pool.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>yes</td>
+<td>—</td>
+<td>Unique node name</td>
+</tr>
+<tr>
+<td><code>host</code></td>
+<td>string</td>
+<td>yes</td>
+<td>—</td>
+<td>Hostname or IP</td>
+</tr>
+<tr>
+<td><code>port</code></td>
+<td>int</td>
+<td>no</td>
+<td>22</td>
+<td>SSH port</td>
+</tr>
+<tr>
+<td><code>username</code></td>
+<td>string</td>
+<td>no</td>
+<td>""</td>
+<td>SSH username</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>string</td>
+<td>no</td>
+<td>—</td>
+<td>Password auth (or use <code>private_key</code>)</td>
+</tr>
+<tr>
+<td><code>private_key</code></td>
+<td>string</td>
+<td>no</td>
+<td>—</td>
+<td>Private key content</td>
+</tr>
+<tr>
+<td><code>jump_host</code></td>
+<td>string</td>
+<td>no</td>
+<td>—</td>
+<td>Name of an existing node to use as jump host</td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>list[string]</td>
+<td>no</td>
+<td>—</td>
+<td>Tags for categorization</td>
+</tr>
+</tbody>
+</table>
+<p>Either <code>password</code> or <code>private_key</code> must be provided. Credentials are encrypted at rest.</p>
+<p><strong>Returns:</strong> Confirmation with node ID.</p>
+<hr />
+<h2 id="ssh_remove_node">ssh_remove_node<a class="headerlink" href="#ssh_remove_node" title="Permanent link">&para;</a></h2>
+<p>Remove an SSH node from the configuration and close its connections.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Node name to remove</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> Confirmation or error if node not found.</p>
 
 
 

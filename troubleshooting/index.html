@@ -13,6 +13,8 @@
         <link rel="canonical" href="https://enwaiax.github.io/shuttle/troubleshooting/">
       
       
+        <link rel="prev" href="../api/">
+      
       
       
         
@@ -23,7 +25,7 @@
     
     
       
-        <title>{{RIPER-5: - Shuttle</title>
+        <title>Troubleshooting - Shuttle</title>
       
     
     
@@ -81,7 +83,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#riper-5" class="md-skip">
+        <a href="#troubleshooting" class="md-skip">
           Skip to content
         </a>
       
@@ -117,7 +119,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              {{RIPER-5:
+              Troubleshooting
             
           </span>
         </div>
@@ -342,6 +344,336 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#connection-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Connection Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connection-refused-or-timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Connection refused" or timeout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication-failed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Authentication failed"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jump-host-not-working" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jump host not working
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mcp-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MCP Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ai-assistant-cant-find-shuttle-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI assistant can't find Shuttle tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commands-blocked-unexpectedly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commands blocked unexpectedly
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confirm-token-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CONFIRM token flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#web-panel-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web Panel Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Web Panel Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cant-access-web-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Can't access Web UI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#token-authentication-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token authentication fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resetting-the-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resetting the database
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using PostgreSQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#slow-command-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Slow command execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#high-memory-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High memory usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Help
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -363,6 +695,242 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#connection-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Connection Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connection-refused-or-timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Connection refused" or timeout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication-failed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Authentication failed"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jump-host-not-working" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jump host not working
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mcp-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MCP Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ai-assistant-cant-find-shuttle-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI assistant can't find Shuttle tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commands-blocked-unexpectedly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commands blocked unexpectedly
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confirm-token-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CONFIRM token flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#web-panel-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web Panel Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Web Panel Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cant-access-web-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Can't access Web UI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#token-authentication-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token authentication fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resetting-the-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resetting the database
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using PostgreSQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#slow-command-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Slow command execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#high-memory-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High memory usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Help
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -376,564 +944,128 @@
                 
                   
 
-<h1 id="riper-5">{{RIPER-5:<a class="headerlink" href="#riper-5" title="Permanent link">&para;</a></h1>
-<h1 id="action-added">Action: "Added"<a class="headerlink" href="#action-added" title="Permanent link">&para;</a></h1>
-<h1 id="task_id-3702898f-86db-43bb-aae0-0161b6a8eedf">Task_ID: "3702898f-86db-43bb-aae0-0161b6a8eedf"<a class="headerlink" href="#task_id-3702898f-86db-43bb-aae0-0161b6a8eedf" title="Permanent link">&para;</a></h1>
-<h1 id="timestamp-2025-08-05t2123200800">Timestamp: "2025-08-05T21:23:20+08:00"<a class="headerlink" href="#timestamp-2025-08-05t2123200800" title="Permanent link">&para;</a></h1>
-<h1 id="authoring_role-ld">Authoring_Role: "LD"<a class="headerlink" href="#authoring_role-ld" title="Permanent link">&para;</a></h1>
-<h1 id="principle_applied">Principle_Applied: "文档即代码 + 问题解决导向"<a class="headerlink" href="#principle_applied" title="Permanent link">&para;</a></h1>
-<h1 id="quality_check">Quality_Check: "全面的故障排除指南，实用的解决方案，丰富的诊断工具"<a class="headerlink" href="#quality_check" title="Permanent link">&para;</a></h1>
-<h1 id="_1">}}<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
-<h1 id="start_modifications">{{START_MODIFICATIONS}}<a class="headerlink" href="#start_modifications" title="Permanent link">&para;</a></h1>
-<h1 id="fastmcp-ssh-server-troubleshooting-guide">FastMCP SSH Server - Troubleshooting Guide<a class="headerlink" href="#fastmcp-ssh-server-troubleshooting-guide" title="Permanent link">&para;</a></h1>
-<h2 id="common-issues-and-solutions">Common Issues and Solutions<a class="headerlink" href="#common-issues-and-solutions" title="Permanent link">&para;</a></h2>
-<h3 id="connection-issues">🔌 Connection Issues<a class="headerlink" href="#connection-issues" title="Permanent link">&para;</a></h3>
-<h4 id="issue-connection-refused-error">Issue: "Connection refused" Error<a class="headerlink" href="#issue-connection-refused-error" title="Permanent link">&para;</a></h4>
-<p><strong>Symptoms:</strong>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>SSHConnectionError: Failed to connect to server.com:22 - Connection refused
-</span></code></pre></div></p>
-<p><strong>Possible Causes &amp; Solutions:</strong></p>
+<h1 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h1>
+<p>Common issues and solutions when using Shuttle.</p>
+<h2 id="connection-issues">Connection Issues<a class="headerlink" href="#connection-issues" title="Permanent link">&para;</a></h2>
+<h3 id="connection-refused-or-timeout">"Connection refused" or timeout<a class="headerlink" href="#connection-refused-or-timeout" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> <code>ssh_execute</code> returns a connection error.</p>
+<p><strong>Checklist:</strong></p>
 <ol>
-<li>
-<p><strong>SSH service not running on target server</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check if SSH service is running</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>ssh
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>sshd
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Start SSH service if stopped</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>ssh
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Incorrect host or port</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test connection manually</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>user@host<span class="w"> </span>-p<span class="w"> </span>port
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check if custom SSH port is configured</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>grep<span class="w"> </span><span class="s2">&quot;Port&quot;</span><span class="w"> </span>/etc/ssh/sshd_config
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Firewall blocking connection</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test connectivity</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>telnet<span class="w"> </span>host<span class="w"> </span>port
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>nc<span class="w"> </span>-zv<span class="w"> </span>host<span class="w"> </span>port
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Check local firewall</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>sudo<span class="w"> </span>ufw<span class="w"> </span>status
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>sudo<span class="w"> </span>iptables<span class="w"> </span>-L
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Network connectivity issues</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test basic connectivity</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ping<span class="w"> </span>host
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check DNS resolution</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>nslookup<span class="w"> </span>host
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>dig<span class="w"> </span>host
-</span></code></pre></div></p>
-</li>
+<li>Verify the node is reachable: <code>shuttle node test &lt;name&gt;</code></li>
+<li>Check host/port are correct: <code>shuttle node list</code></li>
+<li>Ensure SSH is running on the remote server</li>
+<li>Check firewall rules allow port 22 (or your custom port)</li>
+<li>If using a jump host, verify the jump host itself is reachable first</li>
 </ol>
-<p><strong>Fix:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Use correct host and port</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>correct.host.com<span class="w"> </span>--port<span class="w"> </span><span class="m">22</span><span class="w"> </span>--username<span class="w"> </span>user<span class="w"> </span>--password<span class="w"> </span>pass
-</span></code></pre></div></p>
-<h4 id="issue-connection-timeout-error">Issue: "Connection timeout" Error<a class="headerlink" href="#issue-connection-timeout-error" title="Permanent link">&para;</a></h4>
-<p><strong>Symptoms:</strong>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>SSHConnectionError: Connection timeout after 10 seconds
-</span></code></pre></div></p>
+<h3 id="authentication-failed">"Authentication failed"<a class="headerlink" href="#authentication-failed" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Connection succeeds but authentication is rejected.</p>
 <p><strong>Solutions:</strong></p>
-<ol>
-<li><strong>Increase connection timeout (if available)</strong></li>
-<li>
-<p><strong>Check network latency</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">5</span><span class="w"> </span>host
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>traceroute<span class="w"> </span>host
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Verify SSH configuration</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Test with verbose SSH</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ssh<span class="w"> </span>-v<span class="w"> </span>user@host
-</span></code></pre></div></p>
-</li>
-</ol>
-<h3 id="authentication-issues">🔐 Authentication Issues<a class="headerlink" href="#authentication-issues" title="Permanent link">&para;</a></h3>
-<h4 id="issue-authentication-failed-error">Issue: "Authentication failed" Error<a class="headerlink" href="#issue-authentication-failed-error" title="Permanent link">&para;</a></h4>
-<p><strong>Symptoms:</strong>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>SSHAuthenticationError: Authentication failed for user@host
-</span></code></pre></div></p>
-<p><strong>Possible Causes &amp; Solutions:</strong></p>
-<ol>
-<li>
-<p><strong>Incorrect username or password</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Verify credentials manually</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ssh<span class="w"> </span>user@host
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Use correct credentials</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>host<span class="w"> </span>--username<span class="w"> </span>correct_user<span class="w"> </span>--password<span class="w"> </span>correct_pass
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Private key issues</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check key permissions</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ls<span class="w"> </span>-la<span class="w"> </span>~/.ssh/id_rsa
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>~/.ssh/id_rsa
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>~/.ssh
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># Test key manually</span>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/id_rsa<span class="w"> </span>user@host
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Key format issues</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Convert OpenSSH key to RSA format if needed</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ssh-keygen<span class="w"> </span>-p<span class="w"> </span>-m<span class="w"> </span>RFC4716<span class="w"> </span>-f<span class="w"> </span>~/.ssh/id_rsa
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Generate new key if corrupted</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>rsa<span class="w"> </span>-b<span class="w"> </span><span class="m">4096</span><span class="w"> </span>-f<span class="w"> </span>~/.ssh/new_key
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Passphrase required</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># If private key has passphrase</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>host<span class="w"> </span>--username<span class="w"> </span>user<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>--private-key<span class="w"> </span>~/.ssh/id_rsa<span class="w"> </span>--passphrase<span class="w"> </span><span class="s2">&quot;your_passphrase&quot;</span>
-</span></code></pre></div></p>
-</li>
-</ol>
-<h4 id="issue-permission-denied-publickey-error">Issue: "Permission denied (publickey)" Error<a class="headerlink" href="#issue-permission-denied-publickey-error" title="Permanent link">&para;</a></h4>
-<p><strong>Solutions:</strong></p>
-<ol>
-<li>
-<p><strong>Add public key to authorized_keys</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Copy public key to server</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ssh-copy-id<span class="w"> </span>-i<span class="w"> </span>~/.ssh/id_rsa.pub<span class="w"> </span>user@host
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Or manually</span>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>cat<span class="w"> </span>~/.ssh/id_rsa.pub<span class="w"> </span><span class="p">|</span><span class="w"> </span>ssh<span class="w"> </span>user@host<span class="w"> </span><span class="s1">&#39;mkdir -p ~/.ssh &amp;&amp; cat &gt;&gt; ~/.ssh/authorized_keys&#39;</span>
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Check SSH server configuration</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># On SSH server, check config</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>sudo<span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(PubkeyAuthentication|PasswordAuthentication)&quot;</span><span class="w"> </span>/etc/ssh/sshd_config
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Ensure public key auth is enabled</span>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># PubkeyAuthentication yes</span>
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Verify authorized_keys permissions</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># On SSH server</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>~/.ssh
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>~/.ssh/authorized_keys
-</span></code></pre></div></p>
-</li>
-</ol>
-<h3 id="command-execution-issues">🚫 Command Execution Issues<a class="headerlink" href="#command-execution-issues" title="Permanent link">&para;</a></h3>
-<h4 id="issue-command-denied-by-security-policy-error">Issue: "Command denied by security policy" Error<a class="headerlink" href="#issue-command-denied-by-security-policy-error" title="Permanent link">&para;</a></h4>
-<p><strong>Symptoms:</strong>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>SSHCommandError: Command denied by security policy: rm not allowed
-</span></code></pre></div></p>
-<p><strong>Solutions:</strong></p>
-<ol>
-<li>
-<p><strong>Check whitelist configuration</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Allow specific commands</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>host<span class="w"> </span>--username<span class="w"> </span>user<span class="w"> </span>--password<span class="w"> </span>pass<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span>--whitelist<span class="w"> </span><span class="s2">&quot;ls,pwd,echo.*,git.*&quot;</span>
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Review blacklist patterns</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Remove overly restrictive patterns</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>host<span class="w"> </span>--username<span class="w"> </span>user<span class="w"> </span>--password<span class="w"> </span>pass<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span>--whitelist<span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="w"> </span>--blacklist<span class="w"> </span><span class="s2">&quot;rm -rf.*,sudo su.*&quot;</span>
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Test command patterns</strong>
-   <div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Test regex patterns</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ls.*&quot;</span><span class="p">,</span> <span class="s2">&quot;echo.*&quot;</span><span class="p">]</span>
-</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="n">command</span> <span class="o">=</span> <span class="s2">&quot;ls -la&quot;</span>
-</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
-</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="n">matches</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">)</span>
-</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Command &#39;</span><span class="si">{</span><span class="n">command</span><span class="si">}</span><span class="s2">&#39; matches: </span><span class="si">{</span><span class="n">matches</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span></code></pre></div></p>
-</li>
-</ol>
-<h4 id="issue-command-not-in-allowed-list-error">Issue: "Command not in allowed list" Error<a class="headerlink" href="#issue-command-not-in-allowed-list-error" title="Permanent link">&para;</a></h4>
-<p><strong>Solutions:</strong></p>
-<ol>
-<li>
-<p><strong>Add command to whitelist</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Add missing command pattern</span>
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>host<span class="w"> </span>--username<span class="w"> </span>user<span class="w"> </span>--password<span class="w"> </span>pass<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span>--whitelist<span class="w"> </span><span class="s2">&quot;ls.*,pwd,echo.*,cat.*,your_command.*&quot;</span>
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Use wildcard for testing</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Allow all commands (use cautiously)</span>
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>host<span class="w"> </span>--username<span class="w"> </span>user<span class="w"> </span>--password<span class="w"> </span>pass<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span>--whitelist<span class="w"> </span><span class="s2">&quot;*&quot;</span>
-</span></code></pre></div></p>
-</li>
-</ol>
-<h3 id="file-transfer-issues">📁 File Transfer Issues<a class="headerlink" href="#file-transfer-issues" title="Permanent link">&para;</a></h3>
-<h4 id="issue-local-file-not-found-error">Issue: "Local file not found" Error<a class="headerlink" href="#issue-local-file-not-found-error" title="Permanent link">&para;</a></h4>
-<p><strong>Symptoms:</strong>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>SFTPError: Local file not found: /path/to/file.txt
-</span></code></pre></div></p>
-<p><strong>Solutions:</strong></p>
-<ol>
-<li>
-<p><strong>Verify file path</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Check if file exists</span>
-</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>ls<span class="w"> </span>-la<span class="w"> </span>/path/to/file.txt
-</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
-</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Use absolute path</span>
-</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>realpath<span class="w"> </span>/path/to/file.txt
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Check permissions</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Ensure read permissions</span>
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>chmod<span class="w"> </span><span class="m">644</span><span class="w"> </span>/path/to/file.txt
-</span></code></pre></div></p>
-</li>
-</ol>
-<h4 id="issue-remote-file-not-found-error">Issue: "Remote file not found" Error<a class="headerlink" href="#issue-remote-file-not-found-error" title="Permanent link">&para;</a></h4>
-<p><strong>Solutions:</strong></p>
-<ol>
-<li>
-<p><strong>Verify remote path</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Check remote file manually</span>
-</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>ssh<span class="w"> </span>user@host<span class="w"> </span><span class="s2">&quot;ls -la /remote/path/file.txt&quot;</span>
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Use proper path format</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Use absolute paths</span>
-</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>/home/user/file.txt<span class="w">  </span><span class="c1"># Good</span>
-</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>~/file.txt<span class="w">           </span><span class="c1"># May not work as expected</span>
-</span></code></pre></div></p>
-</li>
-</ol>
-<h4 id="issue-permission-denied-for-file-operations">Issue: "Permission denied" for File Operations<a class="headerlink" href="#issue-permission-denied-for-file-operations" title="Permanent link">&para;</a></h4>
-<p><strong>Solutions:</strong></p>
-<ol>
-<li>
-<p><strong>Check directory permissions</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Ensure write permissions on target directory</span>
-</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>ssh<span class="w"> </span>user@host<span class="w"> </span><span class="s2">&quot;ls -la /target/directory/&quot;</span>
-</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
-</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1"># Create directory if needed</span>
-</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>ssh<span class="w"> </span>user@host<span class="w"> </span><span class="s2">&quot;mkdir -p /target/directory/&quot;</span>
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Verify user permissions</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># Check user&#39;s access</span>
-</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>ssh<span class="w"> </span>user@host<span class="w"> </span><span class="s2">&quot;touch /target/directory/test_file&quot;</span>
-</span></code></pre></div></p>
-</li>
-</ol>
-<h3 id="configuration-issues">⚙️ Configuration Issues<a class="headerlink" href="#configuration-issues" title="Permanent link">&para;</a></h3>
-<h4 id="issue-ssh-manager-not-initialized-error">Issue: "SSH manager not initialized" Error<a class="headerlink" href="#issue-ssh-manager-not-initialized-error" title="Permanent link">&para;</a></h4>
-<p><strong>Symptoms:</strong>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>RuntimeError: SSH manager not initialized
-</span></code></pre></div></p>
-<p><strong>Solutions:</strong></p>
-<ol>
-<li><strong>Ensure proper initialization</strong>
-   <div class="language-python highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># In Python code</span>
-</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ssh_mcp.ssh_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">SSHConnectionManager</span>
-</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ssh_mcp.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">SSHConfig</span>
-</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>
-</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a><span class="c1"># Create configuration</span>
-</span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a><span class="n">config</span> <span class="o">=</span> <span class="n">SSHConfig</span><span class="p">(</span>
-</span><span id="__span-31-7"><a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;server1&quot;</span><span class="p">,</span>
-</span><span id="__span-31-8"><a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;example.com&quot;</span><span class="p">,</span>
-</span><span id="__span-31-9"><a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>    <span class="n">username</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
-</span><span id="__span-31-10"><a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a>    <span class="n">password</span><span class="o">=</span><span class="s2">&quot;pass&quot;</span>
-</span><span id="__span-31-11"><a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a><span class="p">)</span>
-</span><span id="__span-31-12"><a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a>
-</span><span id="__span-31-13"><a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a><span class="c1"># Initialize manager</span>
-</span><span id="__span-31-14"><a id="__codelineno-31-14" name="__codelineno-31-14" href="#__codelineno-31-14"></a><span class="n">manager</span> <span class="o">=</span> <span class="k">await</span> <span class="n">SSHConnectionManager</span><span class="o">.</span><span class="n">get_instance</span><span class="p">()</span>
-</span><span id="__span-31-15"><a id="__codelineno-31-15" name="__codelineno-31-15" href="#__codelineno-31-15"></a><span class="n">manager</span><span class="o">.</span><span class="n">set_config</span><span class="p">({</span><span class="s2">&quot;server1&quot;</span><span class="p">:</span> <span class="n">config</span><span class="p">})</span>
-</span></code></pre></div></li>
-</ol>
-<h4 id="issue-invalid-port-number-error">Issue: "Invalid port number" Error<a class="headerlink" href="#issue-invalid-port-number-error" title="Permanent link">&para;</a></h4>
-<p><strong>Solutions:</strong></p>
-<ol>
-<li><strong>Use valid port range</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Port must be 1-65535</span>
-</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>host<span class="w"> </span>--port<span class="w"> </span><span class="m">22</span><span class="w">  </span><span class="c1"># Good</span>
-</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>host<span class="w"> </span>--port<span class="w"> </span><span class="m">99999</span><span class="w">  </span><span class="c1"># Bad</span>
-</span></code></pre></div></li>
-</ol>
-<h3 id="debug-mode">🔍 Debug Mode<a class="headerlink" href="#debug-mode" title="Permanent link">&para;</a></h3>
-<h4 id="enable-debug-logging">Enable Debug Logging<a class="headerlink" href="#enable-debug-logging" title="Permanent link">&para;</a></h4>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># Set environment variable</span>
-</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">PYTHONPATH</span><span class="o">=</span>src
-</span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>
-</span><span id="__span-33-4"><a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="c1"># Run with debug logging</span>
-</span><span id="__span-33-5"><a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-</span><span id="__span-33-6"><a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a><span class="s2">from ssh_mcp.utils import setup_logger, Logger</span>
-</span><span id="__span-33-7"><a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="s2">setup_logger(level=&#39;debug&#39;, enable_console=True)</span>
-</span><span id="__span-33-8"><a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a><span class="s2">Logger.debug(&#39;Debug mode enabled&#39;)</span>
-</span><span id="__span-33-9"><a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a><span class="s2">&quot;</span>
-</span></code></pre></div>
-<h4 id="verbose-ssh-debugging">Verbose SSH Debugging<a class="headerlink" href="#verbose-ssh-debugging" title="Permanent link">&para;</a></h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># Enable AsyncSSH debug logging</span>
-</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-</span><span id="__span-34-3"><a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;asyncssh&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
-</span><span id="__span-34-4"><a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a>
-</span><span id="__span-34-5"><a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a><span class="c1"># Custom debug wrapper</span>
-</span><span id="__span-34-6"><a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ssh_mcp.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Logger</span>
-</span><span id="__span-34-7"><a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a>
-</span><span id="__span-34-8"><a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">debug_command</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">server</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">):</span>
-</span><span id="__span-34-9"><a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a>    <span class="n">Logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Executing command: </span><span class="si">{</span><span class="n">command</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;server&quot;</span><span class="p">:</span> <span class="n">server</span><span class="p">})</span>
-</span><span id="__span-34-10"><a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a>    <span class="k">try</span><span class="p">:</span>
-</span><span id="__span-34-11"><a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">manager</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">server</span><span class="p">)</span>
-</span><span id="__span-34-12"><a id="__codelineno-34-12" name="__codelineno-34-12" href="#__codelineno-34-12"></a>        <span class="n">Logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Command result: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-34-13"><a id="__codelineno-34-13" name="__codelineno-34-13" href="#__codelineno-34-13"></a>        <span class="k">return</span> <span class="n">result</span>
-</span><span id="__span-34-14"><a id="__codelineno-34-14" name="__codelineno-34-14" href="#__codelineno-34-14"></a>    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span id="__span-34-15"><a id="__codelineno-34-15" name="__codelineno-34-15" href="#__codelineno-34-15"></a>        <span class="n">Logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Command failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-34-16"><a id="__codelineno-34-16" name="__codelineno-34-16" href="#__codelineno-34-16"></a>        <span class="k">raise</span>
-</span></code></pre></div>
-<h3 id="diagnostic-tools">🧪 Diagnostic Tools<a class="headerlink" href="#diagnostic-tools" title="Permanent link">&para;</a></h3>
-<h4 id="create-diagnostic-script">Create Diagnostic Script<a class="headerlink" href="#create-diagnostic-script" title="Permanent link">&para;</a></h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="ch">#!/usr/bin/env python3</span>
-</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="__span-35-3"><a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="sd">FastMCP SSH Server Diagnostic Tool</span>
-</span><span id="__span-35-4"><a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="__span-35-5"><a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a>
-</span><span id="__span-35-6"><a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
-</span><span id="__span-35-7"><a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a><span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
-</span><span id="__span-35-8"><a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-</span><span id="__span-35-9"><a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-</span><span id="__span-35-10"><a id="__codelineno-35-10" name="__codelineno-35-10" href="#__codelineno-35-10"></a>
-</span><span id="__span-35-11"><a id="__codelineno-35-11" name="__codelineno-35-11" href="#__codelineno-35-11"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_diagnostics</span><span class="p">():</span>
-</span><span id="__span-35-12"><a id="__codelineno-35-12" name="__codelineno-35-12" href="#__codelineno-35-12"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔍 FastMCP SSH Server Diagnostics&quot;</span><span class="p">)</span>
-</span><span id="__span-35-13"><a id="__codelineno-35-13" name="__codelineno-35-13" href="#__codelineno-35-13"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
-</span><span id="__span-35-14"><a id="__codelineno-35-14" name="__codelineno-35-14" href="#__codelineno-35-14"></a>
-</span><span id="__span-35-15"><a id="__codelineno-35-15" name="__codelineno-35-15" href="#__codelineno-35-15"></a>    <span class="c1"># Check 1: Python version</span>
-</span><span id="__span-35-16"><a id="__codelineno-35-16" name="__codelineno-35-16" href="#__codelineno-35-16"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1. Python Version Check:&quot;</span><span class="p">)</span>
-</span><span id="__span-35-17"><a id="__codelineno-35-17" name="__codelineno-35-17" href="#__codelineno-35-17"></a>    <span class="n">version</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span>
-</span><span id="__span-35-18"><a id="__codelineno-35-18" name="__codelineno-35-18" href="#__codelineno-35-18"></a>    <span class="k">if</span> <span class="n">version</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span>
-</span><span id="__span-35-19"><a id="__codelineno-35-19" name="__codelineno-35-19" href="#__codelineno-35-19"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   ✅ Python </span><span class="si">{</span><span class="n">version</span><span class="o">.</span><span class="n">major</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">version</span><span class="o">.</span><span class="n">minor</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">version</span><span class="o">.</span><span class="n">micro</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-35-20"><a id="__codelineno-35-20" name="__codelineno-35-20" href="#__codelineno-35-20"></a>    <span class="k">else</span><span class="p">:</span>
-</span><span id="__span-35-21"><a id="__codelineno-35-21" name="__codelineno-35-21" href="#__codelineno-35-21"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   ❌ Python </span><span class="si">{</span><span class="n">version</span><span class="o">.</span><span class="n">major</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">version</span><span class="o">.</span><span class="n">minor</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">version</span><span class="o">.</span><span class="n">micro</span><span class="si">}</span><span class="s2"> (need 3.12+)&quot;</span><span class="p">)</span>
-</span><span id="__span-35-22"><a id="__codelineno-35-22" name="__codelineno-35-22" href="#__codelineno-35-22"></a>
-</span><span id="__span-35-23"><a id="__codelineno-35-23" name="__codelineno-35-23" href="#__codelineno-35-23"></a>    <span class="c1"># Check 2: Dependencies</span>
-</span><span id="__span-35-24"><a id="__codelineno-35-24" name="__codelineno-35-24" href="#__codelineno-35-24"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">2. Dependencies Check:&quot;</span><span class="p">)</span>
-</span><span id="__span-35-25"><a id="__codelineno-35-25" name="__codelineno-35-25" href="#__codelineno-35-25"></a>    <span class="n">deps</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;asyncssh&quot;</span><span class="p">,</span> <span class="s2">&quot;fastmcp&quot;</span><span class="p">,</span> <span class="s2">&quot;pydantic&quot;</span><span class="p">,</span> <span class="s2">&quot;typer&quot;</span><span class="p">,</span> <span class="s2">&quot;loguru&quot;</span><span class="p">]</span>
-</span><span id="__span-35-26"><a id="__codelineno-35-26" name="__codelineno-35-26" href="#__codelineno-35-26"></a>
-</span><span id="__span-35-27"><a id="__codelineno-35-27" name="__codelineno-35-27" href="#__codelineno-35-27"></a>    <span class="k">for</span> <span class="n">dep</span> <span class="ow">in</span> <span class="n">deps</span><span class="p">:</span>
-</span><span id="__span-35-28"><a id="__codelineno-35-28" name="__codelineno-35-28" href="#__codelineno-35-28"></a>        <span class="k">try</span><span class="p">:</span>
-</span><span id="__span-35-29"><a id="__codelineno-35-29" name="__codelineno-35-29" href="#__codelineno-35-29"></a>            <span class="nb">__import__</span><span class="p">(</span><span class="n">dep</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">))</span>
-</span><span id="__span-35-30"><a id="__codelineno-35-30" name="__codelineno-35-30" href="#__codelineno-35-30"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   ✅ </span><span class="si">{</span><span class="n">dep</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-35-31"><a id="__codelineno-35-31" name="__codelineno-35-31" href="#__codelineno-35-31"></a>        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-</span><span id="__span-35-32"><a id="__codelineno-35-32" name="__codelineno-35-32" href="#__codelineno-35-32"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   ❌ </span><span class="si">{</span><span class="n">dep</span><span class="si">}</span><span class="s2"> - not installed&quot;</span><span class="p">)</span>
-</span><span id="__span-35-33"><a id="__codelineno-35-33" name="__codelineno-35-33" href="#__codelineno-35-33"></a>
-</span><span id="__span-35-34"><a id="__codelineno-35-34" name="__codelineno-35-34" href="#__codelineno-35-34"></a>    <span class="c1"># Check 3: SSH connectivity test</span>
-</span><span id="__span-35-35"><a id="__codelineno-35-35" name="__codelineno-35-35" href="#__codelineno-35-35"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">3. SSH Test (if host provided):&quot;</span><span class="p">)</span>
-</span><span id="__span-35-36"><a id="__codelineno-35-36" name="__codelineno-35-36" href="#__codelineno-35-36"></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-</span><span id="__span-35-37"><a id="__codelineno-35-37" name="__codelineno-35-37" href="#__codelineno-35-37"></a>        <span class="n">host</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-</span><span id="__span-35-38"><a id="__codelineno-35-38" name="__codelineno-35-38" href="#__codelineno-35-38"></a>        <span class="k">try</span><span class="p">:</span>
-</span><span id="__span-35-39"><a id="__codelineno-35-39" name="__codelineno-35-39" href="#__codelineno-35-39"></a>            <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-</span><span id="__span-35-40"><a id="__codelineno-35-40" name="__codelineno-35-40" href="#__codelineno-35-40"></a>                <span class="p">[</span><span class="s2">&quot;ssh&quot;</span><span class="p">,</span> <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;ConnectTimeout=5&quot;</span><span class="p">,</span> <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;BatchMode=yes&quot;</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="s2">&quot;echo&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">],</span>
-</span><span id="__span-35-41"><a id="__codelineno-35-41" name="__codelineno-35-41" href="#__codelineno-35-41"></a>                <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-35-42"><a id="__codelineno-35-42" name="__codelineno-35-42" href="#__codelineno-35-42"></a>                <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span>
-</span><span id="__span-35-43"><a id="__codelineno-35-43" name="__codelineno-35-43" href="#__codelineno-35-43"></a>            <span class="p">)</span>
-</span><span id="__span-35-44"><a id="__codelineno-35-44" name="__codelineno-35-44" href="#__codelineno-35-44"></a>            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span><span id="__span-35-45"><a id="__codelineno-35-45" name="__codelineno-35-45" href="#__codelineno-35-45"></a>                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   ✅ SSH connection to </span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-35-46"><a id="__codelineno-35-46" name="__codelineno-35-46" href="#__codelineno-35-46"></a>            <span class="k">else</span><span class="p">:</span>
-</span><span id="__span-35-47"><a id="__codelineno-35-47" name="__codelineno-35-47" href="#__codelineno-35-47"></a>                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   ❌ SSH connection failed: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-35-48"><a id="__codelineno-35-48" name="__codelineno-35-48" href="#__codelineno-35-48"></a>        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span id="__span-35-49"><a id="__codelineno-35-49" name="__codelineno-35-49" href="#__codelineno-35-49"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   ❌ SSH test error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-35-50"><a id="__codelineno-35-50" name="__codelineno-35-50" href="#__codelineno-35-50"></a>    <span class="k">else</span><span class="p">:</span>
-</span><span id="__span-35-51"><a id="__codelineno-35-51" name="__codelineno-35-51" href="#__codelineno-35-51"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   ⏭️  Skipped (no host provided)&quot;</span><span class="p">)</span>
-</span><span id="__span-35-52"><a id="__codelineno-35-52" name="__codelineno-35-52" href="#__codelineno-35-52"></a>
-</span><span id="__span-35-53"><a id="__codelineno-35-53" name="__codelineno-35-53" href="#__codelineno-35-53"></a>    <span class="c1"># Check 4: FastMCP SSH Server</span>
-</span><span id="__span-35-54"><a id="__codelineno-35-54" name="__codelineno-35-54" href="#__codelineno-35-54"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">4. FastMCP SSH Server Check:&quot;</span><span class="p">)</span>
-</span><span id="__span-35-55"><a id="__codelineno-35-55" name="__codelineno-35-55" href="#__codelineno-35-55"></a>    <span class="k">try</span><span class="p">:</span>
-</span><span id="__span-35-56"><a id="__codelineno-35-56" name="__codelineno-35-56" href="#__codelineno-35-56"></a>        <span class="c1"># Try to import main modules</span>
-</span><span id="__span-35-57"><a id="__codelineno-35-57" name="__codelineno-35-57" href="#__codelineno-35-57"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">ssh_mcp.ssh_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">SSHConnectionManager</span>
-</span><span id="__span-35-58"><a id="__codelineno-35-58" name="__codelineno-35-58" href="#__codelineno-35-58"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">ssh_mcp.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">SSHConfig</span>
-</span><span id="__span-35-59"><a id="__codelineno-35-59" name="__codelineno-35-59" href="#__codelineno-35-59"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">ssh_mcp.server</span><span class="w"> </span><span class="kn">import</span> <span class="n">SSHMCPServer</span>
-</span><span id="__span-35-60"><a id="__codelineno-35-60" name="__codelineno-35-60" href="#__codelineno-35-60"></a>
-</span><span id="__span-35-61"><a id="__codelineno-35-61" name="__codelineno-35-61" href="#__codelineno-35-61"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   ✅ Core modules import successfully&quot;</span><span class="p">)</span>
-</span><span id="__span-35-62"><a id="__codelineno-35-62" name="__codelineno-35-62" href="#__codelineno-35-62"></a>
-</span><span id="__span-35-63"><a id="__codelineno-35-63" name="__codelineno-35-63" href="#__codelineno-35-63"></a>        <span class="c1"># Test basic functionality</span>
-</span><span id="__span-35-64"><a id="__codelineno-35-64" name="__codelineno-35-64" href="#__codelineno-35-64"></a>        <span class="n">config</span> <span class="o">=</span> <span class="n">SSHConfig</span><span class="p">(</span>
-</span><span id="__span-35-65"><a id="__codelineno-35-65" name="__codelineno-35-65" href="#__codelineno-35-65"></a>            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span>
-</span><span id="__span-35-66"><a id="__codelineno-35-66" name="__codelineno-35-66" href="#__codelineno-35-66"></a>            <span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
-</span><span id="__span-35-67"><a id="__codelineno-35-67" name="__codelineno-35-67" href="#__codelineno-35-67"></a>            <span class="n">username</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span>
-</span><span id="__span-35-68"><a id="__codelineno-35-68" name="__codelineno-35-68" href="#__codelineno-35-68"></a>            <span class="n">password</span><span class="o">=</span><span class="s2">&quot;test&quot;</span>
-</span><span id="__span-35-69"><a id="__codelineno-35-69" name="__codelineno-35-69" href="#__codelineno-35-69"></a>        <span class="p">)</span>
-</span><span id="__span-35-70"><a id="__codelineno-35-70" name="__codelineno-35-70" href="#__codelineno-35-70"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   ✅ Configuration model working&quot;</span><span class="p">)</span>
-</span><span id="__span-35-71"><a id="__codelineno-35-71" name="__codelineno-35-71" href="#__codelineno-35-71"></a>
-</span><span id="__span-35-72"><a id="__codelineno-35-72" name="__codelineno-35-72" href="#__codelineno-35-72"></a>    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span id="__span-35-73"><a id="__codelineno-35-73" name="__codelineno-35-73" href="#__codelineno-35-73"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   ❌ FastMCP SSH Server error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-35-74"><a id="__codelineno-35-74" name="__codelineno-35-74" href="#__codelineno-35-74"></a>
-</span><span id="__span-35-75"><a id="__codelineno-35-75" name="__codelineno-35-75" href="#__codelineno-35-75"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🎯 Diagnostic Summary:&quot;</span><span class="p">)</span>
-</span><span id="__span-35-76"><a id="__codelineno-35-76" name="__codelineno-35-76" href="#__codelineno-35-76"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   If all checks pass, the server should work correctly.&quot;</span><span class="p">)</span>
-</span><span id="__span-35-77"><a id="__codelineno-35-77" name="__codelineno-35-77" href="#__codelineno-35-77"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   If any check fails, resolve the issue before proceeding.&quot;</span><span class="p">)</span>
-</span><span id="__span-35-78"><a id="__codelineno-35-78" name="__codelineno-35-78" href="#__codelineno-35-78"></a>
-</span><span id="__span-35-79"><a id="__codelineno-35-79" name="__codelineno-35-79" href="#__codelineno-35-79"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-</span><span id="__span-35-80"><a id="__codelineno-35-80" name="__codelineno-35-80" href="#__codelineno-35-80"></a>    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">run_diagnostics</span><span class="p">())</span>
-</span></code></pre></div>
-<h4 id="usage">Usage:<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h4>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1"># Run diagnostics</span>
-</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>python<span class="w"> </span>diagnostic.py
-</span><span id="__span-36-3"><a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>
-</span><span id="__span-36-4"><a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="c1"># Run with SSH test</span>
-</span><span id="__span-36-5"><a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>python<span class="w"> </span>diagnostic.py<span class="w"> </span>user@host
-</span></code></pre></div>
-<h3 id="performance-issues">📊 Performance Issues<a class="headerlink" href="#performance-issues" title="Permanent link">&para;</a></h3>
-<h4 id="issue-slow-command-execution">Issue: Slow Command Execution<a class="headerlink" href="#issue-slow-command-execution" title="Permanent link">&para;</a></h4>
-<p><strong>Solutions:</strong></p>
-<ol>
-<li>
-<p><strong>Check network latency</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">10</span><span class="w"> </span>host
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Optimize commands</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="c1"># Use efficient commands</span>
-</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>ls<span class="w"> </span>-1<span class="w"> </span>instead<span class="w"> </span>of<span class="w"> </span>ls<span class="w"> </span>-la<span class="w">  </span><span class="c1"># Less output</span>
-</span><span id="__span-38-3"><a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>
-</span><span id="__span-38-4"><a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a><span class="c1"># Avoid unnecessary verbosity</span>
-</span><span id="__span-38-5"><a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>git<span class="w"> </span>status<span class="w"> </span>--porcelain<span class="w">  </span><span class="c1"># Shorter output</span>
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Use connection pooling</strong>
-   <div class="language-python highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="c1"># Reuse connections for multiple commands</span>
-</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a><span class="n">manager</span> <span class="o">=</span> <span class="k">await</span> <span class="n">SSHConnectionManager</span><span class="o">.</span><span class="n">get_instance</span><span class="p">()</span>
-</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a><span class="c1"># Multiple commands use the same connection automatically</span>
-</span></code></pre></div></p>
-</li>
-</ol>
-<h4 id="issue-high-memory-usage">Issue: High Memory Usage<a class="headerlink" href="#issue-high-memory-usage" title="Permanent link">&para;</a></h4>
-<p><strong>Solutions:</strong></p>
-<ol>
-<li>
-<p><strong>Monitor memory usage</strong>
-   <div class="language-python highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">psutil</span>
-</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>
-</span><span id="__span-40-4"><a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="n">process</span> <span class="o">=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">())</span>
-</span><span id="__span-40-5"><a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Memory usage: </span><span class="si">{</span><span class="n">process</span><span class="o">.</span><span class="n">memory_info</span><span class="p">()</span><span class="o">.</span><span class="n">rss</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1024</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1024</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Cleanup connections</strong>
-   <div class="language-python highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="c1"># Ensure proper cleanup</span>
-</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a><span class="k">await</span> <span class="n">manager</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
-</span></code></pre></div></p>
-</li>
-</ol>
-<h3 id="emergency-procedures">🆘 Emergency Procedures<a class="headerlink" href="#emergency-procedures" title="Permanent link">&para;</a></h3>
-<h4 id="complete-reset">Complete Reset<a class="headerlink" href="#complete-reset" title="Permanent link">&para;</a></h4>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="c1"># Stop all SSH connections</span>
-</span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>pkill<span class="w"> </span>-f<span class="w"> </span>fastmcp-ssh-server
-</span><span id="__span-42-3"><a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>
-</span><span id="__span-42-4"><a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a><span class="c1"># Clear SSH agent</span>
-</span><span id="__span-42-5"><a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a>ssh-add<span class="w"> </span>-D
-</span><span id="__span-42-6"><a id="__codelineno-42-6" name="__codelineno-42-6" href="#__codelineno-42-6"></a>
-</span><span id="__span-42-7"><a id="__codelineno-42-7" name="__codelineno-42-7" href="#__codelineno-42-7"></a><span class="c1"># Reset SSH connection state</span>
-</span><span id="__span-42-8"><a id="__codelineno-42-8" name="__codelineno-42-8" href="#__codelineno-42-8"></a>rm<span class="w"> </span>-f<span class="w"> </span>~/.ssh/known_hosts.tmp
-</span></code></pre></div>
-<h4 id="backup-configuration">Backup Configuration<a class="headerlink" href="#backup-configuration" title="Permanent link">&para;</a></h4>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="c1"># Backup SSH keys</span>
-</span><span id="__span-43-2"><a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>cp<span class="w"> </span>-r<span class="w"> </span>~/.ssh<span class="w"> </span>~/.ssh.backup
-</span><span id="__span-43-3"><a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a>
-</span><span id="__span-43-4"><a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a><span class="c1"># Backup configuration</span>
-</span><span id="__span-43-5"><a id="__codelineno-43-5" name="__codelineno-43-5" href="#__codelineno-43-5"></a>cp<span class="w"> </span>pyproject.toml<span class="w"> </span>pyproject.toml.backup
-</span></code></pre></div>
-<h3 id="getting-help">📞 Getting Help<a class="headerlink" href="#getting-help" title="Permanent link">&para;</a></h3>
-<h4 id="collect-debug-information">Collect Debug Information<a class="headerlink" href="#collect-debug-information" title="Permanent link">&para;</a></h4>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="c1"># Create debug report</span>
-</span><span id="__span-44-2"><a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>debug_report.txt<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
-</span><span id="__span-44-3"><a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a><span class="s">FastMCP SSH Server Debug Report</span>
-</span><span id="__span-44-4"><a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a><span class="s">Generated: $(date)</span>
-</span><span id="__span-44-5"><a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a>
-</span><span id="__span-44-6"><a id="__codelineno-44-6" name="__codelineno-44-6" href="#__codelineno-44-6"></a><span class="s">Python Version: $(python --version)</span>
-</span><span id="__span-44-7"><a id="__codelineno-44-7" name="__codelineno-44-7" href="#__codelineno-44-7"></a><span class="s">OS: $(uname -a)</span>
-</span><span id="__span-44-8"><a id="__codelineno-44-8" name="__codelineno-44-8" href="#__codelineno-44-8"></a>
-</span><span id="__span-44-9"><a id="__codelineno-44-9" name="__codelineno-44-9" href="#__codelineno-44-9"></a><span class="s">Error Details:</span>
-</span><span id="__span-44-10"><a id="__codelineno-44-10" name="__codelineno-44-10" href="#__codelineno-44-10"></a><span class="s">[Paste your error message here]</span>
-</span><span id="__span-44-11"><a id="__codelineno-44-11" name="__codelineno-44-11" href="#__codelineno-44-11"></a>
-</span><span id="__span-44-12"><a id="__codelineno-44-12" name="__codelineno-44-12" href="#__codelineno-44-12"></a><span class="s">Configuration:</span>
-</span><span id="__span-44-13"><a id="__codelineno-44-13" name="__codelineno-44-13" href="#__codelineno-44-13"></a><span class="s">[Paste your command line or configuration here]</span>
-</span><span id="__span-44-14"><a id="__codelineno-44-14" name="__codelineno-44-14" href="#__codelineno-44-14"></a>
-</span><span id="__span-44-15"><a id="__codelineno-44-15" name="__codelineno-44-15" href="#__codelineno-44-15"></a><span class="s">Network Test:</span>
-</span><span id="__span-44-16"><a id="__codelineno-44-16" name="__codelineno-44-16" href="#__codelineno-44-16"></a><span class="s">$(ping -c 3 your-host 2&gt;&amp;1)</span>
-</span><span id="__span-44-17"><a id="__codelineno-44-17" name="__codelineno-44-17" href="#__codelineno-44-17"></a>
-</span><span id="__span-44-18"><a id="__codelineno-44-18" name="__codelineno-44-18" href="#__codelineno-44-18"></a><span class="s">SSH Test:</span>
-</span><span id="__span-44-19"><a id="__codelineno-44-19" name="__codelineno-44-19" href="#__codelineno-44-19"></a><span class="s">$(ssh -v your-user@your-host &#39;echo test&#39; 2&gt;&amp;1)</span>
-</span><span id="__span-44-20"><a id="__codelineno-44-20" name="__codelineno-44-20" href="#__codelineno-44-20"></a><span class="s">EOF</span>
-</span></code></pre></div>
-<h4 id="where-to-get-help">Where to Get Help<a class="headerlink" href="#where-to-get-help" title="Permanent link">&para;</a></h4>
-<ol>
-<li><strong>GitHub Issues</strong>: <a href="https://github.com/your-username/fastmcp-ssh-server/issues">Report bugs</a></li>
-<li><strong>Discussions</strong>: <a href="https://github.com/your-username/fastmcp-ssh-server/discussions">Ask questions</a></li>
-<li><strong>Documentation</strong>: <a href="../../docs/">docs/</a></li>
-<li><strong>Examples</strong>: <a href="../../examples/">examples/</a></li>
-</ol>
-<h4 id="information-to-include">Information to Include<a class="headerlink" href="#information-to-include" title="Permanent link">&para;</a></h4>
-<p>When reporting issues, please include:</p>
 <ul>
-<li><strong>Error message</strong> (full traceback)</li>
-<li><strong>Command used</strong> (with sensitive data removed)</li>
-<li><strong>Operating system</strong> and Python version</li>
-<li><strong>Network configuration</strong> (if relevant)</li>
-<li><strong>SSH server configuration</strong> (if relevant)</li>
-<li><strong>Debug output</strong> (if available)</li>
+<li><strong>Password auth:</strong> Re-add the node with the correct password: <code>shuttle node edit &lt;name&gt;</code></li>
+<li><strong>Key auth:</strong> Ensure the private key matches an authorized key on the server</li>
+<li><strong>Key format:</strong> Shuttle supports OpenSSH format keys. Convert PuTTY keys with <code>ssh-keygen -i</code></li>
 </ul>
-<hr />
-<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
-<h3 id="diagnostic-commands">Diagnostic Commands<a class="headerlink" href="#diagnostic-commands" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a><span class="c1"># Test SSH connection</span>
-</span><span id="__span-45-2"><a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>ssh<span class="w"> </span>-v<span class="w"> </span>user@host
-</span><span id="__span-45-3"><a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a>
-</span><span id="__span-45-4"><a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a><span class="c1"># Test with timeout</span>
-</span><span id="__span-45-5"><a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a>timeout<span class="w"> </span><span class="m">10</span><span class="w"> </span>ssh<span class="w"> </span>user@host<span class="w"> </span><span class="s1">&#39;echo test&#39;</span>
-</span><span id="__span-45-6"><a id="__codelineno-45-6" name="__codelineno-45-6" href="#__codelineno-45-6"></a>
-</span><span id="__span-45-7"><a id="__codelineno-45-7" name="__codelineno-45-7" href="#__codelineno-45-7"></a><span class="c1"># Check SSH service</span>
-</span><span id="__span-45-8"><a id="__codelineno-45-8" name="__codelineno-45-8" href="#__codelineno-45-8"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>ssh
-</span><span id="__span-45-9"><a id="__codelineno-45-9" name="__codelineno-45-9" href="#__codelineno-45-9"></a>
-</span><span id="__span-45-10"><a id="__codelineno-45-10" name="__codelineno-45-10" href="#__codelineno-45-10"></a><span class="c1"># Test port connectivity</span>
-</span><span id="__span-45-11"><a id="__codelineno-45-11" name="__codelineno-45-11" href="#__codelineno-45-11"></a>nc<span class="w"> </span>-zv<span class="w"> </span>host<span class="w"> </span>port
-</span><span id="__span-45-12"><a id="__codelineno-45-12" name="__codelineno-45-12" href="#__codelineno-45-12"></a>
-</span><span id="__span-45-13"><a id="__codelineno-45-13" name="__codelineno-45-13" href="#__codelineno-45-13"></a><span class="c1"># Check DNS resolution</span>
-</span><span id="__span-45-14"><a id="__codelineno-45-14" name="__codelineno-45-14" href="#__codelineno-45-14"></a>nslookup<span class="w"> </span>host
+<h3 id="jump-host-not-working">Jump host not working<a class="headerlink" href="#jump-host-not-working" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Direct connection works but jump host connection fails.</p>
+<p><strong>Checklist:</strong></p>
+<ol>
+<li>Verify the jump host node exists and is active: <code>shuttle node list</code></li>
+<li>Test the jump host directly: <code>shuttle node test &lt;jump-host-name&gt;</code></li>
+<li>Ensure the jump host can reach the target host on the target port</li>
+</ol>
+<h2 id="mcp-issues">MCP Issues<a class="headerlink" href="#mcp-issues" title="Permanent link">&para;</a></h2>
+<h3 id="ai-assistant-cant-find-shuttle-tools">AI assistant can't find Shuttle tools<a class="headerlink" href="#ai-assistant-cant-find-shuttle-tools" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> AI says it doesn't have SSH tools available.</p>
+<p><strong>For stdio mode:</strong></p>
+<p>Verify your <code>.mcp.json</code>:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">&quot;shuttle&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;uvx&quot;</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;shuttle-mcp&quot;</span><span class="p">]</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">}</span>
 </span></code></pre></div>
-<h3 id="common-fix-commands">Common Fix Commands<a class="headerlink" href="#common-fix-commands" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a><span class="c1"># Fix SSH key permissions</span>
-</span><span id="__span-46-2"><a id="__codelineno-46-2" name="__codelineno-46-2" href="#__codelineno-46-2"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>~/.ssh/id_rsa
-</span><span id="__span-46-3"><a id="__codelineno-46-3" name="__codelineno-46-3" href="#__codelineno-46-3"></a>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>~/.ssh
-</span><span id="__span-46-4"><a id="__codelineno-46-4" name="__codelineno-46-4" href="#__codelineno-46-4"></a>
-</span><span id="__span-46-5"><a id="__codelineno-46-5" name="__codelineno-46-5" href="#__codelineno-46-5"></a><span class="c1"># Restart SSH service</span>
-</span><span id="__span-46-6"><a id="__codelineno-46-6" name="__codelineno-46-6" href="#__codelineno-46-6"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>ssh
-</span><span id="__span-46-7"><a id="__codelineno-46-7" name="__codelineno-46-7" href="#__codelineno-46-7"></a>
-</span><span id="__span-46-8"><a id="__codelineno-46-8" name="__codelineno-46-8" href="#__codelineno-46-8"></a><span class="c1"># Clear known_hosts</span>
-</span><span id="__span-46-9"><a id="__codelineno-46-9" name="__codelineno-46-9" href="#__codelineno-46-9"></a>rm<span class="w"> </span>~/.ssh/known_hosts
-</span><span id="__span-46-10"><a id="__codelineno-46-10" name="__codelineno-46-10" href="#__codelineno-46-10"></a>
-</span><span id="__span-46-11"><a id="__codelineno-46-11" name="__codelineno-46-11" href="#__codelineno-46-11"></a><span class="c1"># Test with minimal SSH config</span>
-</span><span id="__span-46-12"><a id="__codelineno-46-12" name="__codelineno-46-12" href="#__codelineno-46-12"></a>ssh<span class="w"> </span>-F<span class="w"> </span>/dev/null<span class="w"> </span>user@host
+<p>Ensure <code>uvx shuttle-mcp</code> works in your terminal. If not, install with <code>pip install shuttle-mcp</code>.</p>
+<p><strong>For service (HTTP) mode:</strong></p>
+<ol>
+<li>Start the service: <code>shuttle serve</code></li>
+<li>Verify MCP endpoint responds: <code>curl http://localhost:9876/mcp/</code></li>
+<li>Configure your AI client:</li>
+</ol>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">&quot;shuttle&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://localhost:9876/mcp/&quot;</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>Remember: Most issues are related to SSH configuration, network connectivity, or authentication. Start with basic SSH troubleshooting before investigating FastMCP-specific issues.</p>
-<h1 id="end_modifications">{{END_MODIFICATIONS}}<a class="headerlink" href="#end_modifications" title="Permanent link">&para;</a></h1>
+<h3 id="commands-blocked-unexpectedly">Commands blocked unexpectedly<a class="headerlink" href="#commands-blocked-unexpectedly" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> <code>ssh_execute</code> returns "BLOCKED" for a command you expect to work.</p>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li>Check security rules: open <code>http://localhost:9876</code> → Rules page</li>
+<li>Look for regex patterns that match your command too broadly</li>
+<li>Use the <strong>Rule Tester</strong> (Rules page → Test button) to see which rule matches</li>
+<li>Adjust or delete the overly broad rule</li>
+</ol>
+<h3 id="confirm-token-flow">CONFIRM token flow<a class="headerlink" href="#confirm-token-flow" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Command returns "requires confirmation" with a token.</p>
+<p>This is expected for commands matching <code>confirm</code>-level rules (e.g., <code>sudo</code>, <code>rm -rf</code>). The AI should:</p>
+<ol>
+<li>Show the user the command and ask for confirmation</li>
+<li>Re-call <code>ssh_execute</code> with the <code>confirm_token</code> parameter</li>
+</ol>
+<h2 id="web-panel-issues">Web Panel Issues<a class="headerlink" href="#web-panel-issues" title="Permanent link">&para;</a></h2>
+<h3 id="cant-access-web-ui">Can't access Web UI<a class="headerlink" href="#cant-access-web-ui" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Browser shows connection error at <code>http://localhost:9876</code>.</p>
+<p><strong>Checklist:</strong></p>
+<ol>
+<li>Ensure <code>shuttle serve</code> is running (not just <code>shuttle</code> which is stdio-only)</li>
+<li>Check the port isn't in use: <code>lsof -i :9876</code></li>
+<li>If binding to a remote server, use <code>--host 0.0.0.0</code></li>
+</ol>
+<h3 id="token-authentication-fails">Token authentication fails<a class="headerlink" href="#token-authentication-fails" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Login page rejects your token.</p>
+<p>The API token is displayed when you run <code>shuttle serve</code>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Shuttle service starting at http://127.0.0.1:9876
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  API token: do5nLwx1-TOxsyNQZpeQx7TkXh3M8VFEZZT4WNcQZOE
+</span></code></pre></div>
+<p>The token is stored in <code>~/.shuttle/web_token</code>. You can read it directly:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cat<span class="w"> </span>~/.shuttle/web_token
+</span></code></pre></div>
+<h2 id="database-issues">Database Issues<a class="headerlink" href="#database-issues" title="Permanent link">&para;</a></h2>
+<h3 id="resetting-the-database">Resetting the database<a class="headerlink" href="#resetting-the-database" title="Permanent link">&para;</a></h3>
+<p>To start fresh, delete the database file:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>rm<span class="w"> </span>~/.shuttle/shuttle.db
+</span></code></pre></div>
+<p>The database and default security rules are recreated automatically on next startup.</p>
+<h3 id="using-postgresql">Using PostgreSQL<a class="headerlink" href="#using-postgresql" title="Permanent link">&para;</a></h3>
+<p>For production deployments, switch to PostgreSQL:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pip<span class="w"> </span>install<span class="w"> </span>asyncpg
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">SHUTTLE_DB_URL</span><span class="o">=</span>postgresql+asyncpg://user:pass@host:5432/shuttle<span class="w"> </span>shuttle<span class="w"> </span>serve
+</span></code></pre></div>
+<h2 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">&para;</a></h2>
+<h3 id="slow-command-execution">Slow command execution<a class="headerlink" href="#slow-command-execution" title="Permanent link">&para;</a></h3>
+<p><strong>Possible causes:</strong></p>
+<ul>
+<li><strong>Connection pool exhausted:</strong> Increase <code>SHUTTLE_POOL_MAX_TOTAL</code> (default: 50)</li>
+<li><strong>Slow SSH handshake:</strong> Shuttle reuses connections. First command to a node is slower</li>
+<li><strong>Network latency:</strong> Check with <code>shuttle node test &lt;name&gt;</code> which reports latency</li>
+</ul>
+<h3 id="high-memory-usage">High memory usage<a class="headerlink" href="#high-memory-usage" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Reduce <code>SHUTTLE_POOL_MAX_TOTAL</code> to limit open SSH connections</li>
+<li>Set <code>SHUTTLE_POOL_IDLE_TIMEOUT</code> to close idle connections sooner (default: 300s)</li>
+<li>Old command logs accumulate. Set <code>cleanup_command_logs_days</code> in Settings</li>
+</ul>
+<h2 id="getting-help">Getting Help<a class="headerlink" href="#getting-help" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://github.com/enwaiax/shuttle/issues">GitHub Issues</a> — Bug reports and feature requests</li>
+<li><a href="https://enwaiax.github.io/shuttle/">Documentation</a> — Full documentation</li>
+</ul>
 
 
 
