@@ -79,7 +79,7 @@ async def execute_command(
         return result.strip() if result else ""
 
     except Exception as error:
-        error_msg = f"Error: {str(error)}"
+        error_msg = f"Error: {error!s}"
         if ctx:
             await ctx.error(
                 f"Command execution failed: {error_msg}",
@@ -147,7 +147,7 @@ async def upload_file(
         return result.strip() if result else "Upload completed successfully"
 
     except Exception as error:
-        error_msg = f"Upload error: {str(error)}"
+        error_msg = f"Upload error: {error!s}"
         if ctx:
             await ctx.error(
                 f"File upload failed: {error_msg}",
@@ -216,7 +216,7 @@ async def download_file(
         return result.strip() if result else "Download completed successfully"
 
     except Exception as error:
-        error_msg = f"Download error: {str(error)}"
+        error_msg = f"Download error: {error!s}"
         if ctx:
             await ctx.error(
                 f"File download failed: {error_msg}",
@@ -284,7 +284,7 @@ async def list_servers(ctx: Context = None):
         return result
 
     except Exception as error:
-        error_msg = f"Error: {str(error)}"
+        error_msg = f"Error: {error!s}"
         if ctx:
             await ctx.error(f"Failed to list servers: {error_msg}")
         return error_msg
@@ -318,4 +318,4 @@ async def initialize_server(ssh_configs):
 
 
 # 导出MCP实例和初始化函数
-__all__ = ["mcp", "initialize_server"]
+__all__ = ["initialize_server", "mcp"]

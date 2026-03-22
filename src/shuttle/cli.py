@@ -22,9 +22,11 @@ app.add_typer(config_app, name="config")
 
 # ── Root command ──────────────────────────────────────────────────────────────
 
+
 def _version_callback(value: bool) -> None:
     if value:
         from shuttle import __version__
+
         typer.echo(f"Shuttle v{__version__}")
         raise typer.Exit()
 
@@ -43,8 +45,10 @@ def main(
 ) -> None:
     """Start the Shuttle MCP server (default command)."""
     if ctx.invoked_subcommand is None:
+
         async def _run() -> None:
             from shuttle.mcp.server import create_mcp_server
+
             mcp = await create_mcp_server()
             await mcp.run_async()
 
@@ -52,6 +56,7 @@ def main(
 
 
 # ── Serve command ─────────────────────────────────────────────────────────────
+
 
 @app.command("serve")
 def serve(
@@ -88,7 +93,14 @@ def serve(
     info.append(f"http://{host}:{port}\n", style="cyan")
     info.append("  API token     ", style="dim")
     info.append(api_token, style="green bold")
-    console.print(Panel(info, title="[bold green]Shuttle[/bold green]", subtitle=f"http://{host}:{port}", border_style="green"))
+    console.print(
+        Panel(
+            info,
+            title="[bold green]Shuttle[/bold green]",
+            subtitle=f"http://{host}:{port}",
+            border_style="green",
+        )
+    )
 
     import logging
 
@@ -96,7 +108,10 @@ def serve(
         from shuttle.mcp.server import create_service_app
 
         service_app = await create_service_app(
-            host=host, port=port, api_token=api_token, db_url=db_url,
+            host=host,
+            port=port,
+            api_token=api_token,
+            db_url=db_url,
         )
 
         # Suppress noisy shutdown tracebacks. uvicorn/starlette/anyio emit
@@ -104,6 +119,7 @@ def serve(
         # normal behavior but alarming to users. We filter them out.
         class _ShutdownFilter(logging.Filter):
             shutting_down = False
+
             def filter(self, record: logging.LogRecord) -> bool:
                 msg = record.getMessage()
                 if "Shutting down" in msg:
@@ -134,14 +150,19 @@ def serve(
 
 # ── Node commands ─────────────────────────────────────────────────────────────
 
+
 @node_app.command("add")
 def node_add(
     name: str = typer.Option(None, "--name", "-n", help="Node name"),
     host: str = typer.Option(None, "--host", "-H", help="Hostname or IP"),
     username: str = typer.Option(None, "--user", "-u", help="SSH username"),
     port: int = typer.Option(22, "--port", "-p", help="SSH port"),
-    password: str = typer.Option(None, "--password", help="Password (or use --key-file)"),
-    key_file: str = typer.Option(None, "--key-file", "-k", help="Path to private key file"),
+    password: str = typer.Option(
+        None, "--password", help="Password (or use --key-file)"
+    ),
+    key_file: str = typer.Option(
+        None, "--key-file", "-k", help="Path to private key file"
+    ),
 ) -> None:
     """Add a new SSH node.
 
@@ -176,12 +197,18 @@ def node_add(
     elif key_file:
         key_path = Path(key_file).expanduser()
         if not key_path.exists():
-            typer.secho(f"  Key file not found: {key_path}", fg=typer.colors.RED, err=True)
+            typer.secho(
+                f"  Key file not found: {key_path}", fg=typer.colors.RED, err=True
+            )
             raise typer.Exit(1)
         auth_type = "key"
         credential = key_path.read_text()
     else:
-        pwd = Prompt.ask("  [bold]Password[/bold] [dim](enter to use key)[/dim]", password=True, default="")
+        pwd = Prompt.ask(
+            "  [bold]Password[/bold] [dim](enter to use key)[/dim]",
+            password=True,
+            default="",
+        )
         if pwd:
             auth_type = "password"
             credential = pwd
@@ -194,13 +221,16 @@ def node_add(
                 if key_path.exists():
                     credential = key_path.read_text()
                     break
-                typer.secho(f"  File not found: {key_path}", fg=typer.colors.RED, err=True)
+                typer.secho(
+                    f"  File not found: {key_path}", fg=typer.colors.RED, err=True
+                )
 
     # Early duplicate check before asking for credentials in interactive mode
     async def _check_exists(n: str) -> bool:
         from shuttle.core.config import ShuttleConfig
         from shuttle.db.engine import create_db_engine, create_session_factory, init_db
         from shuttle.db.repository import NodeRepo
+
         cfg = ShuttleConfig()
         url = cfg.db_url
         if ":///" in url and "~" in url:
@@ -249,6 +279,7 @@ def node_add(
             )
 
             from shuttle.core.proxy import NodeConnectInfo, connect_ssh
+
             info = NodeConnectInfo(
                 node_id=name,
                 hostname=host,
@@ -266,9 +297,15 @@ def node_add(
                     await repo.update(node.id, status="active")
                     typer.echo(f"  ● {name} online ✓")
                 else:
-                    typer.echo(f"  ○ {name} added (connection returned unexpected output)")
+                    typer.echo(
+                        f"  ○ {name} added (connection returned unexpected output)"
+                    )
             except Exception as exc:
-                typer.secho(f"  ○ {name} added (offline — {exc})", fg=typer.colors.YELLOW, err=True)
+                typer.secho(
+                    f"  ○ {name} added (offline — {exc})",
+                    fg=typer.colors.YELLOW,
+                    err=True,
+                )
 
         await engine.dispose()
 
@@ -278,6 +315,7 @@ def node_add(
 @node_app.command("list")
 def node_list() -> None:
     """List all SSH nodes."""
+
     async def _list() -> None:
         from shuttle.core.config import ShuttleConfig
         from shuttle.db.engine import create_db_engine, create_session_factory, init_db
@@ -312,8 +350,16 @@ def node_list() -> None:
         table.add_column("Port", justify="right", style="dim")
 
         for node in nodes:
-            dot = "[green]●[/green]" if node.status == "active" else "[red]●[/red]" if node.status == "error" else "[dim]○[/dim]"
-            table.add_row(f"{dot} {node.name}", node.host, node.username, str(node.port))
+            dot = (
+                "[green]●[/green]"
+                if node.status == "active"
+                else "[red]●[/red]"
+                if node.status == "error"
+                else "[dim]○[/dim]"
+            )
+            table.add_row(
+                f"{dot} {node.name}", node.host, node.username, str(node.port)
+            )
 
         Console().print(table)
 
@@ -323,6 +369,7 @@ def node_list() -> None:
 @node_app.command("edit")
 def node_edit(name: str = typer.Argument(..., help="Node name to edit")) -> None:
     """Edit an existing SSH node interactively."""
+
     async def _edit() -> None:
         from shuttle.core.config import ShuttleConfig
         from shuttle.core.credentials import CredentialManager
@@ -360,7 +407,9 @@ def node_edit(name: str = typer.Argument(..., help="Node name to edit")) -> None
             }
 
             if change_cred:
-                new_auth = typer.prompt("Auth type (password/key)", default=node.auth_type)
+                new_auth = typer.prompt(
+                    "Auth type (password/key)", default=node.auth_type
+                )
                 if new_auth == "password":
                     credential = typer.prompt("Password", hide_input=True)
                 else:
@@ -381,6 +430,7 @@ def node_edit(name: str = typer.Argument(..., help="Node name to edit")) -> None
 @node_app.command("test")
 def node_test(name: str = typer.Argument(..., help="Node name to test")) -> None:
     """Test SSH connectivity to a node."""
+
     async def _test() -> None:
         from shuttle.core.config import ShuttleConfig
         from shuttle.core.credentials import CredentialManager
@@ -450,12 +500,14 @@ def node_test(name: str = typer.Argument(..., help="Node name to test")) -> None
                     typer.echo(f"  ● {name} connected ✓")
                     await repo.update(node.id, status="active")
                 else:
-                    typer.secho(f"Unexpected output: {output!r}", fg=typer.colors.YELLOW)
+                    typer.secho(
+                        f"Unexpected output: {output!r}", fg=typer.colors.YELLOW
+                    )
             except Exception as exc:
                 typer.secho(f"Connection failed: {exc}", fg=typer.colors.RED, err=True)
                 await repo.update(node.id, status="error")
                 await engine.dispose()
-                raise typer.Exit(1)
+                raise typer.Exit(1) from None
 
         await engine.dispose()
 
@@ -508,17 +560,23 @@ def node_remove(
 
 # ── Config commands ───────────────────────────────────────────────────────────
 
+
 @config_app.command("show")
 def config_show() -> None:
     """Show current Shuttle configuration."""
-    from shuttle import __version__
-    from shuttle.core.config import ShuttleConfig
-
     from rich.console import Console
     from rich.table import Table
 
+    from shuttle import __version__
+    from shuttle.core.config import ShuttleConfig
+
     config = ShuttleConfig()
-    table = Table(title="Shuttle Configuration", border_style="dim", show_header=False, padding=(0, 2))
+    table = Table(
+        title="Shuttle Configuration",
+        border_style="dim",
+        show_header=False,
+        padding=(0, 2),
+    )
     table.add_column("Key", style="dim")
     table.add_column("Value", style="bold")
 

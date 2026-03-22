@@ -17,15 +17,11 @@ from shuttle.web.schemas import LogListResponse
 router = APIRouter(tags=["logs"])
 
 
-async def _batch_node_names(
-    db: AsyncSession, node_ids: set[str]
-) -> dict[str, str]:
+async def _batch_node_names(db: AsyncSession, node_ids: set[str]) -> dict[str, str]:
     """Load node names for a set of node IDs."""
     if not node_ids:
         return {}
-    result = await db.execute(
-        select(Node.id, Node.name).where(Node.id.in_(node_ids))
-    )
+    result = await db.execute(select(Node.id, Node.name).where(Node.id.in_(node_ids)))
     return {row.id: row.name for row in result.all()}
 
 
@@ -78,12 +74,18 @@ async def list_logs(
     """Paginated list of command logs with optional filters."""
     try:
         since_dt = datetime.fromisoformat(since) if since else None
-    except ValueError:
-        raise HTTPException(status_code=400, detail=f"Invalid 'since' datetime format: {since!r}. Use ISO 8601 format (e.g. 2025-01-01T00:00:00).")
+    except ValueError as err:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid 'since' datetime format: {since!r}. Use ISO 8601 format (e.g. 2025-01-01T00:00:00).",
+        ) from err
     try:
         until_dt = datetime.fromisoformat(until) if until else None
-    except ValueError:
-        raise HTTPException(status_code=400, detail=f"Invalid 'until' datetime format: {until!r}. Use ISO 8601 format (e.g. 2025-01-01T00:00:00).")
+    except ValueError as err:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid 'until' datetime format: {until!r}. Use ISO 8601 format (e.g. 2025-01-01T00:00:00).",
+        ) from err
 
     # Total count
     count_stmt = select(func.count(CommandLog.id))
@@ -121,7 +123,11 @@ async def export_logs(
 ):
     """Export all matching logs as JSON or CSV (max 50,000 rows)."""
     MAX_EXPORT_ROWS = 50_000
-    stmt = select(CommandLog).order_by(CommandLog.executed_at.desc()).limit(MAX_EXPORT_ROWS + 1)
+    stmt = (
+        select(CommandLog)
+        .order_by(CommandLog.executed_at.desc())
+        .limit(MAX_EXPORT_ROWS + 1)
+    )
     stmt = _build_filter_stmt(stmt, node_id, session_id)
     result = await db.execute(stmt)
     logs = list(result.scalars().all())
@@ -148,7 +154,9 @@ async def export_logs(
                 }
                 writer.writerow(row)
         if truncated:
-            output.write(f"\n# NOTE: Export truncated to {MAX_EXPORT_ROWS} rows. Apply filters to narrow results.\n")
+            output.write(
+                f"\n# NOTE: Export truncated to {MAX_EXPORT_ROWS} rows. Apply filters to narrow results.\n"
+            )
         content = output.getvalue()
         return StreamingResponse(
             iter([content]),
@@ -161,8 +169,7 @@ async def export_logs(
     json_items = []
     for item in items:
         json_item = {
-            k: v.isoformat() if hasattr(v, "isoformat") else v
-            for k, v in item.items()
+            k: v.isoformat() if hasattr(v, "isoformat") else v for k, v in item.items()
         }
         json_items.append(json_item)
 

@@ -18,21 +18,21 @@ from shuttle.db.repository import (
 )
 
 __all__ = [
+    "AppConfig",
     # Models
     "Base",
+    "CommandLog",
+    "ConfigRepo",
+    "LogRepo",
     "Node",
+    # Repositories
+    "NodeRepo",
+    "RuleRepo",
     "SecurityRule",
     "Session",
-    "CommandLog",
-    "AppConfig",
+    "SessionRepo",
     # Engine helpers
     "create_db_engine",
     "create_session_factory",
     "init_db",
-    # Repositories
-    "NodeRepo",
-    "RuleRepo",
-    "SessionRepo",
-    "LogRepo",
-    "ConfigRepo",
 ]

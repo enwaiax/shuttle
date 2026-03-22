@@ -1,7 +1,7 @@
 """SQLAlchemy 2.0 ORM models for Shuttle."""
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from sqlalchemy import (
     JSON,
@@ -47,13 +47,13 @@ class Node(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
-        default=lambda: datetime.now(timezone.utc),
+        default=lambda: datetime.now(UTC),
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
-        default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc),
+        default=lambda: datetime.now(UTC),
+        onupdate=lambda: datetime.now(UTC),
     )
 
     # Self-referential relationship for jump host
@@ -77,9 +77,7 @@ class SecurityRule(Base):
     """Pattern-based security rule for command filtering."""
 
     __tablename__ = "security_rules"
-    __table_args__ = (
-        Index("ix_security_rules_node", "node_id"),
-    )
+    __table_args__ = (Index("ix_security_rules_node", "node_id"),)
 
     id: Mapped[str] = mapped_column(
         String(36), primary_key=True, default=lambda: str(uuid.uuid4())
@@ -98,7 +96,7 @@ class SecurityRule(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
-        default=lambda: datetime.now(timezone.utc),
+        default=lambda: datetime.now(UTC),
     )
 
     # Relationships
@@ -109,9 +107,7 @@ class Session(Base):
     """Active SSH session tracking."""
 
     __tablename__ = "sessions"
-    __table_args__ = (
-        Index("ix_sessions_node_status", "node_id", "status"),
-    )
+    __table_args__ = (Index("ix_sessions_node_status", "node_id", "status"),)
 
     id: Mapped[str] = mapped_column(
         String(36), primary_key=True, default=lambda: str(uuid.uuid4())
@@ -125,7 +121,7 @@ class Session(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
-        default=lambda: datetime.now(timezone.utc),
+        default=lambda: datetime.now(UTC),
     )
     closed_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
@@ -168,7 +164,7 @@ class CommandLog(Base):
     executed_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
-        default=lambda: datetime.now(timezone.utc),
+        default=lambda: datetime.now(UTC),
     )
 
     # Relationships
@@ -188,6 +184,6 @@ class AppConfig(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
-        default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc),
+        default=lambda: datetime.now(UTC),
+        onupdate=lambda: datetime.now(UTC),
     )

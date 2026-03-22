@@ -2,7 +2,6 @@
 
 import pytest
 
-
 NODE_PAYLOAD = {
     "name": "test-node",
     "host": "192.168.1.1",

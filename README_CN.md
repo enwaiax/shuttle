@@ -4,14 +4,15 @@
 
 **面向 AI 助手的安全 SSH 网关**
 
-[![Python](https://img.shields.io/badge/python-3.12+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
-[![FastMCP](https://img.shields.io/badge/MCP-2.0+-76B900?style=flat-square)](https://modelcontextprotocol.io)
-[![License](https://img.shields.io/badge/license-ISC-blue?style=flat-square)](LICENSE)
+[![CI](https://img.shields.io/github/actions/workflow/status/enwaiax/shuttle/test.yml?style=flat-square&label=CI)](https://github.com/enwaiax/shuttle/actions/workflows/test.yml)
 [![PyPI](https://img.shields.io/pypi/v/shuttle-mcp?style=flat-square&color=76B900)](https://pypi.org/project/shuttle-mcp)
+[![Python](https://img.shields.io/badge/python-3.12+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![Docs](https://img.shields.io/badge/docs-enwaiax.github.io%2Fshuttle-76B900?style=flat-square)](https://enwaiax.github.io/shuttle/)
+[![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 
 Shuttle 让 AI 助手（Claude Code、Cursor 等）安全地在你的远程 SSH 服务器上执行命令 — 支持连接池、会话隔离、命令安全规则和 Web 审计面板。
 
-[快速开始](#快速开始) · [MCP 工具](#mcp-工具) · [Web 面板](#web-面板) · [安全规则](#安全规则) · [English](README.md)
+[快速开始](#快速开始) · [MCP 工具](#mcp-工具) · [Web 面板](#web-面板) · [安全规则](#安全规则) · [文档](https://enwaiax.github.io/shuttle/) · [English](README.md)
 
 </div>
 
@@ -203,7 +204,7 @@ SHUTTLE_DB_URL=postgresql+asyncpg://user:pass@host:5432/shuttle shuttle serve
 ```bash
 # 克隆并安装
 git clone https://github.com/enwaiax/shuttle.git
-cd ssh-mcp
+cd shuttle
 uv sync
 
 # 运行测试
@@ -235,7 +236,7 @@ cd web && npm install && npm run dev
 
 ## 许可证
 
-[ISC](LICENSE)
+[MIT](LICENSE)
 
 ---
 

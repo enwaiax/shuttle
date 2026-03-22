@@ -10,7 +10,6 @@ import pytest
 from shuttle.core.connection_pool import ConnectionPool, PoolConfig, PooledConnection
 from shuttle.core.proxy import NodeConnectInfo
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -32,7 +31,9 @@ def make_mock_conn(*, closing: bool = False) -> MagicMock:
     return conn
 
 
-def make_pooled(node_id: str = "test-node", *, closing: bool = False) -> PooledConnection:
+def make_pooled(
+    node_id: str = "test-node", *, closing: bool = False
+) -> PooledConnection:
     return PooledConnection(conn=make_mock_conn(closing=closing), node_id=node_id)
 
 
@@ -50,7 +51,9 @@ def test_pool_config_defaults():
 
 
 def test_pool_config_custom():
-    cfg = PoolConfig(max_per_node=2, max_total=10, idle_timeout=60.0, max_lifetime=600.0)
+    cfg = PoolConfig(
+        max_per_node=2, max_total=10, idle_timeout=60.0, max_lifetime=600.0
+    )
     assert cfg.max_per_node == 2
     assert cfg.max_total == 10
     assert cfg.idle_timeout == 60.0

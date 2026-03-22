@@ -19,9 +19,7 @@ async def get_stats(db: AsyncSession = Depends(get_db_session)):
             select(func.count(Session.id)).where(Session.status == "active")
         )
     ).scalar() or 0
-    total_commands = (
-        await db.execute(select(func.count(CommandLog.id)))
-    ).scalar() or 0
+    total_commands = (await db.execute(select(func.count(CommandLog.id)))).scalar() or 0
 
     return {
         "node_count": node_count,

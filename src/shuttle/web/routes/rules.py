@@ -66,7 +66,9 @@ async def update_rule(
     repo = RuleRepo(db)
     rule = await repo.get_by_id(rule_id)
     if rule is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Rule not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Rule not found"
+        )
 
     update_data = body.model_dump(exclude_unset=True)
     updated = await repo.update(rule_id, **update_data)
@@ -82,7 +84,9 @@ async def delete_rule(
     repo = RuleRepo(db)
     deleted = await repo.delete(rule_id)
     if not deleted:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Rule not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Rule not found"
+        )
 
 
 @router.post("/reorder", response_model=list[RuleResponse])

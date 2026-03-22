@@ -8,13 +8,12 @@ import pytest
 
 from shuttle.core.session import (
     PWD_SENTINEL,
-    SSHSession,
     SessionManager,
     SessionStatus,
+    SSHSession,
     _parse_sentinel_output,
     _wrap_command,
 )
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -34,10 +33,12 @@ def make_mock_pool(initial_pwd: str = "/home/testuser") -> MagicMock:
 
     # connection() must be an async context manager
     mock_pool = MagicMock()
-    mock_pool.connection = MagicMock(return_value=AsyncMock(
-        __aenter__=AsyncMock(return_value=pooled_conn),
-        __aexit__=AsyncMock(return_value=False),
-    ))
+    mock_pool.connection = MagicMock(
+        return_value=AsyncMock(
+            __aenter__=AsyncMock(return_value=pooled_conn),
+            __aexit__=AsyncMock(return_value=False),
+        )
+    )
     return mock_pool
 
 
@@ -199,10 +200,12 @@ async def test_execute_updates_working_directory():
     pooled_conn = MagicMock()
     pooled_conn.conn.run = AsyncMock(return_value=execute_result)
 
-    pool.connection = MagicMock(return_value=AsyncMock(
-        __aenter__=AsyncMock(return_value=pooled_conn),
-        __aexit__=AsyncMock(return_value=False),
-    ))
+    pool.connection = MagicMock(
+        return_value=AsyncMock(
+            __aenter__=AsyncMock(return_value=pooled_conn),
+            __aexit__=AsyncMock(return_value=False),
+        )
+    )
 
     result = await manager.execute(session.session_id, "cd /tmp && ls")
 
@@ -232,10 +235,12 @@ async def test_execute_returns_stdout():
     pooled_conn = MagicMock()
     pooled_conn.conn.run = AsyncMock(return_value=execute_result)
 
-    pool.connection = MagicMock(return_value=AsyncMock(
-        __aenter__=AsyncMock(return_value=pooled_conn),
-        __aexit__=AsyncMock(return_value=False),
-    ))
+    pool.connection = MagicMock(
+        return_value=AsyncMock(
+            __aenter__=AsyncMock(return_value=pooled_conn),
+            __aexit__=AsyncMock(return_value=False),
+        )
+    )
 
     result = await manager.execute(session.session_id, "echo hello")
 

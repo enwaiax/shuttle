@@ -121,9 +121,7 @@ async def test_session_creation(db_session):
     db_session.add(session)
     await db_session.commit()
 
-    result = await db_session.execute(
-        select(Session).where(Session.node_id == node.id)
-    )
+    result = await db_session.execute(select(Session).where(Session.node_id == node.id))
     fetched = result.scalar_one()
     assert fetched.working_directory == "/home/u"
     assert fetched.status == "active"

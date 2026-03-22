@@ -17,14 +17,13 @@ from __future__ import annotations
 import asyncio
 import time
 from collections import deque
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from dataclasses import dataclass, field
-from typing import AsyncIterator, Optional
 
 import asyncssh
 
 from shuttle.core.proxy import NodeConnectInfo, connect_ssh
-
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -105,7 +104,7 @@ class ConnectionPool:
         Pool tuning parameters (defaults defined in PoolConfig).
     """
 
-    def __init__(self, config: Optional[PoolConfig] = None) -> None:
+    def __init__(self, config: PoolConfig | None = None) -> None:
         self._config = config or PoolConfig()
 
         # Per-node tracking structures guarded by _lock[node_id]
@@ -122,7 +121,7 @@ class ConnectionPool:
         self._global_lock = asyncio.Lock()
         self._global_active: int = 0
 
-        self._eviction_task: Optional[asyncio.Task] = None
+        self._eviction_task: asyncio.Task | None = None
 
     # ------------------------------------------------------------------
     # Node registry
@@ -258,11 +257,8 @@ class ConnectionPool:
             if self._active[node_id] > 0:
                 self._active[node_id] -= 1
 
-            if (
-                not pc.conn.is_closed()
-                and not pc.is_expired(
-                    self._config.idle_timeout, self._config.max_lifetime
-                )
+            if not pc.conn.is_closed() and not pc.is_expired(
+                self._config.idle_timeout, self._config.max_lifetime
             ):
                 pc.touch()
                 # LIFO: push to front so hot connections are reused first
@@ -293,9 +289,12 @@ class ConnectionPool:
                 alive: deque[PooledConnection] = deque()
                 while idle_queue:
                     pc = idle_queue.popleft()
-                    if pc.is_expired(
-                        self._config.idle_timeout, self._config.max_lifetime
-                    ) or pc.conn.is_closed():
+                    if (
+                        pc.is_expired(
+                            self._config.idle_timeout, self._config.max_lifetime
+                        )
+                        or pc.conn.is_closed()
+                    ):
                         pc.conn.close()
                         async with self._global_lock:
                             if self._global_active > 0:

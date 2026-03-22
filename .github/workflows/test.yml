@@ -11,16 +11,22 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
+          cache-dependency-glob: uv.lock
 
       - name: Set up Python
         run: uv python install 3.12
@@ -32,14 +38,11 @@ jobs:
         run: uv run ruff check src/shuttle/ tests/
 
       - name: Test with coverage
-        run: uv run pytest tests/ -v --tb=short --cov=src/shuttle --cov-report=xml --cov-report=term-missing
+        run: uv run pytest --cov --cov-branch --cov-report=xml
 
-      - name: Upload coverage to Codecov
-        if: github.ref == 'refs/heads/main'
+      - name: Upload results to Codecov
         uses: codecov/codecov-action@v5
         with:
-          files: coverage.xml
-          fail_ci_if_error: false
           token: ${{ secrets.CODECOV_TOKEN }}
 
   frontend:
@@ -50,7 +53,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "npm"
           cache-dependency-path: web/package-lock.json
 
@@ -73,6 +76,7 @@ jobs:
         uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
+          cache-dependency-glob: uv.lock
 
       - name: Set up Python
         run: uv python install 3.12
@@ -80,7 +84,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "npm"
           cache-dependency-path: web/package-lock.json
 

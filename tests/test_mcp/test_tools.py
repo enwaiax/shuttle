@@ -13,20 +13,20 @@ from shuttle.core.security import (
     SecurityDecision,
     SecurityLevel,
 )
-from shuttle.core.session import SSHSession, SessionManager
+from shuttle.core.session import SessionManager, SSHSession
 from shuttle.mcp.tools import _execute_command_logic
-
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_guard(level: SecurityLevel, message: str = "", rule: str = "test-rule"):
     """Return a CommandGuard mock that always returns the given decision."""
     guard = MagicMock(spec=CommandGuard)
-    guard.evaluate = AsyncMock(return_value=SecurityDecision(
-        level=level, matched_rule=rule, message=message
-    ))
+    guard.evaluate = AsyncMock(
+        return_value=SecurityDecision(level=level, matched_rule=rule, message=message)
+    )
     return guard
 
 
@@ -40,11 +40,13 @@ def _make_session_mgr(session: SSHSession | None = None, execute_result=None):
     if execute_result is not None:
         mgr.execute = AsyncMock(return_value=execute_result)
     else:
-        mgr.execute = AsyncMock(return_value={
-            "stdout": "ok",
-            "exit_status": 0,
-            "working_directory": "/home/user",
-        })
+        mgr.execute = AsyncMock(
+            return_value={
+                "stdout": "ok",
+                "exit_status": 0,
+                "working_directory": "/home/user",
+            }
+        )
     mgr.list_active.return_value = []
     return mgr
 
@@ -91,7 +93,11 @@ async def test_allowed_command_executes():
     guard = _make_guard(SecurityLevel.ALLOW)
     session_mgr = _make_session_mgr(
         session=session,
-        execute_result={"stdout": "hello world", "exit_status": 0, "working_directory": "/tmp"},
+        execute_result={
+            "stdout": "hello world",
+            "exit_status": 0,
+            "working_directory": "/tmp",
+        },
     )
 
     result = await _execute_command_logic(

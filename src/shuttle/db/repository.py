@@ -1,6 +1,6 @@
 """Repository layer — CRUD operations for Shuttle ORM models."""
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from sqlalchemy import select
@@ -46,15 +46,11 @@ class NodeRepo:
         return node
 
     async def get_by_id(self, node_id: str) -> Node | None:
-        result = await self._session.execute(
-            select(Node).where(Node.id == node_id)
-        )
+        result = await self._session.execute(select(Node).where(Node.id == node_id))
         return result.scalar_one_or_none()
 
     async def get_by_name(self, name: str) -> Node | None:
-        result = await self._session.execute(
-            select(Node).where(Node.name == name)
-        )
+        result = await self._session.execute(select(Node).where(Node.name == name))
         return result.scalar_one_or_none()
 
     async def list_all(self, tag: str | None = None) -> list[Node]:
@@ -74,7 +70,7 @@ class NodeRepo:
             return None
         for key, value in kwargs.items():
             setattr(node, key, value)
-        node.updated_at = datetime.now(timezone.utc)
+        node.updated_at = datetime.now(UTC)
         await self._session.commit()
         await self._session.refresh(node)
         return node
@@ -227,7 +223,7 @@ class SessionRepo:
         if sess is None:
             return None
         sess.status = "closed"
-        sess.closed_at = datetime.now(timezone.utc)
+        sess.closed_at = datetime.now(UTC)
         await self._session.commit()
         await self._session.refresh(sess)
         return sess
@@ -308,8 +304,8 @@ async def cleanup_old_data(
     """
     from sqlalchemy import delete
 
-    cutoff_logs = datetime.now(timezone.utc) - timedelta(days=command_log_days)
-    cutoff_sessions = datetime.now(timezone.utc) - timedelta(days=closed_session_days)
+    cutoff_logs = datetime.now(UTC) - timedelta(days=command_log_days)
+    cutoff_sessions = datetime.now(UTC) - timedelta(days=closed_session_days)
 
     # Delete old command logs
     result_logs = await session.execute(
@@ -352,7 +348,7 @@ class ConfigRepo:
         existing = record.scalar_one_or_none()
         if existing is not None:
             existing.value = value
-            existing.updated_at = datetime.now(timezone.utc)
+            existing.updated_at = datetime.now(UTC)
             await self._session.commit()
             await self._session.refresh(existing)
             return existing

@@ -8,7 +8,9 @@ ssh_session_list, ssh_upload, ssh_download.
 from __future__ import annotations
 
 import time
-from typing import Any, AsyncIterator, Callable, Optional
+from collections.abc import AsyncIterator, Callable
+from datetime import UTC
+from typing import Any
 
 from loguru import logger
 
@@ -17,7 +19,7 @@ from shuttle.core.session import SessionManager
 
 # Truncation limits
 MAX_OUTPUT_BYTES = 10 * 1024 * 1024  # 10 MB for caller output
-MAX_DB_OUTPUT_BYTES = 64 * 1024      # 64 KB for DB storage
+MAX_DB_OUTPUT_BYTES = 64 * 1024  # 64 KB for DB storage
 
 
 def _truncate(text: str, limit: int) -> str:
@@ -32,14 +34,15 @@ def _truncate(text: str, limit: int) -> str:
 # Core execution logic (extracted for testability)
 # ---------------------------------------------------------------------------
 
+
 async def _execute_command_logic(
     *,
     command: str,
-    node: Optional[str],
-    session_id: Optional[str],
+    node: str | None,
+    session_id: str | None,
     timeout: float,
-    confirm_token: Optional[str],
-    bypass_scope: Optional[str],
+    confirm_token: str | None,
+    bypass_scope: str | None,
     pool: Any,
     guard: CommandGuard,
     token_store: ConfirmTokenStore,
@@ -84,8 +87,8 @@ async def _execute_command_logic(
     from shuttle.db.repository import LogRepo, NodeRepo
 
     # ── 1. Resolve target node ──────────────────────────────────────
-    resolved_node: Optional[str] = node
-    resolved_node_id: Optional[str] = None  # UUID for DB foreign key
+    resolved_node: str | None = node
+    resolved_node_id: str | None = None  # UUID for DB foreign key
     session_obj = None
 
     if session_id:
@@ -122,7 +125,9 @@ async def _execute_command_logic(
     # ── 2. Security check ───────────────────────────────────────────
     bypass_patterns = list(session_obj.bypass_patterns) if session_obj else []
     async with db_session_ctx() as db_sess:
-        decision = await guard.evaluate(command, resolved_node, db_sess, bypass_patterns)
+        decision = await guard.evaluate(
+            command, resolved_node, db_sess, bypass_patterns
+        )
 
     if decision.level == SecurityLevel.BLOCK:
         return f"BLOCKED: {decision.message}"
@@ -135,7 +140,7 @@ async def _execute_command_logic(
                 f"Command requires confirmation.\n"
                 f"Rule: {decision.matched_rule}\n"
                 f"Reason: {decision.message}\n"
-                f"To proceed, re-call ssh_execute with confirm_token=\"{token}\""
+                f'To proceed, re-call ssh_execute with confirm_token="{token}"'
             )
             return msg
 
@@ -147,6 +152,7 @@ async def _execute_command_logic(
         if bypass_scope == "session" and session_obj and decision.matched_rule:
             async with db_session_ctx() as db_sess:
                 from shuttle.db.repository import RuleRepo
+
                 rule_repo = RuleRepo(db_sess)
                 matched = await rule_repo.get_by_id(decision.matched_rule)
                 if matched:
@@ -198,11 +204,12 @@ async def _execute_command_logic(
                     duration_ms=elapsed_ms,
                 )
                 # Update node last_seen_at on successful execution
-                from datetime import datetime, timezone
+                from datetime import datetime
+
                 node_repo = NodeRepo(db_sess)
                 await node_repo.update(
                     resolved_node_id,
-                    last_seen_at=datetime.now(timezone.utc),
+                    last_seen_at=datetime.now(UTC),
                     status="active",
                 )
         except Exception:
@@ -214,6 +221,7 @@ async def _execute_command_logic(
 # ---------------------------------------------------------------------------
 # Tool registration
 # ---------------------------------------------------------------------------
+
 
 def register_tools(
     mcp: Any,
@@ -251,11 +259,11 @@ def register_tools(
     @mcp.tool()
     async def ssh_execute(
         command: str,
-        node: Optional[str] = None,
-        session_id: Optional[str] = None,
+        node: str | None = None,
+        session_id: str | None = None,
         timeout: float = 30.0,
-        confirm_token: Optional[str] = None,
-        bypass_scope: Optional[str] = None,
+        confirm_token: str | None = None,
+        bypass_scope: str | None = None,
     ) -> str:
         """Execute a shell command on a remote SSH node.
 
@@ -387,7 +395,9 @@ def register_tools(
             return "Error: either 'password' or 'private_key' must be provided."
 
         if cred_mgr is None:
-            return "Error: credential manager not available — cannot encrypt credentials."
+            return (
+                "Error: credential manager not available — cannot encrypt credentials."
+            )
 
         # Determine auth type and encrypt credential
         if private_key is not None:
@@ -479,6 +489,8 @@ def register_tools(
         try:
             await pool.close_node(name)
         except Exception:
-            logger.warning("Failed to close pool connections for node '{name}'", name=name)
+            logger.warning(
+                "Failed to close pool connections for node '{name}'", name=name
+            )
 
         return f"Node '{name}' removed."
