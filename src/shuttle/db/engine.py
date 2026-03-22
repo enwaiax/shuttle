@@ -123,5 +123,7 @@ async def init_db(engine: AsyncEngine) -> None:
                     text("ALTER TABLE nodes ADD COLUMN latency_ms INTEGER")
                 )
                 await conn.execute(
-                    text("ALTER TABLE nodes ADD COLUMN last_seen_at TIMESTAMP WITH TIME ZONE")
+                    text(
+                        "ALTER TABLE nodes ADD COLUMN last_seen_at TIMESTAMP WITH TIME ZONE"
+                    )
                 )

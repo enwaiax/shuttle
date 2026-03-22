@@ -39,7 +39,9 @@ async def verify_token(
     """Verify Bearer token on all /api/* routes. Skipped when no token is configured."""
     if _api_token is None:
         return
-    if credentials is None or not secrets.compare_digest(credentials.credentials, _api_token):
+    if credentials is None or not secrets.compare_digest(
+        credentials.credentials, _api_token
+    ):
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid or missing token")
 
 

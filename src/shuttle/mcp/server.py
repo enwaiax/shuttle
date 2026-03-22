@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import os
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import AsyncIterator, Optional
 
 from fastapi import FastAPI
 from fastmcp import FastMCP
@@ -24,8 +24,8 @@ from shuttle.mcp.tools import register_tools
 
 
 async def create_mcp_server(
-    shuttle_dir: Optional[Path] = None,
-    db_url: Optional[str] = None,
+    shuttle_dir: Path | None = None,
+    db_url: str | None = None,
 ) -> FastMCP:
     """Create and return a fully-wired FastMCP server instance.
 
@@ -80,6 +80,7 @@ async def create_mcp_server(
 
     # ── 3a. Seed default security rules ─────────────────────────────
     from shuttle.db.seeds import seed_default_rules
+
     async with session_factory() as db_session:
         seeded = await seed_default_rules(db_session)
     if seeded:
@@ -87,6 +88,7 @@ async def create_mcp_server(
 
     # ── 3b. Cleanup old logs/sessions based on retention policy ───
     from shuttle.db.repository import ConfigRepo, cleanup_old_data
+
     async with session_factory() as db_session:
         config_repo = ConfigRepo(db_session)
         log_days = (await config_repo.get("cleanup_command_logs_days")) or 30
@@ -140,7 +142,9 @@ async def create_mcp_server(
 
         jump_host_info = None
         if node.jump_host_id and node.jump_host_id in nodes_by_id:
-            jump_host_info = _build_node_connect_info(nodes_by_id[node.jump_host_id], _seen)
+            jump_host_info = _build_node_connect_info(
+                nodes_by_id[node.jump_host_id], _seen
+            )
 
         return NodeConnectInfo(
             node_id=node.name,
@@ -201,8 +205,8 @@ async def create_service_app(
     host: str = "127.0.0.1",
     port: int = 9876,
     api_token: str | None = None,
-    shuttle_dir: Optional[Path] = None,
-    db_url: Optional[str] = None,
+    shuttle_dir: Path | None = None,
+    db_url: str | None = None,
 ) -> FastAPI:
     """Create a unified ASGI app with FastMCP mounted at /mcp and FastAPI at /.
 
@@ -285,6 +289,7 @@ async def create_service_app(
 
         # Cleanup old logs/sessions on startup
         from shuttle.db.repository import ConfigRepo, cleanup_old_data
+
         async with session_factory() as db_sess:
             cfg_repo = ConfigRepo(db_sess)
             log_days = (await cfg_repo.get("cleanup_command_logs_days")) or 30
@@ -342,7 +347,9 @@ async def create_service_app(
                 if info is not None:
                     pool.register_node(info)
             except Exception:
-                logger.warning("Failed to register node '{name}' — skipping", name=node.name)
+                logger.warning(
+                    "Failed to register node '{name}' — skipping", name=node.name
+                )
 
         logger.info("Registered {n} nodes in pool", n=len(pool._registry))
         await pool.start_eviction_loop()
@@ -360,7 +367,7 @@ async def create_service_app(
 
         try:
             await asyncio.wait_for(_shutdown(), timeout=3.0)
-        except (asyncio.TimeoutError, asyncio.CancelledError):
+        except (TimeoutError, asyncio.CancelledError):
             logger.warning("Shutdown timed out — forcing exit")
             await engine.dispose()
 
@@ -424,6 +431,7 @@ async def create_service_app(
             # Don't intercept API or MCP routes
             if path.startswith("api/") or path.startswith("mcp"):
                 from fastapi import HTTPException
+
                 raise HTTPException(404)
             return FileResponse(str(static_dir / "index.html"))
 

@@ -26,7 +26,9 @@ def create_app(
     session_factory=None,
 ) -> FastAPI:
     """Build and return the FastAPI application."""
-    init_db_deps(db_url, api_token=api_token, engine=engine, session_factory=session_factory)
+    init_db_deps(
+        db_url, api_token=api_token, engine=engine, session_factory=session_factory
+    )
 
     app = FastAPI(
         title="Shuttle",
@@ -64,6 +66,7 @@ def create_app(
         async def spa_fallback(path: str):
             if path.startswith("api/"):
                 from fastapi import HTTPException
+
                 raise HTTPException(404)
             return FileResponse(str(static_dir / "index.html"))
 

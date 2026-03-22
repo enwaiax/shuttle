@@ -7,7 +7,6 @@ asyncssh's tunnel parameter.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Optional
 
 import asyncssh
 
@@ -46,10 +45,10 @@ class NodeConnectInfo:
     hostname: str
     username: str
     port: int = 22
-    password: Optional[str] = None
-    private_key: Optional[str] = None
-    known_hosts: Optional[str] = None
-    jump_host: Optional["NodeConnectInfo"] = None
+    password: str | None = None
+    private_key: str | None = None
+    known_hosts: str | None = None
+    jump_host: NodeConnectInfo | None = None
     connect_timeout: float = 30.0
     extra_options: dict = field(default_factory=dict)
 

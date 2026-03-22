@@ -45,6 +45,7 @@ async def test_create_mcp_server_registers_expected_tools(tmp_path):
 
     # Verify it's a FastMCP
     from fastmcp import FastMCP
+
     assert isinstance(mcp, FastMCP)
 
     # Verify all expected tools are registered

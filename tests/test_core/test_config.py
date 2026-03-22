@@ -2,7 +2,6 @@
 
 from pathlib import Path
 
-
 from shuttle.core.config import ShuttleConfig
 
 

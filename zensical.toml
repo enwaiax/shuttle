@@ -1,0 +1,41 @@
+[project]
+site_name = "Shuttle"
+site_description = "Secure SSH gateway for AI assistants"
+site_url = "https://enwaiax.github.io/shuttle/"
+site_dir = "site"
+copyright = "&copy; 2025 enwaiax"
+
+[project.repo]
+url = "https://github.com/enwaiax/shuttle"
+name = "enwaiax/shuttle"
+
+[project.theme]
+palette = [
+  { scheme = "slate", primary = "custom", accent = "lime", toggle = { icon = "material/brightness-4", name = "Switch to light mode" } },
+  { scheme = "default", primary = "custom", accent = "lime", toggle = { icon = "material/brightness-7", name = "Switch to dark mode" } },
+]
+features = [
+  "navigation.instant",
+  "navigation.tracking",
+  "navigation.sections",
+  "content.code.copy",
+  "search.highlight",
+]
+
+[project.extra_css]
+stylesheets = ["stylesheets/extra.css"]
+
+[[project.nav]]
+Home = "index.md"
+
+[[project.nav]]
+Configuration = "configuration.md"
+
+[[project.nav]]
+"Security Rules" = "security-rules.md"
+
+[[project.nav]]
+"MCP Setup" = "mcp-setup.md"
+
+[[project.nav]]
+"Web Panel" = "web-panel.md"

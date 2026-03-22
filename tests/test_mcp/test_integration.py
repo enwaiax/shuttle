@@ -9,17 +9,16 @@ from __future__ import annotations
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from shuttle.db.models import SecurityRule
 from shuttle.mcp.server import create_mcp_server
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _patched_pool():
     """Return a mocked ConnectionPool that skips SSH connections and eviction."""
@@ -60,6 +59,7 @@ async def test_mcp_server_starts_and_lists_nodes(tmp_path):
 
     # Verify it's a FastMCP instance
     from fastmcp import FastMCP
+
     assert isinstance(mcp, FastMCP)
 
     # Verify required tools are registered
@@ -102,6 +102,7 @@ async def test_default_security_rules_seeded(tmp_path):
     try:
         async with async_session() as session:
             from sqlalchemy import select
+
             result = await session.execute(select(SecurityRule))
             rules = result.scalars().all()
 

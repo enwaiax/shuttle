@@ -116,7 +116,9 @@ async def test_evaluate_warn(guard_db_session):
     """A command matching a WARN rule must emit a warning."""
     await _seed_sample_rules(guard_db_session)
     guard = CommandGuard()
-    decision = await guard.evaluate("curl https://example.com", "node1", guard_db_session)
+    decision = await guard.evaluate(
+        "curl https://example.com", "node1", guard_db_session
+    )
     assert decision.level == SecurityLevel.WARN
     assert decision.matched_rule is not None
 
@@ -149,14 +151,18 @@ async def test_bypass_patterns_skip_confirm_but_not_block(guard_db_session):
 
     # CONFIRM bypassed — should skip to default ALLOW
     decision = await guard.evaluate(
-        "sudo apt-get update", "node1", guard_db_session,
+        "sudo apt-get update",
+        "node1",
+        guard_db_session,
         bypass_patterns=[r"\bsudo\b"],
     )
     assert decision.level == SecurityLevel.ALLOW
 
     # BLOCK NOT bypassed even when pattern listed
     decision = await guard.evaluate(
-        "rm -rf /home", "node1", guard_db_session,
+        "rm -rf /home",
+        "node1",
+        guard_db_session,
         bypass_patterns=[r"rm\s+-rf\s+/"],
     )
     assert decision.level == SecurityLevel.BLOCK

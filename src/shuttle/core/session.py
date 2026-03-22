@@ -18,9 +18,10 @@ from __future__ import annotations
 
 import shlex
 import uuid
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Callable, Optional
+from typing import Any
 
 # Maximum output size returned to the caller (10 MB).
 MAX_OUTPUT_BYTES = 10 * 1024 * 1024  # 10 MB
@@ -89,7 +90,7 @@ class SessionManager:
     def __init__(
         self,
         pool: Any,
-        db_session_factory: Optional[Callable] = None,
+        db_session_factory: Callable | None = None,
     ) -> None:
         self._pool = pool
         self._db_session_factory = db_session_factory
@@ -137,7 +138,7 @@ class SessionManager:
             del self._sessions[session_id]
             await self._persist_session_close(session_id)
 
-    def get(self, session_id: str) -> Optional[SSHSession]:
+    def get(self, session_id: str) -> SSHSession | None:
         """Return the active session for *session_id*, or ``None``."""
         return self._sessions.get(session_id)
 
@@ -189,9 +190,7 @@ class SessionManager:
             raise KeyError(f"Session '{session_id}' not found or already closed.")
 
         wrapped = _wrap_command(command, session.working_directory)
-        raw_output = await self._run_on_node(
-            session.node_id, wrapped, timeout=timeout
-        )
+        raw_output = await self._run_on_node(session.node_id, wrapped, timeout=timeout)
 
         stdout, new_pwd = _parse_sentinel_output(raw_output)
 

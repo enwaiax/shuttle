@@ -12,15 +12,11 @@ from shuttle.web.schemas import SessionResponse
 router = APIRouter(tags=["sessions"])
 
 
-async def _batch_node_names(
-    db: AsyncSession, node_ids: set[str]
-) -> dict[str, str]:
+async def _batch_node_names(db: AsyncSession, node_ids: set[str]) -> dict[str, str]:
     """Load node names for a set of node IDs."""
     if not node_ids:
         return {}
-    result = await db.execute(
-        select(Node.id, Node.name).where(Node.id.in_(node_ids))
-    )
+    result = await db.execute(select(Node.id, Node.name).where(Node.id.in_(node_ids)))
     return {row.id: row.name for row in result.all()}
 
 

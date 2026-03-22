@@ -25,9 +25,7 @@ async def test_list_and_close_session(client, db_session):
     )
 
     session_repo = SessionRepo(db_session)
-    sess = await session_repo.create(
-        node_id=node.id, working_directory="/home"
-    )
+    sess = await session_repo.create(node_id=node.id, working_directory="/home")
 
     # List sessions
     resp = await client.get("/api/sessions")

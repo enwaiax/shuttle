@@ -2,6 +2,7 @@
 
 import tempfile
 import time
+from datetime import UTC
 from pathlib import Path
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -105,7 +106,9 @@ async def get_node(
     repo = NodeRepo(db)
     node = await repo.get_by_id(node_id)
     if node is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Node not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Node not found"
+        )
     return _to_response(node)
 
 
@@ -119,14 +122,18 @@ async def update_node(
     repo = NodeRepo(db)
     node = await repo.get_by_id(node_id)
     if node is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Node not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Node not found"
+        )
 
     update_data = body.model_dump(exclude_unset=True)
 
     # Encrypt credential if provided
     if "credential" in update_data:
         cred_mgr = _get_cred_mgr()
-        update_data["encrypted_credential"] = cred_mgr.encrypt(update_data.pop("credential"))
+        update_data["encrypted_credential"] = cred_mgr.encrypt(
+            update_data.pop("credential")
+        )
 
     updated = await repo.update(node_id, **update_data)
     return _to_response(updated)
@@ -141,7 +148,9 @@ async def delete_node(
     repo = NodeRepo(db)
     deleted = await repo.delete(node_id)
     if not deleted:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Node not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Node not found"
+        )
 
 
 @router.post("/nodes/{node_id}/test", response_model=NodeTestResult)
@@ -153,7 +162,9 @@ async def test_node(
     repo = NodeRepo(db)
     node = await repo.get_by_id(node_id)
     if node is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Node not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Node not found"
+        )
 
     try:
         from shuttle.core.proxy import NodeConnectInfo, connect_ssh
@@ -192,15 +203,20 @@ async def test_node(
         client.close()
 
         # Persist latency + last_seen to DB
-        from datetime import datetime, timezone
+        from datetime import datetime
+
         await repo.update(
             node_id,
             latency_ms=int(latency),
-            last_seen_at=datetime.now(timezone.utc),
+            last_seen_at=datetime.now(UTC),
             status="active",
         )
 
-        return NodeTestResult(success=True, message=f"Connection successful ({int(latency)}ms)", latency_ms=latency)
+        return NodeTestResult(
+            success=True,
+            message=f"Connection successful ({int(latency)}ms)",
+            latency_ms=latency,
+        )
     except Exception as exc:
         await repo.update(node_id, status="offline")
         return NodeTestResult(success=False, message=str(exc))

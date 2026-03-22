@@ -7,7 +7,7 @@ import secrets
 import time
 from dataclasses import dataclass
 from enum import Enum
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from sqlalchemy import select
 
@@ -29,7 +29,7 @@ class SecurityDecision:
     """The result produced by CommandGuard.evaluate()."""
 
     level: SecurityLevel
-    matched_rule: Optional[str] = None
+    matched_rule: str | None = None
     message: str = ""
 
 
