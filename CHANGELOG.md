@@ -2,6 +2,14 @@
 
 All notable changes to Shuttle are documented here.
 
+## [0.2.2] - 2026-03-22
+
+### Added
+- **`shuttle-mcp` console script** — same entry as `shuttle`, so `uvx shuttle-mcp` matches the PyPI package name without `--from … shuttle`.
+
+### Changed
+- User docs and examples: prefer `uv` / `uvx` over `pip` for install instructions; MCP config examples use `args: ["shuttle-mcp"]` with a short note for older wheels.
+
 ## [0.2.1] - 2026-03-21
 
 ### Changed

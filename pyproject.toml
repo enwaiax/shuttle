@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "shuttle-mcp"
-version = "0.2.1"
+dynamic = ["version"]
 description = "Secure SSH gateway for AI assistants — MCP server with connection pooling, session isolation, and command safety"
 authors = [{ name = "enwaiax", email = "enwaiax@users.noreply.github.com" }]
 readme = "README.md"
@@ -34,7 +34,9 @@ dependencies = [
 ]
 
 [project.scripts]
+# shuttle = primary CLI; shuttle-mcp = PyPI-name alias so `uvx shuttle-mcp` works.
 shuttle = "shuttle.cli:app"
+shuttle-mcp = "shuttle.cli:app"
 
 [project.urls]
 Homepage = "https://github.com/enwaiax/shuttle"
@@ -42,6 +44,9 @@ Repository = "https://github.com/enwaiax/shuttle"
 Documentation = "https://enwaiax.github.io/shuttle/"
 Issues = "https://github.com/enwaiax/shuttle/issues"
 Changelog = "https://github.com/enwaiax/shuttle/blob/main/CHANGELOG.md"
+
+[tool.hatch.version]
+path = "src/shuttle/__init__.py"
 
 [tool.hatch.build]
 artifacts = ["src/shuttle/web/static/**"]
@@ -136,4 +141,5 @@ dev = [
     "pytest-mock>=3.14.0",
     "ruff>=0.11.0",
     "pre-commit>=4.0.0",
+    "zensical>=0.0.28",
 ]

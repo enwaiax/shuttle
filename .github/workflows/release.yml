@@ -62,7 +62,6 @@ jobs:
 
       - name: Update version
         run: |
-          sed -i 's/^version = "[^"]*"/version = "${{ inputs.version }}"/' pyproject.toml
           sed -i 's/^__version__ = "[^"]*"/__version__ = "${{ inputs.version }}"/' src/shuttle/__init__.py
 
       - name: Build frontend
@@ -116,9 +115,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          sed -i 's/^version = "[^"]*"/version = "${{ inputs.version }}"/' pyproject.toml
           sed -i 's/^__version__ = "[^"]*"/__version__ = "${{ inputs.version }}"/' src/shuttle/__init__.py
-          git add pyproject.toml src/shuttle/__init__.py
+          git add src/shuttle/__init__.py
           git diff --cached --quiet || git commit -m "chore: release v${{ inputs.version }}"
           git tag -a "v${{ inputs.version }}" -m "v${{ inputs.version }}"
           git push origin main --follow-tags
@@ -140,9 +138,11 @@ jobs:
             ### Install
 
             ```bash
-            uvx shuttle-mcp
-            # or
-            pip install shuttle-mcp==${{ inputs.version }}
+            uv tool install "shuttle-mcp==${{ inputs.version }}"
+            shuttle --help
+
+            # Ephemeral stdio (no global install):
+            uvx --from "shuttle-mcp==${{ inputs.version }}" shuttle --help
             ```
 
             See [CHANGELOG.md](https://github.com/enwaiax/shuttle/blob/main/CHANGELOG.md) for details.

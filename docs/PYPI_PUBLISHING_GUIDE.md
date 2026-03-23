@@ -119,23 +119,23 @@ uv run twine upload dist/*
 ## ✅ Verification
 
 ### 1. Check TestPyPI
-- Visit: https://test.pypi.org/project/fastmcp-ssh-server/
+- Visit: https://test.pypi.org/project/shuttle-mcp/
 - Verify package information and files
 
 ### 2. Test Installation from TestPyPI
 ```bash
-pip install --index-url https://test.pypi.org/simple/ fastmcp-ssh-server
-fastmcp-ssh-server --version
+uv pip install --index-url https://test.pypi.org/simple/ shuttle-mcp
+shuttle --version
 ```
 
 ### 3. Check PyPI
-- Visit: https://pypi.org/project/fastmcp-ssh-server/
+- Visit: https://pypi.org/project/shuttle-mcp/
 - Verify package is available
 
 ### 4. Test Production Installation
 ```bash
-pip install fastmcp-ssh-server
-fastmcp-ssh-server --help
+uv pip install shuttle-mcp
+shuttle --help
 ```
 
 ## 🔍 Monitoring and Maintenance
@@ -160,7 +160,7 @@ fastmcp-ssh-server --help
 
 #### 1. Trusted Publishing Not Working
 ```
-Error: The user 'username' isn't allowed to upload to project 'fastmcp-ssh-server'
+Error: The user 'username' isn't allowed to upload to project 'shuttle-mcp'
 ```
 **Solution**:
 - Verify trusted publishing is configured correctly on PyPI
@@ -201,7 +201,7 @@ Package build failed
 uv run python -m tarfile -l dist/*.tar.gz
 
 # Check package metadata
-uv run python -c "import importlib.metadata; print(importlib.metadata.metadata('fastmcp-ssh-server'))"
+uv run python -c "import importlib.metadata; print(importlib.metadata.metadata('shuttle-mcp'))"
 
 # Test package installation
 uv pip install dist/*.whl
@@ -224,8 +224,8 @@ uv run python -c "import python_ssh_mcp; print('Import successful')"
 
 After successful publishing:
 - ✅ Package appears on PyPI
-- ✅ Installation works: `pip install fastmcp-ssh-server`
-- ✅ CLI works: `fastmcp-ssh-server --version`
+- ✅ Installation works: `uv pip install shuttle-mcp`
+- ✅ CLI works: `shuttle --version`
 - ✅ Import works: `python -c "import python_ssh_mcp"`
 - ✅ All functionality operational
 

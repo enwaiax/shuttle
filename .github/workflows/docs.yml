@@ -24,15 +24,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install zensical
-        run: pip install zensical
+      - uses: astral-sh/setup-uv@v5
 
       - name: Build docs
-        run: zensical build
+        run: uv run --group dev zensical build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

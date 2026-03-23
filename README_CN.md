@@ -34,11 +34,14 @@ Shuttle 让 AI 助手（Claude Code、Cursor 等）安全地在你的远程 SSH 
 ### 1. 安装
 
 ```bash
-# 推荐使用 uvx
-uvx shuttle-mcp
+# 推荐：用 uv 安装 CLI 一次（可执行文件在 PATH）
+uv tool install shuttle-mcp
+shuttle --help
 
-# 或 pip
-pip install shuttle-mcp
+# 或不安装，单次运行（stdio）
+uvx shuttle-mcp --help
+
+# 旧版 PyPI 若没有 `shuttle-mcp` 入口：uvx --from shuttle-mcp shuttle --help
 ```
 
 ### 2. 添加第一个节点
@@ -197,7 +200,7 @@ shuttle config show          # 显示当前配置
 SHUTTLE_DB_URL=postgresql+asyncpg://user:pass@host:5432/shuttle shuttle serve
 ```
 
-需要额外安装：`pip install asyncpg`
+需要额外安装驱动：`uv pip install asyncpg`（或在本项目中 `uv add asyncpg`）
 
 ## 开发
 

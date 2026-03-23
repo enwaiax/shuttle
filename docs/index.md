@@ -18,11 +18,10 @@ Shuttle lets AI assistants (Claude Code, Cursor, etc.) securely execute commands
 ### 1. Install
 
 ```bash
-# Via uvx (recommended)
-uvx shuttle-mcp
+uv tool install shuttle-mcp
+shuttle --help
 
-# Or pip
-pip install shuttle-mcp
+# Or without installing: uvx shuttle-mcp --help
 ```
 
 ### 2. Add your first node

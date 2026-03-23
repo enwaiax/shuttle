@@ -139,7 +139,7 @@ After a successful release:
 
 1. **Verify Installation**:
    ```bash
-   pip install fastmcp-ssh-server
+   uv pip install shuttle-mcp
    fastmcp-ssh-server --help
    ```
 

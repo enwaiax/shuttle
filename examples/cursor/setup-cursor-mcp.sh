@@ -1,78 +1,34 @@
-#!/bin/bash
-# Setup script for Cursor MCP integration
+#!/usr/bin/env bash
+# Write Shuttle stdio MCP config for Cursor (project-local .cursor/mcp.json).
+set -euo pipefail
 
-set -e
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+CURSOR_DIR="$ROOT/.cursor"
+OUT="$CURSOR_DIR/mcp.json"
 
-echo "🔧 Setting up Cursor MCP Integration for SSH Server"
-echo "=================================================="
+echo "Shuttle → Cursor MCP (stdio)"
+echo "Project root: $ROOT"
+mkdir -p "$CURSOR_DIR"
 
-# Detect OS and set config path
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    CONFIG_DIR="$HOME/Library/Application Support/Cursor/User/globalStorage"
-elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    CONFIG_DIR="$HOME/.config/Cursor/User/globalStorage"
-else
-    echo "❌ Unsupported OS: $OSTYPE"
-    exit 1
+if [[ -f "$OUT" ]]; then
+  echo "⚠️  $OUT already exists — backing up"
+  cp "$OUT" "$OUT.backup.$(date +%Y%m%d%H%M%S)"
 fi
 
-CONFIG_FILE="$CONFIG_DIR/mcp.json"
-
-echo "📂 Config directory: $CONFIG_DIR"
-echo "📄 Config file: $CONFIG_FILE"
-
-# Create directory if it doesn't exist
-mkdir -p "$CONFIG_DIR"
-
-# Check if config file exists
-if [[ -f "$CONFIG_FILE" ]]; then
-    echo "⚠️  MCP config file already exists"
-    echo "Creating backup..."
-    cp "$CONFIG_FILE" "$CONFIG_FILE.backup.$(date +%Y%m%d_%H%M%S)"
-fi
-
-# Get current project path
-PROJECT_PATH=$(pwd)
-echo "📁 Project path: $PROJECT_PATH"
-
-# Prompt for SSH details
-echo ""
-echo "🔑 Please enter your SSH connection details:"
-read -p "SSH Host: " SSH_HOST
-read -p "SSH Username: " SSH_USERNAME
-read -s -p "SSH Password: " SSH_PASSWORD
-echo ""
-
-# Create MCP configuration
-cat > "$CONFIG_FILE" << EOF
+cat >"$OUT" <<'EOF'
 {
   "mcpServers": {
-    "ssh-server": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "$PROJECT_PATH",
-        "run",
-        "fastmcp-ssh-server",
-        "--host", "$SSH_HOST",
-        "--port", "22",
-        "--username", "$SSH_USERNAME",
-        "--password", "$SSH_PASSWORD"
-      ],
-      "description": "SSH MCP Server for remote operations"
+    "shuttle": {
+      "command": "uvx",
+      "args": ["shuttle-mcp"]
     }
   }
 }
 EOF
 
-echo "✅ MCP configuration created successfully!"
+echo "✅ Wrote $OUT"
 echo ""
-echo "📋 Next steps:"
-echo "1. Restart Cursor IDE"
-echo "2. Look for MCP status in the status bar"
-echo "3. Try asking AI: 'List files in my remote server'"
-echo ""
-echo "🔧 Test your configuration:"
-echo "   uv run fastmcp-ssh-server --host $SSH_HOST --username $SSH_USERNAME --password '***'"
-echo ""
-echo "📚 For more examples, see: examples/cursor/README.md"
+echo "Next:"
+echo "  1. shuttle node add   # configure SSH nodes"
+echo "  2. Restart Cursor"
+echo "  3. For HTTP mode instead, see examples/cursor/serve-config.json and docs/mcp-setup.md"

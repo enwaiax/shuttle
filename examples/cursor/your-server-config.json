@@ -1,18 +1,8 @@
 {
   "mcpServers": {
-    "viking-prod-server": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "/raid/user/xiangw/workspace/toys/ssh-mcp-server",
-        "run",
-        "fastmcp-ssh-server",
-        "--host", "viking-prod-527.ipp4a1.colossus.nvidia.com",
-        "--port", "22",
-        "--username", "local-xiangw",
-        "--password", "b*!j1Lvo*@A#2A"
-      ],
-      "description": "NVIDIA DGX Production Server"
+    "shuttle": {
+      "command": "uvx",
+      "args": ["shuttle-mcp"]
     }
   }
 }

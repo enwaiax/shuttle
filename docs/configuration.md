@@ -43,7 +43,7 @@ SHUTTLE_DB_URL="postgresql+asyncpg://user:password@localhost:5432/shuttle"
 Requires the `asyncpg` driver:
 
 ```bash
-pip install asyncpg
+uv pip install asyncpg
 ```
 
 ### MySQL
@@ -55,7 +55,7 @@ SHUTTLE_DB_URL="mysql+aiomysql://user:password@localhost:3306/shuttle"
 Requires the `aiomysql` driver:
 
 ```bash
-pip install aiomysql
+uv pip install aiomysql
 ```
 
 ## Connection Pool Parameters

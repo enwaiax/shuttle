@@ -47,11 +47,8 @@ tests/
 Ensure you have the required testing dependencies:
 
 ```bash
-# Install test dependencies
-uv add --dev pytest pytest-asyncio pytest-cov pytest-mock
-
-# Or using pip
-pip install pytest pytest-asyncio pytest-cov pytest-mock
+# From repo root (uses pyproject dev group)
+uv sync --group dev
 ```
 
 ### Quick Start

@@ -57,7 +57,7 @@ Verify your `.mcp.json`:
 }
 ```
 
-Ensure `uvx shuttle-mcp` works in your terminal. If not, install with `pip install shuttle-mcp`.
+Ensure `uvx shuttle-mcp --help` works, or run `uv tool install shuttle-mcp` and use `"command": "shuttle"`. See [MCP Setup](mcp-setup.md) for older wheels and `uvx --from` fallback.
 
 **For service (HTTP) mode:**
 
@@ -141,7 +141,7 @@ The database and default security rules are recreated automatically on next star
 For production deployments, switch to PostgreSQL:
 
 ```bash
-pip install asyncpg
+uv pip install asyncpg
 SHUTTLE_DB_URL=postgresql+asyncpg://user:pass@host:5432/shuttle shuttle serve
 ```
 

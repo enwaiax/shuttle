@@ -36,11 +36,15 @@ When AI coding assistants need to operate remote servers (run tests on GPU machi
 ### 1. Install
 
 ```bash
-# Via uvx (recommended)
-uvx shuttle-mcp
+# Recommended: install CLI once (tools bin on PATH)
+uv tool install shuttle-mcp
+shuttle --help
 
-# Or pip
-pip install shuttle-mcp
+# Or run without installing (stdio / one-off)
+uvx shuttle-mcp --help
+
+# Older PyPI wheels without the `shuttle-mcp` script:
+# uvx --from shuttle-mcp shuttle --help
 ```
 
 ### 2. Add your first node
@@ -198,7 +202,7 @@ All settings can be overridden with environment variables (prefix `SHUTTLE_`):
 SHUTTLE_DB_URL=postgresql+asyncpg://user:pass@host:5432/shuttle shuttle serve
 ```
 
-Requires: `pip install asyncpg`
+Requires: `uv pip install asyncpg` (install into the same environment that runs Shuttle)
 
 ## Development
 

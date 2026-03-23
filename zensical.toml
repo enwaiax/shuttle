@@ -1,47 +1,71 @@
+# =============================================================================
+# Shuttle documentation — Zensical configuration
+# =============================================================================
+
 [project]
 site_name = "Shuttle"
-site_description = "Secure SSH gateway for AI assistants"
 site_url = "https://enwaiax.github.io/shuttle/"
-site_dir = "site"
-copyright = "&copy; 2025 enwaiax"
+site_description = "Secure SSH gateway for AI assistants"
 
-[project.repo]
-url = "https://github.com/enwaiax/shuttle"
-name = "enwaiax/shuttle"
+repo_name = "enwaiax/shuttle"
+repo_url = "https://github.com/enwaiax/shuttle"
+edit_uri = "edit/main/docs"
+
+copyright = "&copy; 2025-2026 enwaiax"
+
+extra_css = ["stylesheets/extra.css"]
+
+nav = [
+    { "Home" = "index.md" },
+    { "MCP Setup" = "mcp-setup.md" },
+    { "Configuration" = "configuration.md" },
+    { "Security Rules" = "security-rules.md" },
+    { "Web Panel" = "web-panel.md" },
+    { "API Reference" = "api.md" },
+    { "Troubleshooting" = "troubleshooting.md" },
+]
+
+# -----------------------------------------------------------------------------
+# Theme
+# -----------------------------------------------------------------------------
 
 [project.theme]
-palette = [
-  { scheme = "slate", primary = "custom", accent = "lime", toggle = { icon = "material/brightness-4", name = "Switch to light mode" } },
-  { scheme = "default", primary = "custom", accent = "lime", toggle = { icon = "material/brightness-7", name = "Switch to dark mode" } },
-]
+# Logo/favicon must live as real files under docs/ (not symlinks): Zensical does not copy symlink targets into site/.
+logo = "assets/images/logo.svg"
+favicon = "assets/images/favicon.svg"
 features = [
-  "navigation.instant",
-  "navigation.tracking",
-  "navigation.sections",
-  "content.code.copy",
-  "search.highlight",
+    "content.action.edit",
+    "content.code.copy",
+    "content.code.select",
+    "navigation.instant",
+    "navigation.tracking",
+    "navigation.sections",
+    "navigation.path",
+    "navigation.top",
+    "search.highlight",
+    "toc.follow",
 ]
 
-[project.extra_css]
-stylesheets = ["stylesheets/extra.css"]
+[project.theme.icon]
+repo = "fontawesome/brands/github"
 
-[[project.nav]]
-Home = "index.md"
+[[project.theme.palette]]
+scheme = "slate"
+primary = "custom"
+accent = "lime"
+toggle.icon = "material/brightness-4"
+toggle.name = "Switch to light mode"
 
-[[project.nav]]
-Configuration = "configuration.md"
+[[project.theme.palette]]
+scheme = "default"
+primary = "custom"
+accent = "lime"
+toggle.icon = "material/brightness-7"
+toggle.name = "Switch to dark mode"
 
-[[project.nav]]
-"Security Rules" = "security-rules.md"
+# -----------------------------------------------------------------------------
+# Extra
+# -----------------------------------------------------------------------------
 
-[[project.nav]]
-"MCP Setup" = "mcp-setup.md"
-
-[[project.nav]]
-"Web Panel" = "web-panel.md"
-
-[[project.nav]]
-"API Reference" = "api.md"
-
-[[project.nav]]
-Troubleshooting = "troubleshooting.md"
+[project.extra]
+generator = false

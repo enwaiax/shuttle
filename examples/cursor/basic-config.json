@@ -1,18 +1,8 @@
 {
   "mcpServers": {
-    "ssh-server": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "REPLACE_WITH_PROJECT_PATH",
-        "run",
-        "fastmcp-ssh-server",
-        "--host", "REPLACE_WITH_YOUR_HOST",
-        "--port", "22",
-        "--username", "REPLACE_WITH_YOUR_USERNAME",
-        "--password", "REPLACE_WITH_YOUR_PASSWORD"
-      ],
-      "description": "Basic SSH MCP Server"
+    "shuttle": {
+      "command": "uvx",
+      "args": ["shuttle-mcp"]
     }
   }
 }

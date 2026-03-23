@@ -1,93 +1,52 @@
-# ✅ **Confirmed Working Cursor MCP Configuration**
+# Example Cursor MCP configs (Shuttle)
 
-## 🎯 **Tested and Verified Configuration**
+These patterns match [docs/mcp-setup.md](../../docs/mcp-setup.md).
 
-This configuration has been **tested and confirmed working** in production:
+## stdio (uvx)
 
 ```json
 {
   "mcpServers": {
-    "my-mcp-server": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "/raid/user/xiangw/workspace/toys/ssh-mcp-server",
-        "run",
-        "fastmcp-ssh-server",
-        "--host", "viking-prod-527.ipp4a1.colossus.nvidia.com",
-        "--port", "22",
-        "--username", "local-xiangw",
-        "--password", "b*!j1Lvo*@A#2A"
-      ]
+    "shuttle": {
+      "command": "uvx",
+      "args": ["shuttle-mcp"]
     }
   }
 }
 ```
 
-## 🔑 **Critical Success Factors**
+## stdio (global `shuttle` on PATH)
 
-### 1. **Use `--directory` Parameter**
-```bash
-"--directory", "/path/to/your/project"
-```
-❌ **Don't use:** `"cwd": "/path/to/project"`
-✅ **Use:** `--directory` in the args array
+After `uv tool install shuttle-mcp`:
 
-### 2. **Explicit Port Specification**
-```bash
-"--port", "22"
-```
-❌ **Don't skip** the port parameter
-✅ **Always specify** `--port` explicitly
-
-### 3. **Correct Argument Order**
-```bash
-[
-  "--directory", "/path/to/project",  # 1. Set working directory
-  "run",                             # 2. UV command
-  "fastmcp-ssh-server",             # 3. Our MCP server
-  "--host", "hostname",             # 4. SSH parameters
-  "--port", "22",
-  "--username", "user",
-  "--password", "pass"
-]
+```json
+{
+  "mcpServers": {
+    "shuttle": {
+      "command": "shuttle"
+    }
+  }
+}
 ```
 
-## 🏃 **Quick Setup Steps**
+## streamable-http
 
-1. **Copy your working config** to `~/.cursor/mcp.json` (Linux) or equivalent path
-2. **Update the paths** to match your system:
-   - Replace `/raid/user/xiangw/workspace/toys/ssh-mcp-server` with your actual project path
-   - Update SSH credentials
-3. **Restart Cursor IDE**
-4. **Verify** MCP appears in status bar
+With `shuttle serve` running:
 
-## 🧪 **Test Your Configuration**
-
-Before using in Cursor, test manually:
-
-```bash
-cd /your/project/path
-uv run fastmcp-ssh-server --host your-host --port 22 --username your-user --password your-pass
+```json
+{
+  "mcpServers": {
+    "shuttle": {
+      "url": "http://127.0.0.1:9876/mcp/"
+    }
+  }
+}
 ```
 
-If this works, your Cursor config will work too!
+## Checklist
 
-## 🔍 **Common Issues and Solutions**
+1. Add SSH nodes: `shuttle node add` (credentials live in Shuttle, not in `mcp.json`).
+2. Restart Cursor after editing MCP config.
+3. If `uvx shuttle-mcp` fails on an old wheel, use `"args": ["--from", "shuttle-mcp", "shuttle"]` or upgrade Shuttle.
 
-| Issue | Solution |
-|-------|----------|
-| "Command not found" | Check `--directory` path is correct |
-| "Connection failed" | Verify SSH credentials and network |
-| "MCP not loading" | Restart Cursor after config changes |
-| "Permission denied" | Check SSH user permissions |
-
-## 📚 **Related Files**
-
-- `basic-config.json` - Template configuration
-- `README.md` - Complete setup guide
-- `setup-cursor-mcp.sh` - Automated setup script
-
-## 🙏 **Acknowledgment**
-
-This working configuration was discovered and validated by the community. Thank you for sharing the solution that works!
+Do **not** commit real passwords into JSON; this repo only ships templates.

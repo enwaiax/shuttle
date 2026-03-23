@@ -1,21 +1,24 @@
 # MCP Client Setup
 
-Shuttle exposes its tools through the [Model Context Protocol (MCP)](https://modelcontextprotocol.io). This page covers how to connect Claude Code, Cursor, and other MCP clients to Shuttle in both stdio and streamable-http modes.
+Shuttle exposes its tools through the [Model Context Protocol (MCP)](https://modelcontextprotocol.io). This page covers how to connect Claude Code, Cursor, and other MCP clients to Shuttle in **stdio** and **streamable-http** (`shuttle serve`) modes.
 
-## Transport Modes
+## Package name vs `uvx` (important)
 
-| Mode | Command | Transport | Web UI | Best for |
-|------|---------|-----------|--------|----------|
-| **stdio** | `shuttle` | stdio (stdin/stdout) | No | Single-user, AI client manages the process lifecycle |
-| **streamable-http** | `shuttle serve` | HTTP (`/mcp/`) | Yes | Multi-user, persistent service, audit via web panel |
+The PyPI package is **`shuttle-mcp`**, but the primary CLI command has always been **`shuttle`**. `uvx <name>` looks for a console script **with the same name as the package**, so:
 
-Both modes share the same SQLite database, so commands logged in stdio mode are visible in the web panel when you switch to service mode.
+| Situation | What to use |
+|-----------|----------------|
+| **Current PyPI releases** (with `shuttle-mcp` script; see `pyproject.toml`) | `"command": "uvx", "args": ["shuttle-mcp"]` or run `uvx shuttle-mcp` |
+| **Very old wheels** (no `shuttle-mcp` entry point) | `"args": ["--from", "shuttle-mcp", "shuttle"]` |
+| **After `uv tool install shuttle-mcp`** (CLI on `PATH`) | `"command": "shuttle"` (no `uvx`) |
 
-## Claude Code
+This is a **small usability / documentation issue**, not a security or protocol bug. Prefer **`uvx shuttle-mcp`** in MCP config when you do not install globally; use **`--from shuttle-mcp shuttle`** only if your PyPI wheel predates the `shuttle-mcp` console script.
 
-### stdio mode
+## Quick copy-paste: stdio vs serve
 
-Create or edit `.mcp.json` in your project root (or `~/.mcp.json` for global config):
+### stdio (AI client spawns Shuttle)
+
+Use the same JSON in **Claude Code** (`.mcp.json` / `~/.mcp.json`) or **Cursor** (`.cursor/mcp.json` or Settings → MCP).
 
 ```json
 {
@@ -28,7 +31,56 @@ Create or edit `.mcp.json` in your project root (or `~/.mcp.json` for global con
 }
 ```
 
-If you installed with `pip` instead of `uvx`:
+**Cursor UI:** **Command** = `uvx`, **Arguments** = `shuttle-mcp` (single arg). If your installed package is too old, use three args: `--from`, `shuttle-mcp`, `shuttle`.
+
+**Claude Code:** there is no universal “one button” in the repo; paste the JSON into the project or user `mcp.json` and restart the client.
+
+### streamable-http (`shuttle serve`)
+
+1. Start the service: `shuttle serve` (note host/port and the **API token** printed for the **web panel** only).
+2. Point the MCP client at the HTTP endpoint (trailing slash required):
+
+```json
+{
+  "mcpServers": {
+    "shuttle": {
+      "url": "http://127.0.0.1:9876/mcp/"
+    }
+  }
+}
+```
+
+**Cursor UI:** add server type **URL**, paste `http://127.0.0.1:9876/mcp/`. The web UI token does **not** go here; `/mcp/` is not gated by that token.
+
+Remote machine: use `http://<host>:<port>/mcp/` and ensure firewall / `--host 0.0.0.0` as needed.
+
+## Transport Modes
+
+| Mode | How you start Shuttle | Transport | Web UI | Best for |
+|------|------------------------|-----------|--------|----------|
+| **stdio** | AI runs `uvx … shuttle` or `shuttle` | stdin/stdout | No | Single-user, client manages process |
+| **streamable-http** | `shuttle serve` | HTTP `…/mcp/` | Yes | Long-running service, audit panel, multiple clients |
+
+Both modes can share the same database; see [Configuration](configuration.md) for `SHUTTLE_DB_URL`.
+
+## Claude Code
+
+### stdio
+
+Create or edit `.mcp.json` in the project root or `~/.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "shuttle": {
+      "command": "uvx",
+      "args": ["shuttle-mcp"]
+    }
+  }
+}
+```
+
+If `shuttle` is on `PATH` after `uv tool install shuttle-mcp`:
 
 ```json
 {
@@ -40,15 +92,11 @@ If you installed with `pip` instead of `uvx`:
 }
 ```
 
-### streamable-http mode
-
-First, start the Shuttle service:
+### streamable-http
 
 ```bash
 shuttle serve
 ```
-
-Then configure `.mcp.json`:
 
 ```json
 {
@@ -60,19 +108,19 @@ Then configure `.mcp.json`:
 }
 ```
 
-Note the trailing slash on `/mcp/` — it is required. Requests to `/mcp` (without the slash) are redirected with a 307.
+Note the trailing slash on `/mcp/`. Requests to `/mcp` without slash get a 307 redirect.
 
 ## Cursor
 
-### stdio mode
+### stdio
 
-Open Cursor Settings, navigate to the MCP section, and add a new server:
+- **Settings → MCP → Add server** (wording may vary by Cursor version):
+  - **Name:** `shuttle`
+  - **Type:** Command (stdio)
+  - **Command:** `uvx`
+  - **Arguments:** `shuttle-mcp` (or `--from`, `shuttle-mcp`, `shuttle` on old wheels)
 
-- **Name**: `shuttle`
-- **Type**: `command`
-- **Command**: `uvx shuttle-mcp`
-
-Or edit `.cursor/mcp.json` in your project:
+Or edit **`.cursor/mcp.json`** (project) or the user-level MCP JSON your build expects:
 
 ```json
 {
@@ -85,15 +133,11 @@ Or edit `.cursor/mcp.json` in your project:
 }
 ```
 
-### streamable-http mode
+### streamable-http
 
-Start the service with `shuttle serve`, then configure in Cursor:
-
-- **Name**: `shuttle`
-- **Type**: `url`
-- **URL**: `http://localhost:9876/mcp/`
-
-Or in `.cursor/mcp.json`:
+1. Run `shuttle serve`.
+2. **Type:** URL
+3. **URL:** `http://localhost:9876/mcp/`
 
 ```json
 {
@@ -105,11 +149,9 @@ Or in `.cursor/mcp.json`:
 }
 ```
 
-## Environment Variable Passthrough
+## Environment variable passthrough
 
-You can pass environment variables through your MCP config to override Shuttle settings. This is useful for pointing Shuttle at a different database or port without changing your system environment.
-
-### Passing `SHUTTLE_DB_URL`
+### `SHUTTLE_DB_URL`
 
 ```json
 {
@@ -125,7 +167,7 @@ You can pass environment variables through your MCP config to override Shuttle s
 }
 ```
 
-### Passing multiple variables
+### Multiple variables
 
 ```json
 {
@@ -143,34 +185,29 @@ You can pass environment variables through your MCP config to override Shuttle s
 }
 ```
 
-See [Configuration](configuration.md) for the full list of `SHUTTLE_*` variables.
+See [Configuration](configuration.md) for all `SHUTTLE_*` variables.
 
 ## Troubleshooting
 
-### "Connection refused" when using streamable-http
+### "Connection refused" (streamable-http)
 
-- Verify `shuttle serve` is running. Check for the process: `ps aux | grep shuttle`.
-- Confirm the port matches. Default is `9876`. If you used `--port`, update the URL accordingly.
-- If binding to `127.0.0.1` (default), the client must be on the same machine. Use `--host 0.0.0.0` to listen on all interfaces.
+- Confirm `shuttle serve` is running and the port matches the URL.
+- Default bind is `127.0.0.1`; use `--host 0.0.0.0` if the client runs on another host.
 
-### MCP tools not appearing in Claude Code / Cursor
+### MCP tools missing (stdio)
 
-- Check that `.mcp.json` is valid JSON (no trailing commas, no comments in non-JSONC files).
-- For stdio mode, verify that the `shuttle` or `uvx` command is on your `PATH`. Run `which shuttle` or `which uvx` to confirm.
-- Restart the AI client after editing `.mcp.json`.
+- Valid JSON, no trailing commas (unless your client supports JSONC).
+- Terminal check: `uvx shuttle-mcp --help` should print Typer help.
+- On wheels without the `shuttle-mcp` script, use `uvx --from shuttle-mcp shuttle --help` instead.
 
-### "Invalid or missing token" errors on the web panel
+### Web panel "Invalid or missing token"
 
-- The web panel API routes require a Bearer token. This does **not** affect MCP transport — the `/mcp/` endpoint is not gated by the web token.
-- If the web panel rejects your token, check `~/.shuttle/web_token` for the current value. Delete the file and restart `shuttle serve` to generate a new one.
+- Applies to **Web/API**, not to `/mcp/`. Use the token from startup output or `~/.shuttle/web_token`.
 
-### Database locked (SQLite)
+### SQLite database locked
 
-- SQLite does not support concurrent writes from multiple processes. If you run both `shuttle` (stdio) and `shuttle serve` simultaneously, you may see locking errors.
-- Solution: switch to PostgreSQL (`SHUTTLE_DB_URL=postgresql+asyncpg://...`) for multi-process setups, or run only one mode at a time.
+- Avoid running **stdio** and **`shuttle serve`** against the same SQLite file at once, or use PostgreSQL for `SHUTTLE_DB_URL`.
 
-### Commands hang or time out
+### Commands hang
 
-- Check SSH connectivity to the target node: `shuttle node test <name>`.
-- Verify the connection pool is not exhausted. Default max is 50 total / 5 per node. Increase via `SHUTTLE_POOL_MAX_TOTAL` and `SHUTTLE_POOL_MAX_PER_NODE`.
-- Check `SHUTTLE_POOL_IDLE_TIMEOUT` — if set very low, connections may be evicted between rapid commands, causing reconnect delays.
+- `shuttle node test <name>`, pool limits in [Configuration](configuration.md).

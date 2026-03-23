@@ -112,11 +112,8 @@ asyncio.run(example())
 ### Prerequisites
 
 ```bash
-# Ensure FastMCP SSH Server is installed
+# From repository root
 uv sync
-
-# Or with pip
-pip install -e .
 ```
 
 ### Environment Setup
