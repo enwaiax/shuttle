@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" role="img" aria-label="Shuttle">
+  <!-- Sync from assets/logo-mark.svg when the mark changes -->
+  <rect x="48" y="48" width="416" height="416" rx="96" fill="#76B900"/>
+  <path
+    d="M152 176 L268 256 L152 336"
+    stroke="#111111"
+    stroke-width="52"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+  <circle cx="348" cy="256" r="32" fill="#111111"/>
+</svg>
