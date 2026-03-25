@@ -434,10 +434,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#ssh_execute" class="md-nav__link">
+  <a href="#ssh_run" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ssh_execute
+        ssh_run
       
     </span>
   </a>
@@ -449,39 +449,6 @@
     <span class="md-ellipsis">
       
         ssh_list_nodes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ssh_session_start" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ssh_session_start
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ssh_session_end" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ssh_session_end
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ssh_session_list" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ssh_session_list
       
     </span>
   </a>
@@ -515,17 +482,6 @@
     <span class="md-ellipsis">
       
         ssh_add_node
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ssh_remove_node" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ssh_remove_node
       
     </span>
   </a>
@@ -595,10 +551,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#ssh_execute" class="md-nav__link">
+  <a href="#ssh_run" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ssh_execute
+        ssh_run
       
     </span>
   </a>
@@ -610,39 +566,6 @@
     <span class="md-ellipsis">
       
         ssh_list_nodes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ssh_session_start" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ssh_session_start
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ssh_session_end" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ssh_session_end
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ssh_session_list" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ssh_session_list
       
     </span>
   </a>
@@ -682,17 +605,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#ssh_remove_node" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ssh_remove_node
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -725,9 +637,9 @@
 
 
 <h1 id="mcp-tools-api-reference">MCP Tools API Reference<a class="headerlink" href="#mcp-tools-api-reference" title="Permanent link">&para;</a></h1>
-<p>Shuttle exposes 9 MCP tools that AI assistants call automatically. This page documents every tool's parameters, return format, and usage examples.</p>
-<h2 id="ssh_execute">ssh_execute<a class="headerlink" href="#ssh_execute" title="Permanent link">&para;</a></h2>
-<p>Run a shell command on a remote SSH node. Supports stateless and session-based (stateful) execution with 4-level security checks.</p>
+<p>Shuttle exposes 5 MCP tools that AI assistants call automatically. This page documents every tool's parameters, return format, and usage examples.</p>
+<h2 id="ssh_run">ssh_run<a class="headerlink" href="#ssh_run" title="Permanent link">&para;</a></h2>
+<p>Run a shell command on a remote SSH node. Sessions are managed automatically: working directory is preserved across calls to the same node. 4-level security checks are applied before execution.</p>
 <table>
 <thead>
 <tr>
@@ -751,14 +663,7 @@
 <td>string</td>
 <td>no</td>
 <td>—</td>
-<td>Node name (required if no <code>session_id</code>)</td>
-</tr>
-<tr>
-<td><code>session_id</code></td>
-<td>string</td>
-<td>no</td>
-<td>—</td>
-<td>Session ID for stateful execution</td>
+<td>Node name (auto-selected if only one node exists)</td>
 </tr>
 <tr>
 <td><code>timeout</code></td>
@@ -784,6 +689,7 @@
 </tbody>
 </table>
 <p><strong>Returns:</strong> Command output (stdout), or an error/security message.</p>
+<p><strong>Session management:</strong> Sessions are implicit. The first call to a node auto-creates a session; subsequent calls reuse it, preserving the working directory.</p>
 <p><strong>Security flow:</strong></p>
 <ol>
 <li>Command is evaluated against security rules</li>
@@ -793,8 +699,11 @@
 <li><code>allow</code> → executes normally</li>
 </ol>
 <p><strong>Example:</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>AI → ssh_execute(node=&quot;gpu-server&quot;, command=&quot;nvidia-smi&quot;)
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>AI → ssh_run(node=&quot;gpu-server&quot;, command=&quot;nvidia-smi&quot;)
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>AI ← &quot;Fri Mar 21 17:07:21 2026\n+---------------------+\n| NVIDIA-SMI 580.105 ...&quot;
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>AI → ssh_run(node=&quot;gpu-server&quot;, command=&quot;cd /workspace &amp;&amp; pwd&quot;)
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>AI ← &quot;/workspace&quot;   # working directory preserved for next call
 </span></code></pre></div>
 <hr />
 <h2 id="ssh_list_nodes">ssh_list_nodes<a class="headerlink" href="#ssh_list_nodes" title="Permanent link">&para;</a></h2>
@@ -823,80 +732,6 @@
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>[--] dev-box     (192.168.1.10:22, user=dev)
 </span></code></pre></div>
 <p>Status icons: <code>[OK]</code> = active, <code>[--]</code> = inactive, <code>[!!]</code> = error.</p>
-<hr />
-<h2 id="ssh_session_start">ssh_session_start<a class="headerlink" href="#ssh_session_start" title="Permanent link">&para;</a></h2>
-<p>Start a stateful SSH session on a node. Sessions preserve the working directory across commands.</p>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Required</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>node</code></td>
-<td>string</td>
-<td>yes</td>
-<td>Node name</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> Session ID and initial working directory.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Session started.
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  session_id: a1b2c3d4
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  node: gpu-server
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  cwd: /home/root
-</span></code></pre></div>
-<hr />
-<h2 id="ssh_session_end">ssh_session_end<a class="headerlink" href="#ssh_session_end" title="Permanent link">&para;</a></h2>
-<p>Close an active SSH session and release its resources.</p>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Required</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>session_id</code></td>
-<td>string</td>
-<td>yes</td>
-<td>Session ID to close</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> Confirmation message.</p>
-<hr />
-<h2 id="ssh_session_list">ssh_session_list<a class="headerlink" href="#ssh_session_list" title="Permanent link">&para;</a></h2>
-<p>List all active SSH sessions.</p>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Required</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><em>(none)</em></td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> One line per session with session ID, node, and current working directory.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>  a1b2c3d4  node=gpu-server  cwd=/workspace/training
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  e5f6g7h8  node=staging     cwd=/var/www/app
-</span></code></pre></div>
 <hr />
 <h2 id="ssh_upload">ssh_upload<a class="headerlink" href="#ssh_upload" title="Permanent link">&para;</a></h2>
 <p>Upload a file to a remote node via SFTP.</p>
@@ -931,7 +766,7 @@
 </tbody>
 </table>
 <p><strong>Returns:</strong> Confirmation or error message.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Uploaded /tmp/model.pt -&gt; gpu-server:/workspace/model.pt
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Uploaded /tmp/model.pt -&gt; gpu-server:/workspace/model.pt
 </span></code></pre></div>
 <hr />
 <h2 id="ssh_download">ssh_download<a class="headerlink" href="#ssh_download" title="Permanent link">&para;</a></h2>
@@ -1041,28 +876,6 @@
 </table>
 <p>Either <code>password</code> or <code>private_key</code> must be provided. Credentials are encrypted at rest.</p>
 <p><strong>Returns:</strong> Confirmation with node ID.</p>
-<hr />
-<h2 id="ssh_remove_node">ssh_remove_node<a class="headerlink" href="#ssh_remove_node" title="Permanent link">&para;</a></h2>
-<p>Remove an SSH node from the configuration and close its connections.</p>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Required</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>name</code></td>
-<td>string</td>
-<td>yes</td>
-<td>Node name to remove</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> Confirmation or error if node not found.</p>
 
 
 

@@ -984,7 +984,7 @@
 <p>Common issues and solutions when using Shuttle.</p>
 <h2 id="connection-issues">Connection Issues<a class="headerlink" href="#connection-issues" title="Permanent link">&para;</a></h2>
 <h3 id="connection-refused-or-timeout">"Connection refused" or timeout<a class="headerlink" href="#connection-refused-or-timeout" title="Permanent link">&para;</a></h3>
-<p><strong>Symptom:</strong> <code>ssh_execute</code> returns a connection error.</p>
+<p><strong>Symptom:</strong> <code>ssh_run</code> returns a connection error.</p>
 <p><strong>Checklist:</strong></p>
 <ol>
 <li>Verify the node is reachable: <code>shuttle node test &lt;name&gt;</code></li>
@@ -1039,7 +1039,7 @@
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">}</span>
 </span></code></pre></div>
 <h3 id="commands-blocked-unexpectedly">Commands blocked unexpectedly<a class="headerlink" href="#commands-blocked-unexpectedly" title="Permanent link">&para;</a></h3>
-<p><strong>Symptom:</strong> <code>ssh_execute</code> returns "BLOCKED" for a command you expect to work.</p>
+<p><strong>Symptom:</strong> <code>ssh_run</code> returns "BLOCKED" for a command you expect to work.</p>
 <p><strong>Solutions:</strong></p>
 <ol>
 <li>Check security rules: open <code>http://localhost:9876</code> → Rules page</li>
@@ -1052,7 +1052,7 @@
 <p>This is expected for commands matching <code>confirm</code>-level rules (e.g., <code>sudo</code>, <code>rm -rf</code>). The AI should:</p>
 <ol>
 <li>Show the user the command and ask for confirmation</li>
-<li>Re-call <code>ssh_execute</code> with the <code>confirm_token</code> parameter</li>
+<li>Re-call <code>ssh_run</code> with the <code>confirm_token</code> parameter</li>
 </ol>
 <h2 id="web-panel-issues">Web Panel Issues<a class="headerlink" href="#web-panel-issues" title="Permanent link">&para;</a></h2>
 <h3 id="cant-access-web-ui">Can't access Web UI<a class="headerlink" href="#cant-access-web-ui" title="Permanent link">&para;</a></h3>
