@@ -682,12 +682,14 @@
 <blockquote>
 <p><strong>"有什么内容返回什么内容"</strong> - 不添加额外格式包装，不定义复杂schema</p>
 </blockquote>
-<p>SSH命令的核心价值在于提供与本地执行完全一致的体验。因此，我们的工具输出应该：
-- ✅ 直接返回原始命令输出
-- ✅ 保持原始格式（包括换行、空格、颜色码等）
-- ✅ 简化错误消息格式
-- ❌ 避免JSON包装
-- ❌ 避免复杂的结构化schema</p>
+<p>SSH命令的核心价值在于提供与本地执行完全一致的体验。因此，我们的工具输出应该：</p>
+<ul>
+<li>✅ 直接返回原始命令输出</li>
+<li>✅ 保持原始格式（包括换行、空格、颜色码等）</li>
+<li>✅ 简化错误消息格式</li>
+<li>❌ 避免JSON包装</li>
+<li>❌ 避免复杂的结构化schema</li>
+</ul>
 <h2 id="fastmcp_1">FastMCP返回类型注解机制<a class="headerlink" href="#fastmcp_1" title="Permanent link">&para;</a></h2>
 <h3 id="_4">关键发现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
 <p>FastMCP根据函数的返回类型注解决定输出格式：</p>
@@ -705,8 +707,12 @@
 </span></code></pre></div>
 <h3 id="_5">自动包装规则<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>有返回类型注解</strong>：</li>
-<li><code>-&gt; str</code>: 包装为 <code>{"result": "内容"}</code></li>
+<li>
+<p><strong>有返回类型注解</strong>：</p>
+</li>
+<li>
+<p><code>-&gt; str</code>: 包装为 <code>{"result": "内容"}</code></p>
+</li>
 <li><code>-&gt; dict</code>: 直接作为结构化内容</li>
 <li>
 <p><code>-&gt; list</code>: 包装为 <code>{"result": [...]}</code></p>
@@ -714,7 +720,9 @@
 <li>
 <p><strong>无返回类型注解</strong>：</p>
 </li>
-<li>任何返回值：仅生成TextContent</li>
+<li>
+<p>任何返回值：仅生成TextContent</p>
+</li>
 <li>无结构化内容（structured_content=None）</li>
 </ol>
 <h2 id="_6">实现方案<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
@@ -732,19 +740,19 @@
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></code></pre></div>
 <h3 id="_8">输出示例<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
-<p><strong>命令执行成功</strong>：
+<p><strong>命令执行成功</strong>：</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>$ ls -la
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>total 16
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>drwxr-xr-x 2 user user 4096 Aug  5 15:00 .
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>drwxr-xr-x 3 user user 4096 Aug  5 14:00 ..
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>-rw-r--r-- 1 user user  123 Aug  5 14:30 file.txt
-</span></code></pre></div></p>
-<p><strong>命令执行失败</strong>：
+</span></code></pre></div>
+<p><strong>命令执行失败</strong>：</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Error: command not found: invalidcmd
-</span></code></pre></div></p>
-<p><strong>连接错误</strong>：
+</span></code></pre></div>
+<p><strong>连接错误</strong>：</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Error: SSH connection [server1] failed: Permission denied
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h2 id="_9">优势<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h2>
 <h3 id="1">1. 用户体验一致性<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
 <ul>
@@ -765,10 +773,12 @@
 <li>便于调试和日志分析</li>
 </ul>
 <h2 id="typescript">与TypeScript版本兼容性<a class="headerlink" href="#typescript" title="Permanent link">&para;</a></h2>
-<p>保持与原TypeScript实现的接口兼容：
-- 相同的工具名称和参数
-- 相同的错误消息格式
-- 相同的输出内容（但格式更简洁）</p>
+<p>保持与原TypeScript实现的接口兼容：</p>
+<ul>
+<li>相同的工具名称和参数</li>
+<li>相同的错误消息格式</li>
+<li>相同的输出内容（但格式更简洁）</li>
+</ul>
 <h2 id="_10">最佳实践<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>始终移除返回类型注解</strong></li>

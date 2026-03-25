@@ -1072,11 +1072,13 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Key behaviors:</strong>
-- Lazy connection: no connections at startup, created on first <code>acquire()</code>
-- SSH multiplexing: single <code>asyncssh.SSHClientConnection</code> supports multiple concurrent channels
-- Background eviction task: runs every 60s, removes expired and dead connections
-- Health check on <code>acquire()</code>: if connection is stale, transparently reconnect</p>
+<p><strong>Key behaviors:</strong></p>
+<ul>
+<li>Lazy connection: no connections at startup, created on first <code>acquire()</code></li>
+<li>SSH multiplexing: single <code>asyncssh.SSHClientConnection</code> supports multiple concurrent channels</li>
+<li>Background eviction task: runs every 60s, removes expired and dead connections</li>
+<li>Health check on <code>acquire()</code>: if connection is stale, transparently reconnect</li>
+</ul>
 <p><strong>Core interface:</strong></p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">ConnectionPool</span><span class="p">:</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="nd">@asynccontextmanager</span>
@@ -1157,16 +1159,20 @@
 </tbody>
 </table>
 <p><strong>Rule evaluation order:</strong> Rules are matched by priority (lower number = higher priority). First match wins. Node-specific rules take precedence over global rules.</p>
-<p><strong>Regex matching semantics:</strong>
-- Patterns are matched against the <strong>full command string</strong> using <code>re.search()</code> (substring match).
-- Patterns are compiled at rule creation time; invalid regex is rejected.
-- To anchor a match, use <code>^</code> and <code>$</code> explicitly (e.g., <code>^rm -rf /$</code> for exact match).
-- Rule creation validates regex and rejects patterns with known ReDoS risks (nested quantifiers). A 100ms execution timeout is enforced per pattern match as a safety net.</p>
-<p><strong>Bypass levels:</strong>
-- <strong>Single-use:</strong> confirm once for this exact command invocation
-- <strong>Session-level:</strong> allow this pattern for the remainder of the session (requested via <code>bypass_scope="session"</code> parameter on <code>ssh_execute</code>)
-- <strong>Permanent:</strong> downgrade rule level via Web panel
-- <strong>Block-level commands CANNOT be bypassed.</strong> Any <code>confirm_token</code> or <code>bypass_scope</code> is ignored for <code>block</code>-level rules; the command is always rejected with an error message.</p>
+<p><strong>Regex matching semantics:</strong></p>
+<ul>
+<li>Patterns are matched against the <strong>full command string</strong> using <code>re.search()</code> (substring match).</li>
+<li>Patterns are compiled at rule creation time; invalid regex is rejected.</li>
+<li>To anchor a match, use <code>^</code> and <code>$</code> explicitly (e.g., <code>^rm -rf /$</code> for exact match).</li>
+<li>Rule creation validates regex and rejects patterns with known ReDoS risks (nested quantifiers). A 100ms execution timeout is enforced per pattern match as a safety net.</li>
+</ul>
+<p><strong>Bypass levels:</strong></p>
+<ul>
+<li><strong>Single-use:</strong> confirm once for this exact command invocation</li>
+<li><strong>Session-level:</strong> allow this pattern for the remainder of the session (requested via <code>bypass_scope="session"</code> parameter on <code>ssh_execute</code>)</li>
+<li><strong>Permanent:</strong> downgrade rule level via Web panel</li>
+<li><strong>Block-level commands CANNOT be bypassed.</strong> Any <code>confirm_token</code> or <code>bypass_scope</code> is ignored for <code>block</code>-level rules; the command is always rejected with an error message.</li>
+</ul>
 <h3 id="44-jump-host-support-coreproxypy">4.4 Jump Host Support (<code>core/proxy.py</code>)<a class="headerlink" href="#44-jump-host-support-coreproxypy" title="Permanent link">&para;</a></h3>
 <p>Uses asyncssh's native <code>tunnel</code> parameter:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">connect_with_proxy</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">NodeConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SSHClientConnection</span><span class="p">:</span>
@@ -1274,12 +1280,14 @@ Configurable: <code>postgresql+asyncpg://...</code>, <code>mysql+aiomysql://...<
 </span></code></pre></div>
 <h3 id="54-credential-security">5.4 Credential Security<a class="headerlink" href="#54-credential-security" title="Permanent link">&para;</a></h3>
 <p>Passwords and key contents encrypted with <code>cryptography.fernet</code>.</p>
-<p><strong>Key management:</strong>
-- On first run, a random Fernet key is generated and stored in <code>~/.shuttle/keyfile</code> with <code>chmod 600</code> permissions.
-- The keyfile is never derived from hardware fingerprints (which are mutable and unreliable).
-- If the keyfile is lost or corrupted, all encrypted credentials become unrecoverable. Shuttle detects this on startup and logs a clear error message directing the user to re-add credentials via <code>shuttle node add</code> or the Web panel.
-- For machine migration: export config via <code>POST /api/data/export</code> (credentials excluded), copy <code>keyfile</code> to the new machine, then import.
-- Users connecting to external databases should use their own secrets management (e.g., HashiCorp Vault).</p>
+<p><strong>Key management:</strong></p>
+<ul>
+<li>On first run, a random Fernet key is generated and stored in <code>~/.shuttle/keyfile</code> with <code>chmod 600</code> permissions.</li>
+<li>The keyfile is never derived from hardware fingerprints (which are mutable and unreliable).</li>
+<li>If the keyfile is lost or corrupted, all encrypted credentials become unrecoverable. Shuttle detects this on startup and logs a clear error message directing the user to re-add credentials via <code>shuttle node add</code> or the Web panel.</li>
+<li>For machine migration: export config via <code>POST /api/data/export</code> (credentials excluded), copy <code>keyfile</code> to the new machine, then import.</li>
+<li>Users connecting to external databases should use their own secrets management (e.g., HashiCorp Vault).</li>
+</ul>
 <hr />
 <h2 id="6-mcp-server">6. MCP Server<a class="headerlink" href="#6-mcp-server" title="Permanent link">&para;</a></h2>
 <h3 id="61-tool-definitions">6.1 Tool Definitions<a class="headerlink" href="#61-tool-definitions" title="Permanent link">&para;</a></h3>
@@ -1342,11 +1350,13 @@ Configurable: <code>postgresql+asyncpg://...</code>, <code>mysql+aiomysql://...<
 <p>The AI client displays this to the user. Upon user approval, the AI re-calls with the one-time <code>confirm_token</code> (60s TTL, bound to specific command + node).</p>
 <p><strong>Token storage:</strong> Tokens are stored in an in-memory <code>dict[str, ConfirmToken]</code> within the MCP process. Each token records the command, node_id, created_at, and is deleted immediately on first use (one-time enforcement). Tokens are not persisted to DB — if the MCP process restarts, all pending tokens are invalidated and the user must re-confirm. <strong>TTL enforcement:</strong> Expiry is checked eagerly at token lookup time (<code>created_at + 60s &lt; now</code> → reject). No background sweeper; stale tokens are lazily cleaned on next lookup or when the dict exceeds 100 entries.</p>
 <p><strong><code>bypass_scope</code> parameter:</strong> Optional, values <code>"once"</code> (default) or <code>"session"</code>. When <code>"session"</code> is used with a valid <code>confirm_token</code>, the matched rule's regex pattern string is added to <code>SSHSession.bypass_patterns</code> (an in-memory <code>set[str]</code>). During security evaluation, <code>bypass_patterns</code> is checked before the rule table — if the command matches any bypassed pattern, it is treated as <code>allow</code> regardless of the rule level. Session-level bypasses are not persisted to DB; they are lost when the session ends or the MCP process restarts.</p>
-<p><strong>Node resolution order for <code>ssh_execute</code>:</strong>
-1. If <code>session_id</code> provided → use the session's bound node
-2. If <code>node</code> provided → use that node by name
-3. If neither provided and exactly one node exists → auto-select it
-4. Otherwise → return error listing available nodes</p>
+<p><strong>Node resolution order for <code>ssh_execute</code>:</strong></p>
+<ol>
+<li>If <code>session_id</code> provided → use the session's bound node</li>
+<li>If <code>node</code> provided → use that node by name</li>
+<li>If neither provided and exactly one node exists → auto-select it</li>
+<li>Otherwise → return error listing available nodes</li>
+</ol>
 <h3 id="63-startup-flow">6.3 Startup Flow<a class="headerlink" href="#63-startup-flow" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>uvx shuttle
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  → Check/create ~/.shuttle/
@@ -1782,11 +1792,13 @@ Configurable: <code>postgresql+asyncpg://...</code>, <code>mysql+aiomysql://...<
 </tr>
 </tbody>
 </table>
-<p>Reusable components from current code:
-- asyncssh connection logic (refactored into pool)
-- Basic command validation patterns (migrated to SecurityRule seeds)
-- FastMCP tool registration patterns
-- CLI structure (Typer, migrated to new commands)</p>
+<p>Reusable components from current code:</p>
+<ul>
+<li>asyncssh connection logic (refactored into pool)</li>
+<li>Basic command validation patterns (migrated to SecurityRule seeds)</li>
+<li>FastMCP tool registration patterns</li>
+<li>CLI structure (Typer, migrated to new commands)</li>
+</ul>
 <hr />
 <h2 id="12-future-considerations-out-of-scope-for-v1">12. Future Considerations (Out of Scope for v1)<a class="headerlink" href="#12-future-considerations-out-of-scope-for-v1" title="Permanent link">&para;</a></h2>
 <ul>

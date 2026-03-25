@@ -1010,11 +1010,13 @@
 <li>Add release notes from CHANGELOG.md</li>
 <li>Click "Publish release"</li>
 </ol>
-<p>This triggers the automated workflow that will:
-1. ✅ Run comprehensive tests
-2. ✅ Build the package
-3. ✅ Publish to TestPyPI
-4. ✅ Publish to PyPI (production)</p>
+<p>This triggers the automated workflow that will:</p>
+<ol>
+<li>✅ Run comprehensive tests</li>
+<li>✅ Build the package</li>
+<li>✅ Publish to TestPyPI</li>
+<li>✅ Publish to PyPI (production)</li>
+</ol>
 <h3 id="option-2-manual-workflow-trigger">Option 2: Manual Workflow Trigger<a class="headerlink" href="#option-2-manual-workflow-trigger" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Go to "Actions" tab in your GitHub repository</li>
@@ -1080,33 +1082,41 @@
 <h2 id="troubleshooting">🛠️ Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
 <h4 id="1-trusted-publishing-not-working">1. Trusted Publishing Not Working<a class="headerlink" href="#1-trusted-publishing-not-working" title="Permanent link">&para;</a></h4>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Error: The user &#39;username&#39; isn&#39;t allowed to upload to project &#39;shuttle-mcp&#39;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Error: The user &#39;username&#39; isn&#39;t allowed to upload to project &#39;shuttle-mcp&#39;
 </span></code></pre></div>
-<strong>Solution</strong>:
-- Verify trusted publishing is configured correctly on PyPI
-- Check that repository name, workflow file, and environment name match exactly
-- Ensure the GitHub environment exists and has proper permissions</p>
+<p><strong>Solution</strong>:</p>
+<ul>
+<li>Verify trusted publishing is configured correctly on PyPI</li>
+<li>Check that repository name, workflow file, and environment name match exactly</li>
+<li>Ensure the GitHub environment exists and has proper permissions</li>
+</ul>
 <h4 id="2-package-already-exists">2. Package Already Exists<a class="headerlink" href="#2-package-already-exists" title="Permanent link">&para;</a></h4>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ERROR: File already exists
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ERROR: File already exists
 </span></code></pre></div>
-<strong>Solution</strong>:
-- You cannot overwrite existing versions on PyPI
-- Bump the version number in <code>pyproject.toml</code>
-- Create a new release</p>
+<p><strong>Solution</strong>:</p>
+<ul>
+<li>You cannot overwrite existing versions on PyPI</li>
+<li>Bump the version number in <code>pyproject.toml</code></li>
+<li>Create a new release</li>
+</ul>
 <h4 id="3-test-failures-in-ci">3. Test Failures in CI<a class="headerlink" href="#3-test-failures-in-ci" title="Permanent link">&para;</a></h4>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Tests failed during GitHub Actions workflow
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Tests failed during GitHub Actions workflow
 </span></code></pre></div>
-<strong>Solution</strong>:
-- Check the Actions tab for detailed error logs
-- Fix failing tests locally first
-- Push fixes and re-trigger the workflow</p>
+<p><strong>Solution</strong>:</p>
+<ul>
+<li>Check the Actions tab for detailed error logs</li>
+<li>Fix failing tests locally first</li>
+<li>Push fixes and re-trigger the workflow</li>
+</ul>
 <h4 id="4-build-failures">4. Build Failures<a class="headerlink" href="#4-build-failures" title="Permanent link">&para;</a></h4>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Package build failed
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Package build failed
 </span></code></pre></div>
-<strong>Solution</strong>:
-- Check <code>pyproject.toml</code> for syntax errors
-- Ensure all required files are included
-- Test build locally: <code>uv build</code></p>
+<p><strong>Solution</strong>:</p>
+<ul>
+<li>Check <code>pyproject.toml</code> for syntax errors</li>
+<li>Ensure all required files are included</li>
+<li>Test build locally: <code>uv build</code></li>
+</ul>
 <h3 id="debug-commands">Debug Commands<a class="headerlink" href="#debug-commands" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Validate package structure</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>tarfile<span class="w"> </span>-l<span class="w"> </span>dist/*.tar.gz
@@ -1131,12 +1141,14 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> GitHub environments exist and are configured</li>
 </ul>
 <h2 id="success-metrics">🎉 Success Metrics<a class="headerlink" href="#success-metrics" title="Permanent link">&para;</a></h2>
-<p>After successful publishing:
-- ✅ Package appears on PyPI
-- ✅ Installation works: <code>uv pip install shuttle-mcp</code>
-- ✅ CLI works: <code>shuttle --version</code>
-- ✅ Import works: <code>python -c "import python_ssh_mcp"</code>
-- ✅ All functionality operational</p>
+<p>After successful publishing:</p>
+<ul>
+<li>✅ Package appears on PyPI</li>
+<li>✅ Installation works: <code>uv pip install shuttle-mcp</code></li>
+<li>✅ CLI works: <code>shuttle --version</code></li>
+<li>✅ Import works: <code>python -c "import python_ssh_mcp"</code></li>
+<li>✅ All functionality operational</li>
+</ul>
 <h2 id="getting-help">📞 Getting Help<a class="headerlink" href="#getting-help" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>PyPI Issues</strong>: <a href="https://pypi.org/help/">PyPI Help</a></li>

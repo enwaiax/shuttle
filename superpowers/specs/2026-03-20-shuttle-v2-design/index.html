@@ -1147,7 +1147,7 @@
 <tr>
 <td><strong>warn</strong></td>
 <td>Execute but log as warning</td>
-<td><code>apt install</code>, <code>pip install</code>, <code>curl | bash</code></td>
+<td><code>apt install</code>, <code>pip install</code>, `curl</td>
 </tr>
 <tr>
 <td><strong>allow</strong></td>
@@ -1180,7 +1180,7 @@
 </span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span>
 </span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span>
 </span></code></pre></div>
-<p><strong>Evaluation strategy:</strong> CommandGuard queries the DB on each <code>evaluate()</code> call to load the effective rule set (global + node-specific). This avoids stale in-memory caches — when rules are edited via Web UI or MCP, the next command evaluation sees the change immediately. The query is lightweight (typically &lt;20 rules) and async, so latency impact is negligible.</p>
+<p><strong>Evaluation strategy:</strong> CommandGuard queries the DB on each <code>evaluate()</code> call to load the effective rule set (global + node-specific). This avoids stale in-memory caches — when rules are edited via Web UI or MCP, the next command evaluation sees the change immediately. The query is lightweight (typically \&lt;20 rules) and async, so latency impact is negligible.</p>
 <p>Node-specific rules take precedence over global defaults when both match the same pattern (same pattern string, lower priority number wins; if tied, node-specific wins).</p>
 <h3 id="confirm-flow">Confirm Flow<a class="headerlink" href="#confirm-flow" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>AI calls ssh_execute(&quot;sudo apt update&quot;, node=&quot;prod&quot;)
@@ -1366,8 +1366,12 @@
 </table>
 <h3 id="changes-to-core">Changes to Core<a class="headerlink" href="#changes-to-core" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong><code>core/security.py</code></strong> — Refactor <code>CommandGuard.evaluate()</code>:</li>
-<li>Change from <code>def evaluate(...)</code> to <code>async def evaluate(...)</code> (sync → async)</li>
+<li>
+<p><strong><code>core/security.py</code></strong> — Refactor <code>CommandGuard.evaluate()</code>:</p>
+</li>
+<li>
+<p>Change from <code>def evaluate(...)</code> to <code>async def evaluate(...)</code> (sync → async)</p>
+</li>
 <li>Add <code>db_session: AsyncSession</code> parameter</li>
 <li>Query rules from DB per call (global + node-specific), instead of in-memory cache</li>
 <li>Remove <code>load_rules()</code> method; rules are always live from DB</li>

@@ -1098,13 +1098,13 @@
 ✅ <strong>Unified Architecture</strong> - Single implementation provides all features</p>
 <h2 id="whats-new-in-v2">🆕 What's New in v2<a class="headerlink" href="#whats-new-in-v2" title="Permanent link">&para;</a></h2>
 <h3 id="1-modern-tool-architecture">1. Modern Tool Architecture<a class="headerlink" href="#1-modern-tool-architecture" title="Permanent link">&para;</a></h3>
-<p><strong>v1 (Traditional)</strong>:
+<p><strong>v1 (Traditional)</strong>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">register_execute_command_tool</span><span class="p">(</span><span class="n">mcp</span><span class="p">:</span> <span class="n">FastMCP</span><span class="p">,</span> <span class="n">ssh_manager</span><span class="p">:</span> <span class="n">SSHConnectionManager</span><span class="p">):</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="nd">@mcp</span><span class="o">.</span><span class="n">tool</span><span class="p">(</span><span class="s2">&quot;execute-command&quot;</span><span class="p">)</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_command</span><span class="p">(</span><span class="n">cmdString</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">connectionName</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        <span class="c1"># Implementation</span>
-</span></code></pre></div></p>
-<p><strong>v2 (Enhanced)</strong>:
+</span></code></pre></div>
+<p><strong>v2 (Enhanced)</strong>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nd">@mcp</span><span class="o">.</span><span class="n">tool</span><span class="p">(</span><span class="s2">&quot;execute-command&quot;</span><span class="p">)</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_command</span><span class="p">(</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">cmdString</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1112,13 +1112,15 @@
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">ctx</span><span class="p">:</span> <span class="n">Context</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="c1"># Implementation with Context integration</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="2-context-dependency-injection">2. Context Dependency Injection<a class="headerlink" href="#2-context-dependency-injection" title="Permanent link">&para;</a></h3>
-<p>v2 tools receive a <code>Context</code> object providing:
-- <strong>Structured Logging</strong>: <code>ctx.logger.info("Operation started")</code>
-- <strong>Progress Reporting</strong>: <code>ctx.progress.update(50, "Processing...")</code>
-- <strong>State Management</strong>: Access to MCP server state and configuration
-- <strong>Enhanced Debugging</strong>: Rich error context and tracing</p>
+<p>v2 tools receive a <code>Context</code> object providing:</p>
+<ul>
+<li><strong>Structured Logging</strong>: <code>ctx.logger.info("Operation started")</code></li>
+<li><strong>Progress Reporting</strong>: <code>ctx.progress.update(50, "Processing...")</code></li>
+<li><strong>State Management</strong>: Access to MCP server state and configuration</li>
+<li><strong>Enhanced Debugging</strong>: Rich error context and tracing</li>
+</ul>
 <h3 id="3-enhanced-tool-metadata">3. Enhanced Tool Metadata<a class="headerlink" href="#3-enhanced-tool-metadata" title="Permanent link">&para;</a></h3>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nd">@mcp</span><span class="o">.</span><span class="n">tool</span><span class="p">(</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="s2">&quot;execute-command&quot;</span><span class="p">,</span>
@@ -1137,17 +1139,17 @@
 </span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="4-automatic-tool-registration">4. Automatic Tool Registration<a class="headerlink" href="#4-automatic-tool-registration" title="Permanent link">&para;</a></h3>
-<p><strong>v1</strong>: Manual registration required
+<p><strong>v1</strong>: Manual registration required</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Multiple registration calls needed</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">register_execute_command_tool</span><span class="p">(</span><span class="n">mcp</span><span class="p">,</span> <span class="n">ssh_manager</span><span class="p">)</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">register_upload_tool</span><span class="p">(</span><span class="n">mcp</span><span class="p">,</span> <span class="n">ssh_manager</span><span class="p">)</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">register_download_tool</span><span class="p">(</span><span class="n">mcp</span><span class="p">,</span> <span class="n">ssh_manager</span><span class="p">)</span>
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">register_list_servers_tool</span><span class="p">(</span><span class="n">mcp</span><span class="p">,</span> <span class="n">ssh_manager</span><span class="p">)</span>
-</span></code></pre></div></p>
-<p><strong>v2</strong>: Automatic via decorators
+</span></code></pre></div>
+<p><strong>v2</strong>: Automatic via decorators</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Tools auto-register when imported</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">.ssh_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">mcp</span>  <span class="c1"># All tools already registered</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h2 id="compatibility-assessment">✅ Compatibility Assessment<a class="headerlink" href="#compatibility-assessment" title="Permanent link">&para;</a></h2>
 <h3 id="api-compatibility-matrix">API Compatibility Matrix<a class="headerlink" href="#api-compatibility-matrix" title="Permanent link">&para;</a></h3>
 <table>
@@ -1222,42 +1224,46 @@
 <h2 id="migration-steps">📝 Migration Steps<a class="headerlink" href="#migration-steps" title="Permanent link">&para;</a></h2>
 <h3 id="phase-1-preparation-5-minutes">Phase 1: Preparation (5 minutes)<a class="headerlink" href="#phase-1-preparation-5-minutes" title="Permanent link">&para;</a></h3>
 <ol>
-<li>
-<p><strong>Backup Current Configuration</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>cp<span class="w"> </span>~/.config/mcp/settings.json<span class="w"> </span>~/.config/mcp/settings.json.backup
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Verify Current Setup</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>fastmcp-ssh-server<span class="w"> </span>--version
+<li><strong>Backup Current Configuration</strong></li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>cp<span class="w"> </span>~/.config/mcp/settings.json<span class="w"> </span>~/.config/mcp/settings.json.backup
+</span></code></pre></div>
+<ol>
+<li><strong>Verify Current Setup</strong></li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>fastmcp-ssh-server<span class="w"> </span>--version
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>fastmcp-ssh-server<span class="w"> </span>--help<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>tools-version
-</span></code></pre></div></p>
-</li>
+</span></code></pre></div>
+<ol>
 <li>
 <p><strong>Test Current Functionality</strong></p>
 </li>
-<li>Verify all SSH connections work</li>
+<li>
+<p>Verify all SSH connections work</p>
+</li>
 <li>Test each tool: execute-command, upload, download, list-servers</li>
 <li>Document any custom configurations</li>
 </ol>
 <h3 id="phase-2-environment-testing-10-minutes">Phase 2: Environment Testing (10 minutes)<a class="headerlink" href="#phase-2-environment-testing-10-minutes" title="Permanent link">&para;</a></h3>
 <ol>
-<li>
-<p><strong>Test v2 in Development</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Test v2 with existing configuration</span>
+<li><strong>Test v2 in Development</strong></li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Test v2 with existing configuration</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>YOUR_HOST<span class="w"> </span>--username<span class="w"> </span>YOUR_USER<span class="w"> </span>--tools-version<span class="w"> </span>v2
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Validate Tool Functionality</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Run the same tests as v1</span>
+</span></code></pre></div>
+<ol>
+<li><strong>Validate Tool Functionality</strong></li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Run the same tests as v1</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Verify identical outputs and behavior</span>
-</span></code></pre></div></p>
-</li>
+</span></code></pre></div>
+<ol>
 <li>
 <p><strong>Monitor Performance</strong></p>
 </li>
-<li>Check startup time</li>
+<li>
+<p>Check startup time</p>
+</li>
 <li>Observe memory usage</li>
 <li>Test command execution speed</li>
 </ol>
@@ -1279,14 +1285,14 @@
 </span></code></pre></div>
 <h4 id="strategy-b-environment-based-migration-recommended-for-production">Strategy B: Environment-Based Migration (Recommended for production)<a class="headerlink" href="#strategy-b-environment-based-migration-recommended-for-production" title="Permanent link">&para;</a></h4>
 <ol>
-<li>
-<p><strong>Set up environment control</strong>:
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SSH_MCP_TOOLS_VERSION</span><span class="o">=</span>v2
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Use auto mode</strong>:
-   <div class="language-json highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="p">{</span>
+<li><strong>Set up environment control</strong>:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SSH_MCP_TOOLS_VERSION</span><span class="o">=</span>v2
+</span></code></pre></div>
+<ol>
+<li><strong>Use auto mode</strong>:</li>
+</ol>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="p">{</span>
 </span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span><span class="nt">&quot;ssh-mcp-server&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fastmcp-ssh-server&quot;</span><span class="p">,</span>
@@ -1298,19 +1304,17 @@
 </span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">  </span><span class="p">}</span>
 </span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="p">}</span>
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Test and rollback if needed</strong>:
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">unset</span><span class="w"> </span>SSH_MCP_TOOLS_VERSION<span class="w">  </span><span class="c1"># Falls back to v1</span>
-</span></code></pre></div></p>
-</li>
+</span></code></pre></div>
+<ol>
+<li><strong>Test and rollback if needed</strong>:</li>
 </ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">unset</span><span class="w"> </span>SSH_MCP_TOOLS_VERSION<span class="w">  </span><span class="c1"># Falls back to v1</span>
+</span></code></pre></div>
 <h4 id="strategy-c-blue-green-deployment">Strategy C: Blue-Green Deployment<a class="headerlink" href="#strategy-c-blue-green-deployment" title="Permanent link">&para;</a></h4>
 <ol>
-<li>
-<p><strong>Deploy v2 alongside v1</strong>:
-   <div class="language-json highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">{</span>
+<li><strong>Deploy v2 alongside v1</strong>:</li>
+</ol>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">{</span>
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span><span class="nt">&quot;ssh-mcp-server-v1&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fastmcp-ssh-server&quot;</span><span class="p">,</span>
@@ -1322,26 +1326,32 @@
 </span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">  </span><span class="p">}</span>
 </span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="p">}</span>
-</span></code></pre></div></p>
-</li>
+</span></code></pre></div>
+<ol>
 <li>
 <p><strong>Test both versions</strong></p>
 </li>
-<li><strong>Switch traffic to v2</strong></li>
-<li><strong>Remove v1 configuration</strong></li>
+<li>
+<p><strong>Switch traffic to v2</strong></p>
+</li>
+<li>
+<p><strong>Remove v1 configuration</strong></p>
+</li>
 </ol>
 <h3 id="phase-4-validation-15-minutes">Phase 4: Validation (15 minutes)<a class="headerlink" href="#phase-4-validation-15-minutes" title="Permanent link">&para;</a></h3>
 <ol>
-<li>
-<p><strong>Functional Testing</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Test all operations</span>
+<li><strong>Functional Testing</strong></li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Test all operations</span>
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;ls -la&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>server<span class="w"> </span>--username<span class="w"> </span>user<span class="w"> </span>--tools-version<span class="w"> </span>v2
-</span></code></pre></div></p>
-</li>
+</span></code></pre></div>
+<ol>
 <li>
 <p><strong>Performance Validation</strong></p>
 </li>
-<li>Compare response times</li>
+<li>
+<p>Compare response times</p>
+</li>
 <li>Monitor resource usage</li>
 <li>
 <p>Check log output quality</p>
@@ -1349,7 +1359,9 @@
 <li>
 <p><strong>Integration Testing</strong></p>
 </li>
-<li>Test with your AI assistant</li>
+<li>
+<p>Test with your AI assistant</p>
+</li>
 <li>Verify all workflows function correctly</li>
 <li>Check error handling</li>
 </ol>
@@ -1458,25 +1470,27 @@
 </table>
 <h3 id="performance-optimization-tips">Performance Optimization Tips<a class="headerlink" href="#performance-optimization-tips" title="Permanent link">&para;</a></h3>
 <ol>
-<li>
-<p><strong>Disable Debug Logging in Production</strong>:
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LOG_LEVEL</span><span class="o">=</span>INFO<span class="w">  </span><span class="c1"># Instead of DEBUG</span>
-</span></code></pre></div></p>
-</li>
+<li><strong>Disable Debug Logging in Production</strong>:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LOG_LEVEL</span><span class="o">=</span>INFO<span class="w">  </span><span class="c1"># Instead of DEBUG</span>
+</span></code></pre></div>
+<ol>
 <li>
 <p><strong>Use Connection Pooling</strong>:</p>
 </li>
-<li>Reuse SSH connections when possible</li>
+<li>
+<p>Reuse SSH connections when possible</p>
+</li>
 <li>
 <p>Configure appropriate connection timeouts</p>
 </li>
 <li>
-<p><strong>Monitor Resource Usage</strong>:
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Monitor memory and CPU usage</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>top<span class="w"> </span>-p<span class="w"> </span><span class="k">$(</span>pgrep<span class="w"> </span>-f<span class="w"> </span>fastmcp-ssh-server<span class="k">)</span>
-</span></code></pre></div></p>
+<p><strong>Monitor Resource Usage</strong>:</p>
 </li>
 </ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Monitor memory and CPU usage</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>top<span class="w"> </span>-p<span class="w"> </span><span class="k">$(</span>pgrep<span class="w"> </span>-f<span class="w"> </span>fastmcp-ssh-server<span class="k">)</span>
+</span></code></pre></div>
 <h2 id="rollback-strategy">🔄 Rollback Strategy<a class="headerlink" href="#rollback-strategy" title="Permanent link">&para;</a></h2>
 <h3 id="immediate-rollback-1-minute">Immediate Rollback (&lt; 1 minute)<a class="headerlink" href="#immediate-rollback-1-minute" title="Permanent link">&para;</a></h3>
 <p>If you encounter issues, rollback immediately:</p>
@@ -1505,43 +1519,47 @@
 </span><span id="__span-23-12"><a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a><span class="p">}</span>
 </span></code></pre></div>
 <h3 id="rollback-verification">Rollback Verification<a class="headerlink" href="#rollback-verification" title="Permanent link">&para;</a></h3>
-<p>After rollback, verify:
-- [ ] Server starts with v1 message: "🔧 Using stable v1 tools implementation"
-- [ ] All functionality restored
-- [ ] Performance returns to baseline
-- [ ] No error messages</p>
+<p>After rollback, verify:</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Server starts with v1 message: "🔧 Using stable v1 tools implementation"</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> All functionality restored</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Performance returns to baseline</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> No error messages</li>
+</ul>
 <h2 id="common-issues-and-solutions">🛠️ Common Issues and Solutions<a class="headerlink" href="#common-issues-and-solutions" title="Permanent link">&para;</a></h2>
 <h3 id="issue-1-context-not-available-warnings">Issue 1: "Context not available" warnings<a class="headerlink" href="#issue-1-context-not-available-warnings" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms</strong>: Warning messages about Context not being available</p>
-<p><strong>Solution</strong>: This is informational only in v2. Tools work without Context.
+<p><strong>Solution</strong>: This is informational only in v2. Tools work without Context.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># These warnings are safe to ignore:</span>
 </span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="c1"># &quot;Context not provided, using fallback logging&quot;</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="issue-2-slightly-increased-memory-usage">Issue 2: Slightly increased memory usage<a class="headerlink" href="#issue-2-slightly-increased-memory-usage" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms</strong>: Higher memory consumption with v2</p>
-<p><strong>Solution</strong>: Expected due to enhanced features. Monitor and optimize if needed:
+<p><strong>Solution</strong>: Expected due to enhanced features. Monitor and optimize if needed:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Check memory usage</span>
 </span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>fastmcp-ssh-server
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="issue-3-environment-variable-not-taking-effect">Issue 3: Environment variable not taking effect<a class="headerlink" href="#issue-3-environment-variable-not-taking-effect" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms</strong>: <code>--tools-version auto</code> not using environment variable</p>
-<p><strong>Solution</strong>: Ensure correct variable name and value:
+<p><strong>Solution</strong>: Ensure correct variable name and value:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SSH_MCP_TOOLS_VERSION</span><span class="o">=</span>v2<span class="w">  </span><span class="c1"># Not SSH_TOOLS_VERSION</span>
 </span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>fastmcp-ssh-server<span class="w"> </span>--tools-version<span class="w"> </span>auto<span class="w">  </span><span class="c1"># Must specify auto</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="issue-4-tool-registration-errors">Issue 4: Tool registration errors<a class="headerlink" href="#issue-4-tool-registration-errors" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms</strong>: "Tool not found" errors with v2</p>
-<p><strong>Solution</strong>: Verify installation and imports:
+<p><strong>Solution</strong>: Verify installation and imports:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Reinstall if needed</span>
 </span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>uv<span class="w"> </span>sync
 </span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>uv<span class="w"> </span>run<span class="w"> </span>fastmcp-ssh-server<span class="w"> </span>--version
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="issue-5-performance-regression">Issue 5: Performance regression<a class="headerlink" href="#issue-5-performance-regression" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms</strong>: Noticeably slower performance with v2</p>
-<p><strong>Solution</strong>:
-1. Check system resources
-2. Verify SSH connection stability
-3. Consider reverting to v1 if performance is critical</p>
+<p><strong>Solution</strong>:</p>
+<ol>
+<li>Check system resources</li>
+<li>Verify SSH connection stability</li>
+<li>Consider reverting to v1 if performance is critical</li>
+</ol>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Quick performance test</span>
 </span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="nb">time</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;date&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>server<span class="w"> </span>--username<span class="w"> </span>user<span class="w"> </span>--tools-version<span class="w"> </span>v2
 </span></code></pre></div>
@@ -1573,12 +1591,14 @@
 <li><strong>Future-Ready Architecture</strong> built on FastMCP best practices</li>
 </ul>
 <p>The migration is designed to be <strong>safe, gradual, and reversible</strong>. Start with testing in a development environment, then proceed with confidence knowing you can rollback instantly if needed.</p>
-<p><strong>Next Steps</strong>:
-1. Read <code>docs/TOOLS_V2_FEATURES.md</code> for detailed feature documentation
-2. Test v2 in your environment
-3. Plan your migration strategy
-4. Execute the migration
-5. Enjoy the enhanced capabilities!</p>
+<p><strong>Next Steps</strong>:</p>
+<ol>
+<li>Read <code>docs/TOOLS_V2_FEATURES.md</code> for detailed feature documentation</li>
+<li>Test v2 in your environment</li>
+<li>Plan your migration strategy</li>
+<li>Execute the migration</li>
+<li>Enjoy the enhanced capabilities!</li>
+</ol>
 <hr />
 <p><em>Migration Guide Version: 1.0.0</em>
 <em>Last Updated: August 2025</em>

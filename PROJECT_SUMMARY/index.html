@@ -1179,71 +1179,91 @@
 <h3 id="task-1">Task 1: 创建最佳实践工具实现 ✅<a class="headerlink" href="#task-1" title="Permanent link">&para;</a></h3>
 <p><strong>Duration</strong>: 2 hours
 <strong>Status</strong>: Completed (Score: 94/100)</p>
-<p><strong>Achievements</strong>:
-- Implemented 4 core tools using FastMCP best practices
-- Direct decorator pattern with automatic registration
-- Context dependency injection integration
-- Enhanced tool metadata and annotations
-- 100% API compatibility maintained</p>
-<p><strong>Key Deliverables</strong>:
-- <code>src/python_ssh_mcp/tools/v2/ssh_tools.py</code> - Modern tool implementations
-- <code>src/python_ssh_mcp/tools/v2/__init__.py</code> - Clean module interface
-- Comprehensive tool testing and verification</p>
+<p><strong>Achievements</strong>:</p>
+<ul>
+<li>Implemented 4 core tools using FastMCP best practices</li>
+<li>Direct decorator pattern with automatic registration</li>
+<li>Context dependency injection integration</li>
+<li>Enhanced tool metadata and annotations</li>
+<li>100% API compatibility maintained</li>
+</ul>
+<p><strong>Key Deliverables</strong>:</p>
+<ul>
+<li><code>src/python_ssh_mcp/tools/v2/ssh_tools.py</code> - Modern tool implementations</li>
+<li><code>src/python_ssh_mcp/tools/v2/__init__.py</code> - Clean module interface</li>
+<li>Comprehensive tool testing and verification</li>
+</ul>
 <h3 id="task-2">Task 2: 实现服务器集成和初始化 ✅<a class="headerlink" href="#task-2" title="Permanent link">&para;</a></h3>
 <p><strong>Duration</strong>: 1.5 hours
 <strong>Status</strong>: Completed (Score: 94/100)</p>
-<p><strong>Achievements</strong>:
-- Created OptimizedSSHMCPServer with v1/v2 mode support
-- Automatic tool registration for v2 mode
-- Backward compatibility with existing SSHMCPServer
-- Environment-based version switching
-- Comprehensive server lifecycle management</p>
-<p><strong>Key Deliverables</strong>:
-- <code>src/python_ssh_mcp/tools/v2/server.py</code> - Enhanced server implementation
-- Multiple initialization patterns (initialize_with_tools, create_v2_server)
-- Server integration testing and validation</p>
+<p><strong>Achievements</strong>:</p>
+<ul>
+<li>Created OptimizedSSHMCPServer with v1/v2 mode support</li>
+<li>Automatic tool registration for v2 mode</li>
+<li>Backward compatibility with existing SSHMCPServer</li>
+<li>Environment-based version switching</li>
+<li>Comprehensive server lifecycle management</li>
+</ul>
+<p><strong>Key Deliverables</strong>:</p>
+<ul>
+<li><code>src/python_ssh_mcp/tools/v2/server.py</code> - Enhanced server implementation</li>
+<li>Multiple initialization patterns (initialize_with_tools, create_v2_server)</li>
+<li>Server integration testing and validation</li>
+</ul>
 <h3 id="task-3">Task 3: 实现对比测试和验证 ✅<a class="headerlink" href="#task-3" title="Permanent link">&para;</a></h3>
 <p><strong>Duration</strong>: 2 hours
 <strong>Status</strong>: Completed (Score: 91/100)</p>
-<p><strong>Achievements</strong>:
-- Comprehensive test suite comparing v1 vs v2
-- API compatibility verification (100% pass rate)
-- Performance benchmarking framework
-- Error handling consistency validation
-- End-to-end workflow testing</p>
-<p><strong>Key Deliverables</strong>:
-- <code>tests/test_tools_v2_comparison.py</code> - Complete comparison test suite
-- Performance benchmark analysis
-- Migration safety verification
-- Detailed compatibility assessment</p>
+<p><strong>Achievements</strong>:</p>
+<ul>
+<li>Comprehensive test suite comparing v1 vs v2</li>
+<li>API compatibility verification (100% pass rate)</li>
+<li>Performance benchmarking framework</li>
+<li>Error handling consistency validation</li>
+<li>End-to-end workflow testing</li>
+</ul>
+<p><strong>Key Deliverables</strong>:</p>
+<ul>
+<li><code>tests/test_tools_v2_comparison.py</code> - Complete comparison test suite</li>
+<li>Performance benchmark analysis</li>
+<li>Migration safety verification</li>
+<li>Detailed compatibility assessment</li>
+</ul>
 <h3 id="task-4-cli">Task 4: 更新CLI和配置支持 ✅<a class="headerlink" href="#task-4-cli" title="Permanent link">&para;</a></h3>
 <p><strong>Duration</strong>: 1 hour
 <strong>Status</strong>: Completed (Score: 95/100)</p>
-<p><strong>Achievements</strong>:
-- Added <code>--tools-version</code> CLI parameter (v1/v2/auto)
-- Environment variable support (SSH_MCP_TOOLS_VERSION)
-- Dynamic server selection based on version
-- Comprehensive parameter validation
-- Updated help documentation and examples</p>
-<p><strong>Key Deliverables</strong>:
-- Enhanced <code>src/python_ssh_mcp/cli.py</code> with version selection
-- Updated <code>src/python_ssh_mcp/main.py</code> with server selection logic
-- CLI testing and validation
-- Updated README documentation</p>
+<p><strong>Achievements</strong>:</p>
+<ul>
+<li>Added <code>--tools-version</code> CLI parameter (v1/v2/auto)</li>
+<li>Environment variable support (SSH_MCP_TOOLS_VERSION)</li>
+<li>Dynamic server selection based on version</li>
+<li>Comprehensive parameter validation</li>
+<li>Updated help documentation and examples</li>
+</ul>
+<p><strong>Key Deliverables</strong>:</p>
+<ul>
+<li>Enhanced <code>src/python_ssh_mcp/cli.py</code> with version selection</li>
+<li>Updated <code>src/python_ssh_mcp/main.py</code> with server selection logic</li>
+<li>CLI testing and validation</li>
+<li>Updated README documentation</li>
+</ul>
 <h3 id="task-5">Task 5: 创建迁移文档和指南 ✅<a class="headerlink" href="#task-5" title="Permanent link">&para;</a></h3>
 <p><strong>Duration</strong>: 1.5 hours
 <strong>Status</strong>: Completed (Score: 97/100)</p>
-<p><strong>Achievements</strong>:
-- Comprehensive migration guide with step-by-step instructions
-- Detailed v2 features documentation
-- Updated best practices based on real implementation
-- Complete project summary and metrics
-- Troubleshooting guides and rollback strategies</p>
-<p><strong>Key Deliverables</strong>:
-- <code>docs/MIGRATION_TO_V2.md</code> - Complete migration guide
-- <code>docs/TOOLS_V2_FEATURES.md</code> - Comprehensive feature documentation
-- Updated <code>docs/FASTMCP_BEST_PRACTICES.md</code> with v2 experiences
-- <code>docs/PROJECT_SUMMARY.md</code> - This summary document</p>
+<p><strong>Achievements</strong>:</p>
+<ul>
+<li>Comprehensive migration guide with step-by-step instructions</li>
+<li>Detailed v2 features documentation</li>
+<li>Updated best practices based on real implementation</li>
+<li>Complete project summary and metrics</li>
+<li>Troubleshooting guides and rollback strategies</li>
+</ul>
+<p><strong>Key Deliverables</strong>:</p>
+<ul>
+<li><code>docs/MIGRATION_TO_V2.md</code> - Complete migration guide</li>
+<li><code>docs/TOOLS_V2_FEATURES.md</code> - Comprehensive feature documentation</li>
+<li>Updated <code>docs/FASTMCP_BEST_PRACTICES.md</code> with v2 experiences</li>
+<li><code>docs/PROJECT_SUMMARY.md</code> - This summary document</li>
+</ul>
 <h2 id="success-metrics">🎯 Success Metrics<a class="headerlink" href="#success-metrics" title="Permanent link">&para;</a></h2>
 <h3 id="technical-success-criteria">Technical Success Criteria ✅<a class="headerlink" href="#technical-success-criteria" title="Permanent link">&para;</a></h3>
 <ul class="task-list">
@@ -1272,16 +1292,16 @@
 </ul>
 <h2 id="key-innovations">🚀 Key Innovations<a class="headerlink" href="#key-innovations" title="Permanent link">&para;</a></h2>
 <h3 id="1-seamless-version-coexistence">1. Seamless Version Coexistence<a class="headerlink" href="#1-seamless-version-coexistence" title="Permanent link">&para;</a></h3>
-<p>The ability to run v1 and v2 side-by-side with instant switching:
+<p>The ability to run v1 and v2 side-by-side with instant switching:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Switch between versions instantly</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>server<span class="w"> </span>--username<span class="w"> </span>user<span class="w"> </span>--tools-version<span class="w"> </span>v1
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>fastmcp-ssh-server<span class="w"> </span>--host<span class="w"> </span>server<span class="w"> </span>--username<span class="w"> </span>user<span class="w"> </span>--tools-version<span class="w"> </span>v2
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Environment-based control</span>
 </span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nv">SSH_MCP_TOOLS_VERSION</span><span class="o">=</span>v2<span class="w"> </span>fastmcp-ssh-server<span class="w"> </span>--tools-version<span class="w"> </span>auto
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="2-zero-configuration-v2-tools">2. Zero-Configuration v2 Tools<a class="headerlink" href="#2-zero-configuration-v2-tools" title="Permanent link">&para;</a></h3>
-<p>Automatic tool registration eliminates boilerplate:
+<p>Automatic tool registration eliminates boilerplate:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># v1: Manual registration required</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">register_execute_command_tool</span><span class="p">(</span><span class="n">mcp</span><span class="p">,</span> <span class="n">ssh_manager</span><span class="p">)</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">register_upload_tool</span><span class="p">(</span><span class="n">mcp</span><span class="p">,</span> <span class="n">ssh_manager</span><span class="p">)</span>
@@ -1289,9 +1309,9 @@
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># v2: Automatic registration</span>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="kn">from</span><span class="w"> </span><span class="nn">.ssh_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">mcp</span>  <span class="c1"># All tools registered!</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="3-context-aware-operation">3. Context-Aware Operation<a class="headerlink" href="#3-context-aware-operation" title="Permanent link">&para;</a></h3>
-<p>Enhanced observability and debugging:
+<p>Enhanced observability and debugging:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># v1: Silent operation</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">ssh_manager</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
@@ -1302,47 +1322,61 @@
 </span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">ssh_manager</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
 </span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="k">if</span> <span class="n">ctx</span><span class="p">:</span>
 </span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="n">ctx</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Command completed&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;output_size&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)})</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="4-progressive-enhancement">4. Progressive Enhancement<a class="headerlink" href="#4-progressive-enhancement" title="Permanent link">&para;</a></h3>
-<p>Enhanced features without breaking existing functionality:
-- Structured logging (when Context available)
-- Progress reporting (when Context available)
-- Rich metadata (enhances tool discovery)
-- Better error messages (improves debugging)</p>
+<p>Enhanced features without breaking existing functionality:</p>
+<ul>
+<li>Structured logging (when Context available)</li>
+<li>Progress reporting (when Context available)</li>
+<li>Rich metadata (enhances tool discovery)</li>
+<li>Better error messages (improves debugging)</li>
+</ul>
 <h2 id="impact-analysis">📊 Impact Analysis<a class="headerlink" href="#impact-analysis" title="Permanent link">&para;</a></h2>
 <h3 id="developer-experience-impact">Developer Experience Impact<a class="headerlink" href="#developer-experience-impact" title="Permanent link">&para;</a></h3>
-<p><strong>Before (v1)</strong>:
-- Manual tool registration (error-prone)
-- Basic error messages
-- Limited debugging capabilities
-- Boilerplate code duplication</p>
-<p><strong>After (v2)</strong>:
-- Automatic tool registration (error-free)
-- Structured error reporting
-- Rich debugging with Context
-- Clean, DRY code patterns</p>
+<p><strong>Before (v1)</strong>:</p>
+<ul>
+<li>Manual tool registration (error-prone)</li>
+<li>Basic error messages</li>
+<li>Limited debugging capabilities</li>
+<li>Boilerplate code duplication</li>
+</ul>
+<p><strong>After (v2)</strong>:</p>
+<ul>
+<li>Automatic tool registration (error-free)</li>
+<li>Structured error reporting</li>
+<li>Rich debugging with Context</li>
+<li>Clean, DRY code patterns</li>
+</ul>
 <h3 id="operations-impact">Operations Impact<a class="headerlink" href="#operations-impact" title="Permanent link">&para;</a></h3>
-<p><strong>Before (v1)</strong>:
-- Basic logging to console
-- Limited observability
-- Manual debugging required
-- Single implementation choice</p>
-<p><strong>After (v2)</strong>:
-- Structured logging with correlation
-- Rich observability features
-- Enhanced debugging capabilities
-- Flexible deployment options</p>
+<p><strong>Before (v1)</strong>:</p>
+<ul>
+<li>Basic logging to console</li>
+<li>Limited observability</li>
+<li>Manual debugging required</li>
+<li>Single implementation choice</li>
+</ul>
+<p><strong>After (v2)</strong>:</p>
+<ul>
+<li>Structured logging with correlation</li>
+<li>Rich observability features</li>
+<li>Enhanced debugging capabilities</li>
+<li>Flexible deployment options</li>
+</ul>
 <h3 id="maintenance-impact">Maintenance Impact<a class="headerlink" href="#maintenance-impact" title="Permanent link">&para;</a></h3>
-<p><strong>Before (v1)</strong>:
-- Multiple registration points to maintain
-- Scattered tool definitions
-- Manual testing requirements
-- Limited metadata for documentation</p>
-<p><strong>After (v2)</strong>:
-- Single source of truth for tools
-- Self-contained tool definitions
-- Automated testing integration
-- Rich metadata for auto-documentation</p>
+<p><strong>Before (v1)</strong>:</p>
+<ul>
+<li>Multiple registration points to maintain</li>
+<li>Scattered tool definitions</li>
+<li>Manual testing requirements</li>
+<li>Limited metadata for documentation</li>
+</ul>
+<p><strong>After (v2)</strong>:</p>
+<ul>
+<li>Single source of truth for tools</li>
+<li>Self-contained tool definitions</li>
+<li>Automated testing integration</li>
+<li>Rich metadata for auto-documentation</li>
+</ul>
 <h2 id="migration-outcomes">🔄 Migration Outcomes<a class="headerlink" href="#migration-outcomes" title="Permanent link">&para;</a></h2>
 <h3 id="migration-statistics">Migration Statistics<a class="headerlink" href="#migration-statistics" title="Permanent link">&para;</a></h3>
 <ul>
@@ -1353,16 +1387,20 @@
 <li><strong>User Impact</strong>: Positive (enhanced features with same interface)</li>
 </ul>
 <h3 id="rollback-capability">Rollback Capability<a class="headerlink" href="#rollback-capability" title="Permanent link">&para;</a></h3>
-<p><strong>Instant Rollback Options</strong>:
-1. CLI parameter: <code>--tools-version v1</code>
-2. Environment variable: <code>SSH_MCP_TOOLS_VERSION=v1</code>
-3. Configuration change: Update args in MCP config
-4. Code rollback: Revert to previous version</p>
-<p><strong>Rollback Testing</strong>:
-- ✅ Rollback time: &lt; 1 minute
-- ✅ Data integrity: Maintained
-- ✅ Configuration: No changes required
-- ✅ Functionality: Fully restored</p>
+<p><strong>Instant Rollback Options</strong>:</p>
+<ol>
+<li>CLI parameter: <code>--tools-version v1</code></li>
+<li>Environment variable: <code>SSH_MCP_TOOLS_VERSION=v1</code></li>
+<li>Configuration change: Update args in MCP config</li>
+<li>Code rollback: Revert to previous version</li>
+</ol>
+<p><strong>Rollback Testing</strong>:</p>
+<ul>
+<li>✅ Rollback time: &lt; 1 minute</li>
+<li>✅ Data integrity: Maintained</li>
+<li>✅ Configuration: No changes required</li>
+<li>✅ Functionality: Fully restored</li>
+</ul>
 <h2 id="lessons-learned">💡 Lessons Learned<a class="headerlink" href="#lessons-learned" title="Permanent link">&para;</a></h2>
 <h3 id="technical-insights">Technical Insights<a class="headerlink" href="#technical-insights" title="Permanent link">&para;</a></h3>
 <ol>
@@ -1391,8 +1429,12 @@
 <h2 id="future-roadmap">🔮 Future Roadmap<a class="headerlink" href="#future-roadmap" title="Permanent link">&para;</a></h2>
 <h3 id="short-term-enhancements-next-3-months">Short-term Enhancements (Next 3 months)<a class="headerlink" href="#short-term-enhancements-next-3-months" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Performance Optimization</strong>:</li>
-<li>Profile v2 implementation for bottlenecks</li>
+<li>
+<p><strong>Performance Optimization</strong>:</p>
+</li>
+<li>
+<p>Profile v2 implementation for bottlenecks</p>
+</li>
 <li>Optimize Context usage patterns</li>
 <li>
 <p>Reduce memory footprint</p>
@@ -1400,7 +1442,9 @@
 <li>
 <p><strong>Enhanced Monitoring</strong>:</p>
 </li>
-<li>Metrics collection integration</li>
+<li>
+<p>Metrics collection integration</p>
+</li>
 <li>Performance dashboards</li>
 <li>
 <p>Alert mechanisms</p>
@@ -1408,14 +1452,20 @@
 <li>
 <p><strong>Advanced Features</strong>:</p>
 </li>
-<li>Connection pooling optimization</li>
+<li>
+<p>Connection pooling optimization</p>
+</li>
 <li>Retry mechanisms with exponential backoff</li>
 <li>Circuit breaker patterns</li>
 </ol>
 <h3 id="medium-term-evolution-3-6-months">Medium-term Evolution (3-6 months)<a class="headerlink" href="#medium-term-evolution-3-6-months" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Plugin System</strong>:</li>
-<li>Custom tool development framework</li>
+<li>
+<p><strong>Plugin System</strong>:</p>
+</li>
+<li>
+<p>Custom tool development framework</p>
+</li>
 <li>Tool marketplace concept</li>
 <li>
 <p>Extension mechanisms</p>
@@ -1423,7 +1473,9 @@
 <li>
 <p><strong>Multi-tenancy Support</strong>:</p>
 </li>
-<li>Isolated environments</li>
+<li>
+<p>Isolated environments</p>
+</li>
 <li>Per-tenant configuration</li>
 <li>
 <p>Resource isolation</p>
@@ -1431,14 +1483,20 @@
 <li>
 <p><strong>Advanced Security</strong>:</p>
 </li>
-<li>Role-based access control</li>
+<li>
+<p>Role-based access control</p>
+</li>
 <li>Audit logging</li>
 <li>Security policy enforcement</li>
 </ol>
 <h3 id="long-term-vision-6-months">Long-term Vision (6+ months)<a class="headerlink" href="#long-term-vision-6-months" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Ecosystem Integration</strong>:</li>
-<li>Integration with monitoring systems</li>
+<li>
+<p><strong>Ecosystem Integration</strong>:</p>
+</li>
+<li>
+<p>Integration with monitoring systems</p>
+</li>
 <li>CI/CD pipeline integration</li>
 <li>
 <p>Container orchestration support</p>
@@ -1446,7 +1504,9 @@
 <li>
 <p><strong>AI/ML Enhancements</strong>:</p>
 </li>
-<li>Intelligent error recovery</li>
+<li>
+<p>Intelligent error recovery</p>
+</li>
 <li>Predictive failure detection</li>
 <li>
 <p>Auto-optimization</p>
@@ -1454,7 +1514,9 @@
 <li>
 <p><strong>Community Growth</strong>:</p>
 </li>
-<li>Open source contributions</li>
+<li>
+<p>Open source contributions</p>
+</li>
 <li>Community tool development</li>
 <li>Best practices sharing</li>
 </ol>

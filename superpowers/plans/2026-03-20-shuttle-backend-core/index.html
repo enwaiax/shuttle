@@ -709,13 +709,23 @@
 </span></code></pre></div>
 <hr />
 <h3 id="task-1-project-scaffold">Task 1: Project Scaffold<a class="headerlink" href="#task-1-project-scaffold" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>pyproject.toml</code>
-- Create: <code>src/shuttle/__init__.py</code>
-- Create: <code>src/shuttle/__main__.py</code>
-- Create: <code>tests/conftest.py</code></p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Remove old source and create new project structure</strong></li>
+<li>
+<p>Create: <code>pyproject.toml</code></p>
+</li>
+<li>
+<p>Create: <code>src/shuttle/__init__.py</code></p>
+</li>
+<li>
+<p>Create: <code>src/shuttle/__main__.py</code></p>
+</li>
+<li>
+<p>Create: <code>tests/conftest.py</code></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Remove old source and create new project structure</strong></p>
+</li>
 </ul>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Remove old source (we&#39;re doing a full rewrite)</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>rm<span class="w"> </span>-rf<span class="w"> </span>src/ssh_mcp
@@ -826,17 +836,35 @@
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 6: Create empty <strong>init</strong>.py files for all subpackages</strong></li>
 </ul>
-<p>Create these files with empty content (or a single docstring):
-- <code>src/shuttle/core/__init__.py</code>
-- <code>src/shuttle/db/__init__.py</code>
-- <code>src/shuttle/mcp/__init__.py</code>
-- <code>src/shuttle/web/__init__.py</code>
-- <code>src/shuttle/web/routes/__init__.py</code>
-- <code>tests/test_core/__init__.py</code>
-- <code>tests/test_db/__init__.py</code>
-- <code>tests/test_mcp/__init__.py</code></p>
+<p>Create these files with empty content (or a single docstring):</p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 7: Verify project installs and pytest runs</strong></li>
+<li>
+<p><code>src/shuttle/core/__init__.py</code></p>
+</li>
+<li>
+<p><code>src/shuttle/db/__init__.py</code></p>
+</li>
+<li>
+<p><code>src/shuttle/mcp/__init__.py</code></p>
+</li>
+<li>
+<p><code>src/shuttle/web/__init__.py</code></p>
+</li>
+<li>
+<p><code>src/shuttle/web/routes/__init__.py</code></p>
+</li>
+<li>
+<p><code>tests/test_core/__init__.py</code></p>
+</li>
+<li>
+<p><code>tests/test_db/__init__.py</code></p>
+</li>
+<li>
+<p><code>tests/test_mcp/__init__.py</code></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 7: Verify project installs and pytest runs</strong></p>
+</li>
 </ul>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>uv<span class="w"> </span>sync
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>--co<span class="w"> </span>-q
@@ -853,12 +881,20 @@
 </span></code></pre></div>
 <hr />
 <h3 id="task-2-database-models">Task 2: Database Models<a class="headerlink" href="#task-2-database-models" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>src/shuttle/db/models.py</code>
-- Create: <code>tests/test_db/test_models.py</code>
-- Modify: <code>tests/conftest.py</code> (add db_engine and db_session fixtures)</p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 0: Add DB fixtures to conftest.py</strong></li>
+<li>
+<p>Create: <code>src/shuttle/db/models.py</code></p>
+</li>
+<li>
+<p>Create: <code>tests/test_db/test_models.py</code></p>
+</li>
+<li>
+<p>Modify: <code>tests/conftest.py</code> (add db_engine and db_session fixtures)</p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 0: Add DB fixtures to conftest.py</strong></p>
+</li>
 </ul>
 <p>Append to <code>tests/conftest.py</code>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pytest_asyncio</span>
@@ -1182,11 +1218,17 @@ Expected: All 5 tests PASS</p>
 </span></code></pre></div>
 <hr />
 <h3 id="task-3-database-engine-init">Task 3: Database Engine &amp; Init<a class="headerlink" href="#task-3-database-engine-init" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>src/shuttle/db/engine.py</code>
-- Modify: <code>src/shuttle/db/__init__.py</code></p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write src/shuttle/db/engine.py</strong></li>
+<li>
+<p>Create: <code>src/shuttle/db/engine.py</code></p>
+</li>
+<li>
+<p>Modify: <code>src/shuttle/db/__init__.py</code></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write src/shuttle/db/engine.py</strong></p>
+</li>
 </ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="sd">&quot;&quot;&quot;Database engine creation and initialization.&quot;&quot;&quot;</span>
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
@@ -1268,11 +1310,17 @@ Expected: All PASS</p>
 </span></code></pre></div>
 <hr />
 <h3 id="task-4-repository-layer-crud">Task 4: Repository Layer (CRUD)<a class="headerlink" href="#task-4-repository-layer-crud" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>src/shuttle/db/repository.py</code>
-- Create: <code>tests/test_db/test_repository.py</code></p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write the test</strong></li>
+<li>
+<p>Create: <code>src/shuttle/db/repository.py</code></p>
+</li>
+<li>
+<p>Create: <code>tests/test_db/test_repository.py</code></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write the test</strong></p>
+</li>
 </ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="sd">&quot;&quot;&quot;Tests for repository CRUD operations.&quot;&quot;&quot;</span>
 </span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
@@ -1532,13 +1580,23 @@ Expected: All 6 tests PASS</p>
 </span></code></pre></div>
 <hr />
 <h3 id="task-5-config-credentials">Task 5: Config &amp; Credentials<a class="headerlink" href="#task-5-config-credentials" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>src/shuttle/core/config.py</code>
-- Create: <code>src/shuttle/core/credentials.py</code>
-- Create: <code>tests/test_core/test_config.py</code>
-- Create: <code>tests/test_core/test_credentials.py</code></p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write tests for credentials</strong></li>
+<li>
+<p>Create: <code>src/shuttle/core/config.py</code></p>
+</li>
+<li>
+<p>Create: <code>src/shuttle/core/credentials.py</code></p>
+</li>
+<li>
+<p>Create: <code>tests/test_core/test_config.py</code></p>
+</li>
+<li>
+<p>Create: <code>tests/test_core/test_credentials.py</code></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write tests for credentials</strong></p>
+</li>
 </ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="sd">&quot;&quot;&quot;Tests for credential encryption/decryption.&quot;&quot;&quot;</span>
 </span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
@@ -1707,11 +1765,17 @@ Expected: All 6 tests PASS</p>
 </span></code></pre></div>
 <hr />
 <h3 id="task-6-command-security-commandguard">Task 6: Command Security (CommandGuard)<a class="headerlink" href="#task-6-command-security-commandguard" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>src/shuttle/core/security.py</code>
-- Create: <code>tests/test_core/test_security.py</code></p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write tests</strong></li>
+<li>
+<p>Create: <code>src/shuttle/core/security.py</code></p>
+</li>
+<li>
+<p>Create: <code>tests/test_core/test_security.py</code></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write tests</strong></p>
+</li>
 </ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="sd">&quot;&quot;&quot;Tests for command security layer.&quot;&quot;&quot;</span>
 </span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>
@@ -1971,12 +2035,20 @@ Expected: All 12 tests PASS</p>
 </span></code></pre></div>
 <hr />
 <h3 id="task-7-connection-pool">Task 7: Connection Pool<a class="headerlink" href="#task-7-connection-pool" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>src/shuttle/core/connection_pool.py</code>
-- Create: <code>src/shuttle/core/proxy.py</code>
-- Create: <code>tests/test_core/test_connection_pool.py</code></p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write tests</strong></li>
+<li>
+<p>Create: <code>src/shuttle/core/connection_pool.py</code></p>
+</li>
+<li>
+<p>Create: <code>src/shuttle/core/proxy.py</code></p>
+</li>
+<li>
+<p>Create: <code>tests/test_core/test_connection_pool.py</code></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write tests</strong></p>
+</li>
 </ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="sd">&quot;&quot;&quot;Tests for SSH connection pool.&quot;&quot;&quot;</span>
 </span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>
@@ -2324,11 +2396,17 @@ Expected: All tests PASS</p>
 </span></code></pre></div>
 <hr />
 <h3 id="task-8-session-manager">Task 8: Session Manager<a class="headerlink" href="#task-8-session-manager" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>src/shuttle/core/session.py</code>
-- Create: <code>tests/test_core/test_session.py</code></p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write tests</strong></li>
+<li>
+<p>Create: <code>src/shuttle/core/session.py</code></p>
+</li>
+<li>
+<p>Create: <code>tests/test_core/test_session.py</code></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write tests</strong></p>
+</li>
 </ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="sd">&quot;&quot;&quot;Tests for session management.&quot;&quot;&quot;</span>
 </span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>
@@ -2554,11 +2632,17 @@ Expected: All tests PASS</p>
 </span></code></pre></div>
 <hr />
 <h3 id="task-9-mcp-tools">Task 9: MCP Tools<a class="headerlink" href="#task-9-mcp-tools" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>src/shuttle/mcp/tools.py</code>
-- Create: <code>tests/test_mcp/test_tools.py</code></p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write tests</strong></li>
+<li>
+<p>Create: <code>src/shuttle/mcp/tools.py</code></p>
+</li>
+<li>
+<p>Create: <code>tests/test_mcp/test_tools.py</code></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write tests</strong></p>
+</li>
 </ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="sd">&quot;&quot;&quot;Tests for MCP tool definitions.&quot;&quot;&quot;</span>
 </span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>
@@ -2927,12 +3011,20 @@ Expected: All 3 tests PASS</p>
 </span></code></pre></div>
 <hr />
 <h3 id="task-10-mcp-server-orchestration">Task 10: MCP Server Orchestration<a class="headerlink" href="#task-10-mcp-server-orchestration" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>src/shuttle/mcp/server.py</code>
-- Create: <code>tests/test_mcp/test_server.py</code>
-- Modify: <code>src/shuttle/mcp/__init__.py</code></p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write test</strong></li>
+<li>
+<p>Create: <code>src/shuttle/mcp/server.py</code></p>
+</li>
+<li>
+<p>Create: <code>tests/test_mcp/test_server.py</code></p>
+</li>
+<li>
+<p>Modify: <code>src/shuttle/mcp/__init__.py</code></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write test</strong></p>
+</li>
 </ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="sd">&quot;&quot;&quot;Tests for MCP server creation.&quot;&quot;&quot;</span>
 </span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>
@@ -3111,11 +3203,17 @@ Expected: PASS</p>
 </span></code></pre></div>
 <hr />
 <h3 id="task-11-cli-entry-point">Task 11: CLI &amp; Entry Point<a class="headerlink" href="#task-11-cli-entry-point" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>src/shuttle/cli.py</code>
-- Modify: <code>src/shuttle/__init__.py</code></p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write src/shuttle/cli.py</strong></li>
+<li>
+<p>Create: <code>src/shuttle/cli.py</code></p>
+</li>
+<li>
+<p>Modify: <code>src/shuttle/__init__.py</code></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write src/shuttle/cli.py</strong></p>
+</li>
 </ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="sd">&quot;&quot;&quot;Shuttle CLI — Typer application.&quot;&quot;&quot;</span>
 </span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>
@@ -3411,10 +3509,14 @@ Expected: PASS</p>
 </span></code></pre></div>
 <hr />
 <h3 id="task-12-default-security-rules-seeding">Task 12: Default Security Rules Seeding<a class="headerlink" href="#task-12-default-security-rules-seeding" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>src/shuttle/db/seeds.py</code></p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write src/shuttle/db/seeds.py</strong></li>
+<li>
+<p>Create: <code>src/shuttle/db/seeds.py</code></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write src/shuttle/db/seeds.py</strong></p>
+</li>
 </ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a><span class="sd">&quot;&quot;&quot;Default security rule seeds.&quot;&quot;&quot;</span>
 </span><span id="__span-45-2"><a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>
@@ -3472,10 +3574,14 @@ Expected: PASS</p>
 </span></code></pre></div>
 <hr />
 <h3 id="task-13-integration-test-full-mcp-flow">Task 13: Integration Test — Full MCP Flow<a class="headerlink" href="#task-13-integration-test-full-mcp-flow" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>tests/test_mcp/test_integration.py</code></p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write integration test</strong></li>
+<li>
+<p>Create: <code>tests/test_mcp/test_integration.py</code></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write integration test</strong></p>
+</li>
 </ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-48-1"><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a><span class="sd">&quot;&quot;&quot;Integration test — full MCP server creation and tool invocation.&quot;&quot;&quot;</span>
 </span><span id="__span-48-2"><a id="__codelineno-48-2" name="__codelineno-48-2" href="#__codelineno-48-2"></a>
@@ -3564,11 +3670,11 @@ Expected: All PASS</p>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 4: Update .gitignore if needed</strong></li>
 </ul>
-<p>Ensure <code>.gitignore</code> has entries for:
+<p>Ensure <code>.gitignore</code> has entries for:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-53-1"><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a>__pycache__/
 </span><span id="__span-53-2"><a id="__codelineno-53-2" name="__codelineno-53-2" href="#__codelineno-53-2"></a>*.egg-info/
 </span><span id="__span-53-3"><a id="__codelineno-53-3" name="__codelineno-53-3" href="#__codelineno-53-3"></a>.shuttle/
-</span></code></pre></div></p>
+</span></code></pre></div>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 5: Final commit</strong></li>
 </ul>

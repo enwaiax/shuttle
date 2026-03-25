@@ -729,13 +729,23 @@
 </span></code></pre></div>
 <hr />
 <h3 id="task-1-fastapi-app-factory-dependencies">Task 1: FastAPI App Factory &amp; Dependencies<a class="headerlink" href="#task-1-fastapi-app-factory-dependencies" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>src/shuttle/web/app.py</code>
-- Create: <code>src/shuttle/web/deps.py</code>
-- Create: <code>tests/test_web/__init__.py</code>
-- Create: <code>tests/test_web/conftest.py</code></p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Create test fixtures</strong></li>
+<li>
+<p>Create: <code>src/shuttle/web/app.py</code></p>
+</li>
+<li>
+<p>Create: <code>src/shuttle/web/deps.py</code></p>
+</li>
+<li>
+<p>Create: <code>tests/test_web/__init__.py</code></p>
+</li>
+<li>
+<p>Create: <code>tests/test_web/conftest.py</code></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Create test fixtures</strong></p>
+</li>
 </ul>
 <p>Create <code>tests/test_web/__init__.py</code> (empty) and <code>tests/test_web/conftest.py</code>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="sd">&quot;&quot;&quot;Shared fixtures for web API tests.&quot;&quot;&quot;</span>
@@ -965,8 +975,10 @@ Expected: PASS</p>
 </span></code></pre></div>
 <hr />
 <h3 id="task-2-pydantic-schemas">Task 2: Pydantic Schemas<a class="headerlink" href="#task-2-pydantic-schemas" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>src/shuttle/web/schemas.py</code></p>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Create: <code>src/shuttle/web/schemas.py</code></li>
+</ul>
 <p>All request/response models for every endpoint. Defined upfront so routes can import them.</p>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Create schemas.py</strong></li>
@@ -1138,12 +1150,20 @@ Expected: PASS</p>
 </span></code></pre></div>
 <hr />
 <h3 id="task-3-nodes-api">Task 3: Nodes API<a class="headerlink" href="#task-3-nodes-api" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>src/shuttle/web/routes/nodes.py</code>
-- Modify: <code>src/shuttle/web/app.py</code> (add router include)
-- Create: <code>tests/test_web/test_nodes_api.py</code> (full test suite)</p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write failing tests</strong></li>
+<li>
+<p>Create: <code>src/shuttle/web/routes/nodes.py</code></p>
+</li>
+<li>
+<p>Modify: <code>src/shuttle/web/app.py</code> (add router include)</p>
+</li>
+<li>
+<p>Create: <code>tests/test_web/test_nodes_api.py</code> (full test suite)</p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write failing tests</strong></p>
+</li>
 </ul>
 <p>Replace <code>tests/test_web/test_nodes_api.py</code>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="sd">&quot;&quot;&quot;Node API endpoint tests.&quot;&quot;&quot;</span>
@@ -1454,12 +1474,20 @@ Expected: PASS (all 8 tests)</p>
 </span></code></pre></div>
 <hr />
 <h3 id="task-4-security-rules-api">Task 4: Security Rules API<a class="headerlink" href="#task-4-security-rules-api" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>src/shuttle/web/routes/rules.py</code>
-- Modify: <code>src/shuttle/web/app.py</code> (add router)
-- Create: <code>tests/test_web/test_rules_api.py</code></p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write failing tests</strong></li>
+<li>
+<p>Create: <code>src/shuttle/web/routes/rules.py</code></p>
+</li>
+<li>
+<p>Modify: <code>src/shuttle/web/app.py</code> (add router)</p>
+</li>
+<li>
+<p>Create: <code>tests/test_web/test_rules_api.py</code></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write failing tests</strong></p>
+</li>
 </ul>
 <p>Create <code>tests/test_web/test_rules_api.py</code>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="sd">&quot;&quot;&quot;Security rules API tests.&quot;&quot;&quot;</span>
@@ -1621,14 +1649,26 @@ Expected: PASS</p>
 </span></code></pre></div>
 <hr />
 <h3 id="task-5-sessions-logs-api">Task 5: Sessions &amp; Logs API<a class="headerlink" href="#task-5-sessions-logs-api" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>src/shuttle/web/routes/sessions.py</code>
-- Create: <code>src/shuttle/web/routes/logs.py</code>
-- Modify: <code>src/shuttle/web/app.py</code>
-- Create: <code>tests/test_web/test_sessions_api.py</code>
-- Create: <code>tests/test_web/test_logs_api.py</code></p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write failing session tests</strong></li>
+<li>
+<p>Create: <code>src/shuttle/web/routes/sessions.py</code></p>
+</li>
+<li>
+<p>Create: <code>src/shuttle/web/routes/logs.py</code></p>
+</li>
+<li>
+<p>Modify: <code>src/shuttle/web/app.py</code></p>
+</li>
+<li>
+<p>Create: <code>tests/test_web/test_sessions_api.py</code></p>
+</li>
+<li>
+<p>Create: <code>tests/test_web/test_logs_api.py</code></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write failing session tests</strong></p>
+</li>
 </ul>
 <p>Create <code>tests/test_web/test_sessions_api.py</code>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="sd">&quot;&quot;&quot;Session API tests.&quot;&quot;&quot;</span>
@@ -1980,14 +2020,26 @@ Expected: ALL PASS</p>
 </span></code></pre></div>
 <hr />
 <h3 id="task-6-settings-data-exportimport-api">Task 6: Settings &amp; Data Export/Import API<a class="headerlink" href="#task-6-settings-data-exportimport-api" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>src/shuttle/web/routes/settings.py</code>
-- Create: <code>src/shuttle/web/routes/data.py</code>
-- Modify: <code>src/shuttle/web/app.py</code>
-- Create: <code>tests/test_web/test_settings_api.py</code>
-- Create: <code>tests/test_web/test_data_api.py</code></p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write failing settings tests</strong></li>
+<li>
+<p>Create: <code>src/shuttle/web/routes/settings.py</code></p>
+</li>
+<li>
+<p>Create: <code>src/shuttle/web/routes/data.py</code></p>
+</li>
+<li>
+<p>Modify: <code>src/shuttle/web/app.py</code></p>
+</li>
+<li>
+<p>Create: <code>tests/test_web/test_settings_api.py</code></p>
+</li>
+<li>
+<p>Create: <code>tests/test_web/test_data_api.py</code></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Write failing settings tests</strong></p>
+</li>
 </ul>
 <p>Create <code>tests/test_web/test_settings_api.py</code>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="sd">&quot;&quot;&quot;Settings API tests.&quot;&quot;&quot;</span>
@@ -2151,11 +2203,17 @@ Expected: ALL PASS</p>
 </span></code></pre></div>
 <hr />
 <h3 id="task-7-wire-cli-shuttle-web-command">Task 7: Wire CLI <code>shuttle web</code> Command<a class="headerlink" href="#task-7-wire-cli-shuttle-web-command" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Modify: <code>src/shuttle/cli.py</code>
-- Modify: <code>src/shuttle/core/config.py</code> (update web_port default to 9876)</p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Update ShuttleConfig web_port default</strong></li>
+<li>
+<p>Modify: <code>src/shuttle/cli.py</code></p>
+</li>
+<li>
+<p>Modify: <code>src/shuttle/core/config.py</code> (update web_port default to 9876)</p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Update ShuttleConfig web_port default</strong></p>
+</li>
 </ul>
 <p>In <code>src/shuttle/core/config.py</code>, change <code>web_port: int = 8000</code> to <code>web_port: int = 9876</code>.</p>
 <ul class="task-list">
@@ -2205,16 +2263,32 @@ Expected: Server starts, visit <a href="http://localhost:9876/api/stats">http://
 </span></code></pre></div>
 <hr />
 <h3 id="task-8-react-project-scaffold">Task 8: React Project Scaffold<a class="headerlink" href="#task-8-react-project-scaffold" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>web/package.json</code>
-- Create: <code>web/tsconfig.json</code>
-- Create: <code>web/vite.config.ts</code>
-- Create: <code>web/index.html</code>
-- Create: <code>web/src/main.tsx</code>
-- Create: <code>web/src/App.tsx</code>
-- Create: <code>web/src/vite-env.d.ts</code></p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Initialize the React project</strong></li>
+<li>
+<p>Create: <code>web/package.json</code></p>
+</li>
+<li>
+<p>Create: <code>web/tsconfig.json</code></p>
+</li>
+<li>
+<p>Create: <code>web/vite.config.ts</code></p>
+</li>
+<li>
+<p>Create: <code>web/index.html</code></p>
+</li>
+<li>
+<p>Create: <code>web/src/main.tsx</code></p>
+</li>
+<li>
+<p>Create: <code>web/src/App.tsx</code></p>
+</li>
+<li>
+<p>Create: <code>web/src/vite-env.d.ts</code></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Initialize the React project</strong></p>
+</li>
 </ul>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="nb">cd</span><span class="w"> </span>/home/local-xiangw/workspace/ssh-mcp
 </span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>web/src
@@ -2374,11 +2448,17 @@ Expected: Server starts, visit <a href="http://localhost:9876/api/stats">http://
 </span></code></pre></div>
 <hr />
 <h3 id="task-9-typescript-types-api-client">Task 9: TypeScript Types &amp; API Client<a class="headerlink" href="#task-9-typescript-types-api-client" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>web/src/types/index.ts</code>
-- Create: <code>web/src/api/client.ts</code></p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Create TypeScript interfaces</strong></li>
+<li>
+<p>Create: <code>web/src/types/index.ts</code></p>
+</li>
+<li>
+<p>Create: <code>web/src/api/client.ts</code></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Create TypeScript interfaces</strong></p>
+</li>
 </ul>
 <p>Create <code>web/src/types/index.ts</code>:</p>
 <div class="language-typescript highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="k">export</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="nx">NodeResponse</span><span class="w"> </span><span class="p">{</span>
@@ -2652,13 +2732,15 @@ Expected: Server starts, visit <a href="http://localhost:9876/api/stats">http://
 </span></code></pre></div>
 <hr />
 <h3 id="task-10-shared-ui-components">Task 10: Shared UI Components<a class="headerlink" href="#task-10-shared-ui-components" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>web/src/components/Layout.tsx</code>
-- Create: <code>web/src/components/Sidebar.tsx</code>
-- Create: <code>web/src/components/Badge.tsx</code>
-- Create: <code>web/src/components/DataTable.tsx</code>
-- Create: <code>web/src/components/EmptyState.tsx</code>
-- Create: <code>web/src/components/ConfirmDialog.tsx</code></p>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Create: <code>web/src/components/Layout.tsx</code></li>
+<li>Create: <code>web/src/components/Sidebar.tsx</code></li>
+<li>Create: <code>web/src/components/Badge.tsx</code></li>
+<li>Create: <code>web/src/components/DataTable.tsx</code></li>
+<li>Create: <code>web/src/components/EmptyState.tsx</code></li>
+<li>Create: <code>web/src/components/ConfirmDialog.tsx</code></li>
+</ul>
 <p>This task creates all shared UI components following macOS design language. Components should be clean, minimal, and reusable.</p>
 <p><strong>Note:</strong> Use the <code>/frontend-design</code> skill when implementing this task to ensure high design quality. The design should reference macOS aesthetics: subtle shadows, rounded corners, translucent sidebar, SF-Pro-like typography (Inter or system font stack), restrained color palette.</p>
 <ul class="task-list">
@@ -2898,9 +2980,9 @@ Expected: Server starts, visit <a href="http://localhost:9876/api/stats">http://
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 4: Verify build</strong></li>
 </ul>
-<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a><span class="nb">cd</span><span class="w"> </span>/home/local-xiangw/workspace/ssh-mcp/web<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>npx<span class="w"> </span>tsc<span class="w"> </span>--noEmit
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a><span class="nb">cd</span><span class="w"> </span>/home/local-xiangw/workspace/ssh-mcp/web<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>npx<span class="w"> </span>tsc<span class="w"> </span>--noEmit
 </span></code></pre></div>
-Expected: No errors</p>
+<p>Expected: No errors</p>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 5: Commit</strong></li>
 </ul>
@@ -2910,10 +2992,14 @@ Expected: No errors</p>
 </span></code></pre></div>
 <hr />
 <h3 id="task-11-dashboard-page">Task 11: Dashboard Page<a class="headerlink" href="#task-11-dashboard-page" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>web/src/pages/Dashboard.tsx</code></p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Create Dashboard page</strong></li>
+<li>
+<p>Create: <code>web/src/pages/Dashboard.tsx</code></p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Create Dashboard page</strong></p>
+</li>
 </ul>
 <p>Create <code>web/src/pages/Dashboard.tsx</code>:</p>
 <div class="language-tsx highlight"><pre><span></span><code><span id="__span-51-1"><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Server</span><span class="p">,</span><span class="w"> </span><span class="nx">Terminal</span><span class="p">,</span><span class="w"> </span><span class="nx">ScrollText</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;lucide-react&quot;</span><span class="p">;</span>
@@ -2993,12 +3079,20 @@ Expected: No errors</p>
 </span></code></pre></div>
 <hr />
 <h3 id="task-12-nodes-page">Task 12: Nodes Page<a class="headerlink" href="#task-12-nodes-page" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>web/src/pages/Nodes.tsx</code>
-- Create: <code>web/src/pages/NodeForm.tsx</code>
-- Modify: <code>web/src/App.tsx</code> (add route)</p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Create Nodes list page</strong></li>
+<li>
+<p>Create: <code>web/src/pages/Nodes.tsx</code></p>
+</li>
+<li>
+<p>Create: <code>web/src/pages/NodeForm.tsx</code></p>
+</li>
+<li>
+<p>Modify: <code>web/src/App.tsx</code> (add route)</p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Create Nodes list page</strong></p>
+</li>
 </ul>
 <p>Create <code>web/src/pages/Nodes.tsx</code>:</p>
 <div class="language-tsx highlight"><pre><span></span><code><span id="__span-54-1"><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useState</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react&quot;</span><span class="p">;</span>
@@ -3242,14 +3336,16 @@ Expected: No errors</p>
 </span></code></pre></div>
 <hr />
 <h3 id="task-13-rules-sessions-logs-settings-pages">Task 13: Rules, Sessions, Logs, Settings Pages<a class="headerlink" href="#task-13-rules-sessions-logs-settings-pages" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Create: <code>web/src/pages/Rules.tsx</code>
-- Create: <code>web/src/pages/RuleForm.tsx</code>
-- Create: <code>web/src/pages/Sessions.tsx</code>
-- Create: <code>web/src/pages/SessionDetail.tsx</code>
-- Create: <code>web/src/pages/Logs.tsx</code>
-- Create: <code>web/src/pages/Settings.tsx</code>
-- Modify: <code>web/src/App.tsx</code> (add all remaining routes)</p>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Create: <code>web/src/pages/Rules.tsx</code></li>
+<li>Create: <code>web/src/pages/RuleForm.tsx</code></li>
+<li>Create: <code>web/src/pages/Sessions.tsx</code></li>
+<li>Create: <code>web/src/pages/SessionDetail.tsx</code></li>
+<li>Create: <code>web/src/pages/Logs.tsx</code></li>
+<li>Create: <code>web/src/pages/Settings.tsx</code></li>
+<li>Modify: <code>web/src/App.tsx</code> (add all remaining routes)</li>
+</ul>
 <p>This is a larger task covering all remaining pages. Each page follows the same pattern as the Nodes page: list view with DataTable, create/edit form dialog, and appropriate actions.</p>
 <p><strong>Note:</strong> Use the <code>/frontend-design</code> skill for each page to ensure consistent macOS design language across the entire app.</p>
 <ul class="task-list">
@@ -3307,11 +3403,17 @@ Expected: No errors</p>
 </span></code></pre></div>
 <hr />
 <h3 id="task-14-build-pipeline-gitignore">Task 14: Build Pipeline &amp; .gitignore<a class="headerlink" href="#task-14-build-pipeline-gitignore" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- Modify: <code>.gitignore</code>
-- Modify: <code>pyproject.toml</code> (add <code>web/</code> as package data)</p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Update .gitignore</strong></li>
+<li>
+<p>Modify: <code>.gitignore</code></p>
+</li>
+<li>
+<p>Modify: <code>pyproject.toml</code> (add <code>web/</code> as package data)</p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Update .gitignore</strong></p>
+</li>
 </ul>
 <p>Add to <code>.gitignore</code>:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-62-1"><a id="__codelineno-62-1" name="__codelineno-62-1" href="#__codelineno-62-1"></a># React build output (embedded in package)
@@ -3336,10 +3438,10 @@ Expected: No errors</p>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 3: Build frontend and verify</strong></li>
 </ul>
-<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-64-1"><a id="__codelineno-64-1" name="__codelineno-64-1" href="#__codelineno-64-1"></a><span class="nb">cd</span><span class="w"> </span>/home/local-xiangw/workspace/ssh-mcp/web<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-64-1"><a id="__codelineno-64-1" name="__codelineno-64-1" href="#__codelineno-64-1"></a><span class="nb">cd</span><span class="w"> </span>/home/local-xiangw/workspace/ssh-mcp/web<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build
 </span><span id="__span-64-2"><a id="__codelineno-64-2" name="__codelineno-64-2" href="#__codelineno-64-2"></a>ls<span class="w"> </span>-la<span class="w"> </span>../src/shuttle/web/static/
 </span></code></pre></div>
-Expected: <code>index.html</code>, <code>assets/</code> directory with JS/CSS bundles.</p>
+<p>Expected: <code>index.html</code>, <code>assets/</code> directory with JS/CSS bundles.</p>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 4: Test full flow</strong></li>
 </ul>
@@ -3356,20 +3458,24 @@ Expected: <code>index.html</code>, <code>assets/</code> directory with JS/CSS bu
 </span></code></pre></div>
 <hr />
 <h3 id="task-15-run-full-test-suite-cleanup">Task 15: Run Full Test Suite &amp; Cleanup<a class="headerlink" href="#task-15-run-full-test-suite-cleanup" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- No new files</p>
+<p><strong>Files:</strong></p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Run full Python test suite</strong></li>
+<li>
+<p>No new files</p>
+</li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 1: Run full Python test suite</strong></p>
+</li>
 </ul>
-<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-67-1"><a id="__codelineno-67-1" name="__codelineno-67-1" href="#__codelineno-67-1"></a><span class="nb">cd</span><span class="w"> </span>/home/local-xiangw/workspace/ssh-mcp<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-v<span class="w"> </span>--tb<span class="o">=</span>short
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-67-1"><a id="__codelineno-67-1" name="__codelineno-67-1" href="#__codelineno-67-1"></a><span class="nb">cd</span><span class="w"> </span>/home/local-xiangw/workspace/ssh-mcp<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-v<span class="w"> </span>--tb<span class="o">=</span>short
 </span></code></pre></div>
-Expected: ALL PASS</p>
+<p>Expected: ALL PASS</p>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 2: Run linter</strong></li>
 </ul>
-<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-68-1"><a id="__codelineno-68-1" name="__codelineno-68-1" href="#__codelineno-68-1"></a><span class="nb">cd</span><span class="w"> </span>/home/local-xiangw/workspace/ssh-mcp<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>ruff<span class="w"> </span>check<span class="w"> </span>src/shuttle/web/<span class="w"> </span>tests/test_web/
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-68-1"><a id="__codelineno-68-1" name="__codelineno-68-1" href="#__codelineno-68-1"></a><span class="nb">cd</span><span class="w"> </span>/home/local-xiangw/workspace/ssh-mcp<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>ruff<span class="w"> </span>check<span class="w"> </span>src/shuttle/web/<span class="w"> </span>tests/test_web/
 </span></code></pre></div>
-Fix any issues.</p>
+<p>Fix any issues.</p>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Step 3: Run frontend type check</strong></li>
 </ul>

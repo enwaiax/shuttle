@@ -815,25 +815,31 @@
 <li><a href="#troubleshooting">Troubleshooting</a></li>
 </ul>
 <h2 id="overview">🎯 Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>The project uses automated GitHub Actions workflows to:
-1. Run comprehensive tests across multiple platforms
-2. Build the package
-3. Publish to TestPyPI for validation
-4. Publish to PyPI for production release</p>
+<p>The project uses automated GitHub Actions workflows to:</p>
+<ol>
+<li>Run comprehensive tests across multiple platforms</li>
+<li>Build the package</li>
+<li>Publish to TestPyPI for validation</li>
+<li>Publish to PyPI for production release</li>
+</ol>
 <h2 id="prerequisites">✅ Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
-<p>Before releasing, ensure:
-- [ ] All tests pass locally: <code>uv run pytest</code>
-- [ ] Code quality checks pass: <code>uv run ruff check</code> and <code>uv run ruff format --check</code>
-- [ ] Type checking passes: <code>uv run mypy src/</code>
-- [ ] Documentation is up to date
-- [ ] CHANGELOG.md is updated with new features/fixes
-- [ ] Version number is bumped in <code>pyproject.toml</code></p>
+<p>Before releasing, ensure:</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> All tests pass locally: <code>uv run pytest</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Code quality checks pass: <code>uv run ruff check</code> and <code>uv run ruff format --check</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Type checking passes: <code>uv run mypy src/</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Documentation is up to date</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> CHANGELOG.md is updated with new features/fixes</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Version number is bumped in <code>pyproject.toml</code></li>
+</ul>
 <h2 id="release-types">📦 Release Types<a class="headerlink" href="#release-types" title="Permanent link">&para;</a></h2>
 <h3 id="semantic-versioning">Semantic Versioning<a class="headerlink" href="#semantic-versioning" title="Permanent link">&para;</a></h3>
-<p>This project follows <a href="https://semver.org/">Semantic Versioning</a>:
-- <strong>MAJOR</strong> (1.0.0): Breaking changes
-- <strong>MINOR</strong> (0.1.0): New features, backward compatible
-- <strong>PATCH</strong> (0.0.1): Bug fixes, backward compatible</p>
+<p>This project follows <a href="https://semver.org/">Semantic Versioning</a>:</p>
+<ul>
+<li><strong>MAJOR</strong> (1.0.0): Breaking changes</li>
+<li><strong>MINOR</strong> (0.1.0): New features, backward compatible</li>
+<li><strong>PATCH</strong> (0.0.1): Bug fixes, backward compatible</li>
+</ul>
 <h3 id="release-channels">Release Channels<a class="headerlink" href="#release-channels" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>Development</strong>: Direct pushes to <code>main</code> trigger tests</li>
@@ -921,16 +927,18 @@
 <h2 id="post-release-tasks">📋 Post-Release Tasks<a class="headerlink" href="#post-release-tasks" title="Permanent link">&para;</a></h2>
 <p>After a successful release:</p>
 <ol>
-<li>
-<p><strong>Verify Installation</strong>:
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>shuttle-mcp
+<li><strong>Verify Installation</strong>:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>shuttle-mcp
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>fastmcp-ssh-server<span class="w"> </span>--help
-</span></code></pre></div></p>
-</li>
+</span></code></pre></div>
+<ol>
 <li>
 <p><strong>Update Documentation</strong>:</p>
 </li>
-<li>Update installation instructions</li>
+<li>
+<p>Update installation instructions</p>
+</li>
 <li>Update version numbers in examples</li>
 <li>
 <p>Update compatibility matrices</p>
@@ -938,7 +946,9 @@
 <li>
 <p><strong>Announce the Release</strong>:</p>
 </li>
-<li>Update project README if needed</li>
+<li>
+<p>Update project README if needed</p>
+</li>
 <li>Share on relevant communities</li>
 <li>
 <p>Update project status</p>
@@ -946,33 +956,39 @@
 <li>
 <p><strong>Monitor</strong>:</p>
 </li>
-<li>Check PyPI download statistics</li>
+<li>
+<p>Check PyPI download statistics</p>
+</li>
 <li>Monitor for user feedback and issues</li>
 <li>Watch for compatibility reports</li>
 </ol>
 <h2 id="troubleshooting">🛠️ Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
 <h4 id="1-version-already-exists-on-pypi">1. Version Already Exists on PyPI<a class="headerlink" href="#1-version-already-exists-on-pypi" title="Permanent link">&para;</a></h4>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ERROR: File already exists
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ERROR: File already exists
 </span></code></pre></div>
-<strong>Solution</strong>: Bump the version number in <code>pyproject.toml</code> and create a new release.</p>
+<p><strong>Solution</strong>: Bump the version number in <code>pyproject.toml</code> and create a new release.</p>
 <h4 id="2-test-failures">2. Test Failures<a class="headerlink" href="#2-test-failures" title="Permanent link">&para;</a></h4>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Tests failed in CI/CD pipeline
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Tests failed in CI/CD pipeline
 </span></code></pre></div>
-<strong>Solution</strong>: Fix the failing tests locally and push the fixes before releasing.</p>
+<p><strong>Solution</strong>: Fix the failing tests locally and push the fixes before releasing.</p>
 <h4 id="3-build-failures">3. Build Failures<a class="headerlink" href="#3-build-failures" title="Permanent link">&para;</a></h4>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Package build failed
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Package build failed
 </span></code></pre></div>
-<strong>Solution</strong>:
-- Check <code>pyproject.toml</code> for syntax errors
-- Ensure all required files are included
-- Verify dependencies are correctly specified</p>
+<p><strong>Solution</strong>:</p>
+<ul>
+<li>Check <code>pyproject.toml</code> for syntax errors</li>
+<li>Ensure all required files are included</li>
+<li>Verify dependencies are correctly specified</li>
+</ul>
 <h4 id="4-authentication-issues">4. Authentication Issues<a class="headerlink" href="#4-authentication-issues" title="Permanent link">&para;</a></h4>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Authentication failed for PyPI
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Authentication failed for PyPI
 </span></code></pre></div>
-<strong>Solution</strong>:
-- Ensure GitHub repository has proper PyPI trusted publishing configured
-- Check that the repository name matches PyPI project name</p>
+<p><strong>Solution</strong>:</p>
+<ul>
+<li>Ensure GitHub repository has proper PyPI trusted publishing configured</li>
+<li>Check that the repository name matches PyPI project name</li>
+</ul>
 <h3 id="debugging-commands">Debugging Commands<a class="headerlink" href="#debugging-commands" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check package metadata</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import importlib.metadata; print(importlib.metadata.metadata(&#39;fastmcp-ssh-server&#39;))&quot;</span>

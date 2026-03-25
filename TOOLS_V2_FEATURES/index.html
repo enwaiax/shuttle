@@ -1114,7 +1114,7 @@
 </ul>
 <h2 id="core-architecture-improvements">🏗️ Core Architecture Improvements<a class="headerlink" href="#core-architecture-improvements" title="Permanent link">&para;</a></h2>
 <h3 id="direct-decorator-pattern">Direct Decorator Pattern<a class="headerlink" href="#direct-decorator-pattern" title="Permanent link">&para;</a></h3>
-<p><strong>v1 Architecture</strong> (Function-based registration):
+<p><strong>v1 Architecture</strong> (Function-based registration):</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">register_execute_command_tool</span><span class="p">(</span><span class="n">mcp</span><span class="p">:</span> <span class="n">FastMCP</span><span class="p">,</span> <span class="n">ssh_manager</span><span class="p">:</span> <span class="n">SSHConnectionManager</span><span class="p">):</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="nd">@mcp</span><span class="o">.</span><span class="n">tool</span><span class="p">(</span><span class="s2">&quot;execute-command&quot;</span><span class="p">)</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_command</span><span class="p">(</span><span class="n">cmdString</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">connectionName</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
@@ -1124,8 +1124,8 @@
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="k">return</span> <span class="n">execute_command</span>
-</span></code></pre></div></p>
-<p><strong>v2 Architecture</strong> (Direct decorator pattern):
+</span></code></pre></div>
+<p><strong>v2 Architecture</strong> (Direct decorator pattern):</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nd">@mcp</span><span class="o">.</span><span class="n">tool</span><span class="p">(</span><span class="s2">&quot;execute-command&quot;</span><span class="p">)</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_command</span><span class="p">(</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">cmdString</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1149,7 +1149,7 @@
 </span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>        <span class="k">if</span> <span class="n">ctx</span><span class="p">:</span>
 </span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>            <span class="n">ctx</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Command execution failed&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)})</span>
 </span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="benefits-of-direct-decoration">Benefits of Direct Decoration<a class="headerlink" href="#benefits-of-direct-decoration" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>Self-Contained Tools</strong>: Each tool is a complete, standalone unit</li>
@@ -1346,7 +1346,7 @@
 </span></code></pre></div>
 <h2 id="automatic-tool-registration">⚡ Automatic Tool Registration<a class="headerlink" href="#automatic-tool-registration" title="Permanent link">&para;</a></h2>
 <h3 id="zero-configuration-setup">Zero-Configuration Setup<a class="headerlink" href="#zero-configuration-setup" title="Permanent link">&para;</a></h3>
-<p><strong>v1 Manual Registration</strong>:
+<p><strong>v1 Manual Registration</strong>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Multiple manual registration calls required</span>
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">_register_tools</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">.tools</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -1360,13 +1360,13 @@
 </span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    <span class="n">register_upload_tool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mcp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ssh_manager</span><span class="p">)</span>
 </span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>    <span class="n">register_download_tool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mcp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ssh_manager</span><span class="p">)</span>
 </span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>    <span class="n">register_list_servers_tool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mcp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ssh_manager</span><span class="p">)</span>
-</span></code></pre></div></p>
-<p><strong>v2 Automatic Registration</strong>:
+</span></code></pre></div>
+<p><strong>v2 Automatic Registration</strong>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Tools automatically register when imported</span>
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">.ssh_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">mcp</span>  <span class="c1"># All 4 tools now registered!</span>
 </span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
 </span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># No manual registration needed</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="registration-process">Registration Process<a class="headerlink" href="#registration-process" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>Import Time</strong>: Tools register themselves when the module is imported</li>
@@ -1487,7 +1487,7 @@
 </span></code></pre></div>
 <h2 id="development-experience">🚀 Development Experience<a class="headerlink" href="#development-experience" title="Permanent link">&para;</a></h2>
 <h3 id="enhanced-ide-support">Enhanced IDE Support<a class="headerlink" href="#enhanced-ide-support" title="Permanent link">&para;</a></h3>
-<p><strong>Type Safety</strong>:
+<p><strong>Type Safety</strong>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Full type annotations</span>
 </span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nd">@mcp</span><span class="o">.</span><span class="n">tool</span><span class="p">(</span><span class="s2">&quot;execute-command&quot;</span><span class="p">)</span>
 </span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_command</span><span class="p">(</span>
@@ -1496,11 +1496,11 @@
 </span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    <span class="n">ctx</span><span class="p">:</span> <span class="n">Context</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>        <span class="c1"># Optional Context injection</span>
 </span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>                              <span class="c1"># Return type annotation</span>
 </span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>    <span class="c1"># Implementation with full IDE support</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <p><strong>Auto-completion</strong>: IDEs can provide better auto-completion with proper type hints</p>
 <p><strong>Error Detection</strong>: Static analysis tools can catch errors before runtime</p>
 <h3 id="debugging-capabilities">Debugging Capabilities<a class="headerlink" href="#debugging-capabilities" title="Permanent link">&para;</a></h3>
-<p><strong>Enhanced Stack Traces</strong>:
+<p><strong>Enhanced Stack Traces</strong>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Context provides rich debugging information</span>
 </span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="k">if</span> <span class="n">ctx</span><span class="p">:</span>
 </span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    <span class="n">ctx</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Debug info&quot;</span><span class="p">,</span> <span class="p">{</span>
@@ -1511,14 +1511,14 @@
 </span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>        <span class="p">},</span>
 </span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>        <span class="s2">&quot;call_stack&quot;</span><span class="p">:</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_stack</span><span class="p">()</span>
 </span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>    <span class="p">})</span>
-</span></code></pre></div></p>
-<p><strong>Operation Tracing</strong>:
+</span></code></pre></div>
+<p><strong>Operation Tracing</strong>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Automatic operation correlation</span>
 </span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="n">operation_id</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">get_operation_id</span><span class="p">()</span>  <span class="c1"># Unique ID for this operation</span>
 </span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="c1"># All logs from this operation include the operation_id</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="testing-improvements">Testing Improvements<a class="headerlink" href="#testing-improvements" title="Permanent link">&para;</a></h3>
-<p><strong>Mock Context for Testing</strong>:
+<p><strong>Mock Context for Testing</strong>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
 </span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mock</span>
 </span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
@@ -1538,26 +1538,26 @@
 </span><span id="__span-21-17"><a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>    <span class="c1"># Verify Context usage</span>
 </span><span id="__span-21-18"><a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>    <span class="n">mock_logger</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">assert_called</span><span class="p">()</span>
 </span><span id="__span-21-19"><a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>    <span class="n">mock_progress</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">assert_called</span><span class="p">()</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h2 id="performance-optimizations">⚡ Performance Optimizations<a class="headerlink" href="#performance-optimizations" title="Permanent link">&para;</a></h2>
 <h3 id="efficient-resource-usage">Efficient Resource Usage<a class="headerlink" href="#efficient-resource-usage" title="Permanent link">&para;</a></h3>
-<p><strong>Connection Pooling</strong>:
+<p><strong>Connection Pooling</strong>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># v2 uses optimized connection management</span>
 </span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="n">ssh_manager</span> <span class="o">=</span> <span class="n">get_ssh_manager</span><span class="p">()</span>  <span class="c1"># Singleton pattern</span>
 </span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="c1"># Connections are reused across tool calls</span>
-</span></code></pre></div></p>
-<p><strong>Lazy Loading</strong>:
+</span></code></pre></div>
+<p><strong>Lazy Loading</strong>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Tools are only loaded when needed</span>
 </span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="nd">@mcp</span><span class="o">.</span><span class="n">tool</span><span class="p">(</span><span class="s2">&quot;heavy-operation&quot;</span><span class="p">)</span>
 </span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">heavy_operation</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">Context</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 </span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>    <span class="c1"># Heavy imports only happen when tool is called</span>
 </span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>    <span class="kn">import</span><span class="w"> </span><span class="nn">heavy_library</span>
 </span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>    <span class="c1"># ... implementation</span>
-</span></code></pre></div></p>
-<p><strong>Memory Optimization</strong>:
+</span></code></pre></div>
+<p><strong>Memory Optimization</strong>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Context objects are lightweight and reused</span>
 </span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="c1"># No memory leaks from tool registration</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="concurrent-execution">Concurrent Execution<a class="headerlink" href="#concurrent-execution" title="Permanent link">&para;</a></h3>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># v2 supports concurrent tool execution</span>
 </span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">parallel_commands</span><span class="p">():</span>
