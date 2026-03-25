@@ -117,8 +117,8 @@ class SessionManager:
         SSHSession
         """
         # Determine the initial working directory
-        result = await self._run_on_node(node_id, "pwd", timeout=10.0)
-        working_directory = result.strip() or "~"
+        pwd_result = await self._run_on_node(node_id, "pwd", timeout=10.0)
+        working_directory = pwd_result["stdout"].strip() or "~"
 
         session = SSHSession(
             session_id=str(uuid.uuid4()),
@@ -190,9 +190,13 @@ class SessionManager:
             raise KeyError(f"Session '{session_id}' not found or already closed.")
 
         wrapped = _wrap_command(command, session.working_directory)
-        raw_output = await self._run_on_node(session.node_id, wrapped, timeout=timeout)
+        run_result = await self._run_on_node(session.node_id, wrapped, timeout=timeout)
 
-        stdout, new_pwd = _parse_sentinel_output(raw_output)
+        raw_stdout = run_result["stdout"]
+        stderr = run_result["stderr"]
+        exit_status = run_result["exit_status"]
+
+        stdout, new_pwd = _parse_sentinel_output(raw_stdout)
 
         # Truncate output
         if len(stdout.encode()) > MAX_OUTPUT_BYTES:
@@ -205,7 +209,8 @@ class SessionManager:
 
         return {
             "stdout": stdout,
-            "exit_status": 0,  # asyncssh result handling done in _run_on_node
+            "stderr": stderr,
+            "exit_status": exit_status,
             "working_directory": session.working_directory,
         }
 
@@ -215,11 +220,18 @@ class SessionManager:
 
     async def _run_on_node(
         self, node_id: str, command: str, timeout: float = 30.0
-    ) -> str:
-        """Acquire a connection from the pool and run *command*, returning stdout."""
+    ) -> dict:
+        """Acquire a connection from the pool and run *command*.
+
+        Returns dict with 'stdout', 'stderr', 'exit_status'.
+        """
         async with self._pool.connection(node_id) as pc:
             result = await pc.conn.run(command, timeout=timeout, check=False)
-            return result.stdout or ""
+            return {
+                "stdout": result.stdout or "",
+                "stderr": result.stderr or "",
+                "exit_status": result.exit_status,
+            }
 
     async def _persist_session(self, session: SSHSession) -> None:
         """Persist session creation to DB if a factory is available."""
