@@ -5,14 +5,17 @@ All notable changes to Shuttle are documented here.
 ## [0.2.2] - 2026-03-22
 
 ### Added
+
 - **`shuttle-mcp` console script** — same entry as `shuttle`, so `uvx shuttle-mcp` matches the PyPI package name without `--from … shuttle`.
 
 ### Changed
+
 - User docs and examples: prefer `uv` / `uvx` over `pip` for install instructions; MCP config examples use `args: ["shuttle-mcp"]` with a short note for older wheels.
 
 ## [0.2.1] - 2026-03-21
 
 ### Changed
+
 - Switch license from ISC to MIT
 - Add pre-commit hooks (ruff, trailing-whitespace, uv-lock)
 - Upgrade ruff rules (isort, pyupgrade, bugbear, comprehensions)
@@ -28,6 +31,7 @@ All notable changes to Shuttle are documented here.
 ## [0.2.0] - 2026-03-21
 
 ### Added
+
 - **Service mode** (`shuttle serve`) — MCP + Web UI on a single HTTP port
 - **Web control panel** — React dark-theme UI with nodes, activity logs, rules, settings
 - **9 MCP tools** — ssh_execute, ssh_upload, ssh_download, ssh_list_nodes, ssh_add_node, ssh_remove_node, ssh_session_start/end/list
@@ -42,6 +46,7 @@ All notable changes to Shuttle are documented here.
 - **Database indexes** — optimized query performance for hot paths
 
 ### Infrastructure
+
 - SQLAlchemy 2.0 async ORM with SQLite WAL mode
 - FastMCP 2.0 with Context dependency injection
 - Typer CLI with interactive and non-interactive modes
@@ -51,6 +56,7 @@ All notable changes to Shuttle are documented here.
 ## [0.1.0] - 2025-12-01
 
 ### Added
+
 - Initial release — basic SSH MCP tools (execute, upload, download)
 - FastMCP server with stdio transport
 - Simple command whitelist/blacklist security

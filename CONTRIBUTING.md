@@ -31,8 +31,8 @@ cd web && npm run dev
 ## Making Changes
 
 1. Create a branch: `git checkout -b feat/your-feature`
-2. Make your changes
-3. Run checks:
+1. Make your changes
+1. Run checks:
 
 ```bash
 # Lint

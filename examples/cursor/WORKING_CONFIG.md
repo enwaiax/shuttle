@@ -46,7 +46,7 @@ With `shuttle serve` running:
 ## Checklist
 
 1. Add SSH nodes: `shuttle node add` (credentials live in Shuttle, not in `mcp.json`).
-2. Restart Cursor after editing MCP config.
-3. If `uvx shuttle-mcp` fails on an old wheel, use `"args": ["--from", "shuttle-mcp", "shuttle"]` or upgrade Shuttle.
+1. Restart Cursor after editing MCP config.
+1. If `uvx shuttle-mcp` fails on an old wheel, use `"args": ["--from", "shuttle-mcp", "shuttle"]` or upgrade Shuttle.
 
 Do **not** commit real passwords into JSON; this repo only ships templates.

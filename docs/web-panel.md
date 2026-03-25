@@ -45,10 +45,10 @@ Note: The `/mcp/` endpoint is **not** gated by this token. MCP clients connect w
 The Overview page is the landing page of the web panel. It shows:
 
 - **Node cards** — One card per configured SSH node displaying:
-    - Node name, host, and username
-    - Connection status (active, error, or unknown)
-    - Latency (if measured)
-    - Quick stats (total commands executed, last seen time)
+  - Node name, host, and username
+  - Connection status (active, error, or unknown)
+  - Latency (if measured)
+  - Quick stats (total commands executed, last seen time)
 - **Delete action** — Each node card has a delete option to remove the node
 - **Summary statistics** — Total nodes, active connections, and recent command count
 
@@ -67,16 +67,16 @@ The Activity page is a command log viewer that shows every command executed thro
 
 Each log entry includes:
 
-| Field | Description |
-|-------|-------------|
-| Command | The executed command text |
-| Node | Which node it ran on |
-| Exit code | Process exit code (0 = success) |
-| stdout / stderr | Full command output |
-| Security level | Which rule level matched (block/confirm/warn/allow) |
-| Duration | Execution time in milliseconds |
-| Timestamp | When the command was executed |
-| Bypassed | Whether a confirm rule was bypassed with a token |
+| Field           | Description                                         |
+| --------------- | --------------------------------------------------- |
+| Command         | The executed command text                           |
+| Node            | Which node it ran on                                |
+| Exit code       | Process exit code (0 = success)                     |
+| stdout / stderr | Full command output                                 |
+| Security level  | Which rule level matched (block/confirm/warn/allow) |
+| Duration        | Execution time in milliseconds                      |
+| Timestamp       | When the command was executed                       |
+| Bypassed        | Whether a confirm rule was bypassed with a token    |
 
 ## Security Rules Page
 

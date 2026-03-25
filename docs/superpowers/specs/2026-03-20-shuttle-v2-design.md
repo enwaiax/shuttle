@@ -4,7 +4,7 @@
 **Status:** Draft
 **Supersedes:** `2026-03-20-shuttle-design.md` (v1)
 
----
+______________________________________________________________________
 
 ## 1. Product Definition
 
@@ -21,14 +21,14 @@ Shuttle is not an SSH client for humans. Humans don't SSH through Shuttle. AI do
 ### Three Core Capabilities
 
 1. **Connection Management** — multi-node SSH with connection pooling, session isolation, jump host support
-2. **Security Control** — 4-level command rules (block/confirm/warn/allow), global defaults + per-node overrides
-3. **Command Audit** — every command logged to DB with full context, queryable per node and time range
+1. **Security Control** — 4-level command rules (block/confirm/warn/allow), global defaults + per-node overrides
+1. **Command Audit** — every command logged to DB with full context, queryable per node and time range
 
 ### Target User
 
 A developer working with AI coding assistants who has one or more remote servers (GPU machines, dev servers, staging environments). Single-user first; shared database enables team use later.
 
----
+______________________________________________________________________
 
 ## 2. Architecture
 
@@ -142,7 +142,7 @@ mysql = ["aiomysql>=0.2.0"]
 
 Commands logged in stdio mode are visible in Web UI when service mode is started (same DB).
 
----
+______________________________________________________________________
 
 ## 3. CLI Commands
 
@@ -164,21 +164,21 @@ shuttle config show                  # Display current configuration
 
 `shuttle web` is removed. Web UI is only available via `shuttle serve`.
 
----
+______________________________________________________________________
 
 ## 4. MCP Tools
 
-| Tool | Description | New in v2 |
-|------|-------------|-----------|
-| `ssh_execute` | Execute command on a node | |
-| `ssh_upload` | SFTP upload | |
-| `ssh_download` | SFTP download | |
-| `ssh_list_nodes` | List all configured nodes | |
-| `ssh_session_start` | Create stateful session | |
-| `ssh_session_end` | Close session | |
-| `ssh_session_list` | List active sessions | |
-| **`ssh_add_node`** | Add a new SSH node | ✓ |
-| **`ssh_remove_node`** | Remove a node by name | ✓ |
+| Tool                  | Description               | New in v2 |
+| --------------------- | ------------------------- | --------- |
+| `ssh_execute`         | Execute command on a node |           |
+| `ssh_upload`          | SFTP upload               |           |
+| `ssh_download`        | SFTP download             |           |
+| `ssh_list_nodes`      | List all configured nodes |           |
+| `ssh_session_start`   | Create stateful session   |           |
+| `ssh_session_end`     | Close session             |           |
+| `ssh_session_list`    | List active sessions      |           |
+| **`ssh_add_node`**    | Add a new SSH node        | ✓         |
+| **`ssh_remove_node`** | Remove a node by name     | ✓         |
 
 ### ssh_add_node
 
@@ -205,18 +205,18 @@ async def ssh_remove_node(name: str) -> str
 
 Closes idle connections for this node via `pool.close_node()`. Active (checked-out) connections are discarded on release. Removes from pool registry, deletes from DB. Returns confirmation.
 
----
+______________________________________________________________________
 
 ## 5. Security Rules
 
 ### 4-Level System
 
-| Level | Behavior | Example |
-|-------|----------|---------|
-| **block** | Reject immediately, return error | `rm -rf /`, `mkfs`, fork bomb |
+| Level       | Behavior                                                                           | Example                                      |
+| ----------- | ---------------------------------------------------------------------------------- | -------------------------------------------- |
+| **block**   | Reject immediately, return error                                                   | `rm -rf /`, `mkfs`, fork bomb                |
 | **confirm** | Return confirmation prompt; AI client shows to user; re-call with token to execute | `sudo .*`, `rm -rf`, `chmod 777`, `shutdown` |
-| **warn** | Execute but log as warning | `apt install`, `pip install`, `curl | bash` |
-| **allow** | Execute silently | Everything else |
+| **warn**    | Execute but log as warning                                                         | `apt install`, `pip install`, \`curl         |
+| **allow**   | Execute silently                                                                   | Everything else                              |
 
 ### Per-Node Inheritance
 
@@ -249,7 +249,7 @@ class SecurityRule(Base):
     created_at: datetime
 ```
 
-**Evaluation strategy:** CommandGuard queries the DB on each `evaluate()` call to load the effective rule set (global + node-specific). This avoids stale in-memory caches — when rules are edited via Web UI or MCP, the next command evaluation sees the change immediately. The query is lightweight (typically <20 rules) and async, so latency impact is negligible.
+**Evaluation strategy:** CommandGuard queries the DB on each `evaluate()` call to load the effective rule set (global + node-specific). This avoids stale in-memory caches — when rules are edited via Web UI or MCP, the next command evaluation sees the change immediately. The query is lightweight (typically \<20 rules) and async, so latency impact is negligible.
 
 Node-specific rules take precedence over global defaults when both match the same pattern (same pattern string, lower priority number wins; if tied, node-specific wins).
 
@@ -267,7 +267,7 @@ AI calls ssh_execute("sudo apt update", node="prod")
 
 No web-based approval. Confirmation happens in the AI client's terminal.
 
----
+______________________________________________________________________
 
 ## 6. Command Audit
 
@@ -302,7 +302,7 @@ command_logs_retention: 30 days (default)
 closed_sessions_retention: 7 days (default)
 ```
 
----
+______________________________________________________________________
 
 ## 7. Web UI
 
@@ -311,7 +311,7 @@ closed_sessions_retention: 7 days (default)
 The Web UI serves two functions:
 
 1. **Audit** — Browse command logs per node, filter by time range, review what AI did
-2. **Manage** — Configure nodes (add/edit/remove), configure security rules (global defaults + per-node overrides), adjust settings
+1. **Manage** — Configure nodes (add/edit/remove), configure security rules (global defaults + per-node overrides), adjust settings
 
 The Web UI does not execute commands, does not provide a terminal, and does not do real-time streaming. It reads from the database.
 
@@ -411,43 +411,44 @@ Bearer token required for all `/api/*` routes in service mode.
 - Frontend: Login page prompts for token, stores in localStorage
 - `verify_token` dependency skipped when no token configured (e.g., tests)
 
----
+______________________________________________________________________
 
 ## 8. Core Engine (Unchanged from v1)
 
 These modules are stable and require no changes:
 
-| Module | Responsibility |
-|--------|---------------|
+| Module                    | Responsibility                                            |
+| ------------------------- | --------------------------------------------------------- |
 | `core/connection_pool.py` | SSH connection pooling with per-node limits, TTL eviction |
-| `core/session.py` | Session isolation, working directory tracking |
-| `core/security.py` | CommandGuard, SecurityLevel, ConfirmTokenStore |
-| `core/proxy.py` | Jump host / SSH tunneling via asyncssh |
-| `core/credentials.py` | Fernet encryption for stored passwords/keys |
-| `core/config.py` | Pydantic Settings with `SHUTTLE_` env prefix |
-| `db/models.py` | SQLAlchemy ORM models |
-| `db/repository.py` | CRUD repositories |
-| `db/engine.py` | Async engine creation, SQLite WAL pragma |
-| `db/seeds.py` | Default security rule seeds |
+| `core/session.py`         | Session isolation, working directory tracking             |
+| `core/security.py`        | CommandGuard, SecurityLevel, ConfirmTokenStore            |
+| `core/proxy.py`           | Jump host / SSH tunneling via asyncssh                    |
+| `core/credentials.py`     | Fernet encryption for stored passwords/keys               |
+| `core/config.py`          | Pydantic Settings with `SHUTTLE_` env prefix              |
+| `db/models.py`            | SQLAlchemy ORM models                                     |
+| `db/repository.py`        | CRUD repositories                                         |
+| `db/engine.py`            | Async engine creation, SQLite WAL pragma                  |
+| `db/seeds.py`             | Default security rule seeds                               |
 
 ### Changes to Core
 
 1. **`core/security.py`** — Refactor `CommandGuard.evaluate()`:
+
    - Change from `def evaluate(...)` to `async def evaluate(...)` (sync → async)
    - Add `db_session: AsyncSession` parameter
    - Query rules from DB per call (global + node-specific), instead of in-memory cache
    - Remove `load_rules()` method; rules are always live from DB
    - **All callers must be updated:** `_execute_command_logic()` in `tools.py` and all tests that call `evaluate()`
 
-2. **`db/models.py`** — Add `source_rule_id` nullable field to `SecurityRule` for tracking which default rule was overridden. **Schema migration:** Since `Base.metadata.create_all()` does not add columns to existing tables, add an explicit migration in `init_db()` that checks for the column and runs `ALTER TABLE security_rules ADD COLUMN source_rule_id VARCHAR(36)` if missing. This is safe for SQLite and PostgreSQL.
+1. **`db/models.py`** — Add `source_rule_id` nullable field to `SecurityRule` for tracking which default rule was overridden. **Schema migration:** Since `Base.metadata.create_all()` does not add columns to existing tables, add an explicit migration in `init_db()` that checks for the column and runs `ALTER TABLE security_rules ADD COLUMN source_rule_id VARCHAR(36)` if missing. This is safe for SQLite and PostgreSQL.
 
-3. **`db/repository.py`** — Add `source_rule_id` parameter to `RuleRepo.create()`. Add `RuleRepo.list_effective(node_id)` method that returns merged global + node-specific rules ordered by priority.
+1. **`db/repository.py`** — Add `source_rule_id` parameter to `RuleRepo.create()`. Add `RuleRepo.list_effective(node_id)` method that returns merged global + node-specific rules ordered by priority.
 
-4. **`web/schemas.py`** — Add `source_rule_id: str | None` to `RuleCreate`, `RuleResponse`.
+1. **`web/schemas.py`** — Add `source_rule_id: str | None` to `RuleCreate`, `RuleResponse`.
 
-5. **`mcp/tools.py`** — Fix pre-existing bug: `CommandLog.node_id` must store the node UUID, not the node name string. Resolve node name to `(name, uuid)` early; use name for pool/guard, uuid for DB logging.
+1. **`mcp/tools.py`** — Fix pre-existing bug: `CommandLog.node_id` must store the node UUID, not the node name string. Resolve node name to `(name, uuid)` early; use name for pool/guard, uuid for DB logging.
 
----
+______________________________________________________________________
 
 ## 9. Project Structure
 
@@ -500,14 +501,15 @@ web/                          # React source
 │       └── Settings.tsx      # Settings modal
 ```
 
----
+______________________________________________________________________
 
 ## 10. Migration from v1
 
 ### What stays
+
 - All `core/*` modules (connection pool, session, proxy, credentials, config)
 - All `db/*` modules (models, repository, engine, seeds)
-- MCP tools (ssh_execute, ssh_upload, ssh_download, ssh_list_nodes, ssh_session_*)
+- MCP tools (ssh_execute, ssh_upload, ssh_download, ssh_list_nodes, ssh_session\_\*)
 - Web API routes (nodes, rules, sessions, logs, settings, stats, data)
 - Web schemas
 - Existing Python tests (with updates for changed interfaces)
@@ -516,6 +518,7 @@ web/                          # React source
 - Existing `~/.shuttle/web_token` files are reused automatically
 
 ### What changes
+
 - `cli.py` — remove `shuttle web`, add `shuttle serve` (wires FastMCP + FastAPI into single ASGI app)
 - `mcp/server.py` — add streamable-http startup, return ASGI sub-app for mounting
 - `mcp/tools.py` — add ssh_add_node, ssh_remove_node; fix node_id bug: resolve node name to `(node_name, node_uuid)` tuple early in `_execute_command_logic()`. Use `node_name` for pool/guard/token_store (they are keyed by name). Use `node_uuid` for `CommandLog.node_id` (FK to nodes.id). This keeps the pool's name-based keying intact while fixing the DB FK violation.
@@ -529,16 +532,19 @@ web/                          # React source
 - `db/models.py` — reconcile tags: change `Node.tags` type annotation from `dict | None` to `list | None` (JSON column stays the same — it's schema-agnostic). Update `NodeRepo.list_all()` filter to only handle lists: `tag in (n.tags or [])`. Existing rows with dict-format tags are treated as empty (no migration needed — this is a new product with minimal data).
 
 ### What's new (frontend)
+
 - `pages/Activity.tsx` — replaces Dashboard + Sessions + Logs as the main view
 - `pages/Login.tsx` — already built in v1
 - Sidebar refactor — node list with status, click to filter activity
 
 ### What's removed
+
 - `shuttle web` CLI command (replaced by `shuttle serve`)
 - Separate Dashboard, Sessions, Logs pages (merged into Activity)
 - Independent web process concept
 - In-memory rule caching in CommandGuard (replaced by per-call DB query)
 
 ### Known v1 bugs fixed in v2
+
 - `CommandLog.node_id` stored node name instead of UUID (FK violation on PostgreSQL)
 - `Node.tags` stored as `dict` wrapper but API expected `list` (inconsistent serialization)

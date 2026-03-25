@@ -10,7 +10,7 @@
 
 **Spec:** `docs/superpowers/specs/2026-03-20-shuttle-v2-design.md`
 
----
+______________________________________________________________________
 
 ## File Structure (changes only)
 
@@ -49,22 +49,28 @@ tests/
 └── test_web/test_rules_api.py    # MODIFY: add effective rules test
 ```
 
----
+______________________________________________________________________
 
 ### Task 1: Fix Node.tags Type (dict → list)
 
 **Files:**
+
 - Modify: `src/shuttle/db/models.py:39`
+
 - Modify: `src/shuttle/db/repository.py:60-74`
+
 - Modify: `tests/test_db/test_repository.py`
 
 - [ ] **Step 1: Update model type annotation**
 
 In `src/shuttle/db/models.py`, line 39, change:
+
 ```python
 tags: Mapped[dict | None] = mapped_column(JSON, nullable=True)
 ```
+
 to:
+
 ```python
 tags: Mapped[list | None] = mapped_column(JSON, nullable=True)
 ```
@@ -72,6 +78,7 @@ tags: Mapped[list | None] = mapped_column(JSON, nullable=True)
 - [ ] **Step 2: Fix tag filtering in NodeRepo.list_all()**
 
 In `src/shuttle/db/repository.py`, replace the tag filtering logic (lines 66-72):
+
 ```python
         if tag:
             nodes = [
@@ -80,7 +87,9 @@ In `src/shuttle/db/repository.py`, replace the tag filtering logic (lines 66-72)
                 if n.tags and tag in (n.tags.values() if isinstance(n.tags, dict) else n.tags)
             ]
 ```
+
 with:
+
 ```python
         if tag:
             nodes = [n for n in nodes if n.tags and tag in n.tags]
@@ -102,20 +111,26 @@ git add src/shuttle/db/models.py src/shuttle/db/repository.py
 git commit -m "fix: change Node.tags from dict to list type, simplify tag filtering"
 ```
 
----
+______________________________________________________________________
 
 ### Task 2: Add source_rule_id to SecurityRule + Schema Migration
 
 **Files:**
+
 - Modify: `src/shuttle/db/models.py:71-94`
+
 - Modify: `src/shuttle/db/repository.py:102-122`
+
 - Modify: `src/shuttle/db/engine.py:57-64`
+
 - Modify: `src/shuttle/web/schemas.py`
+
 - Test: `tests/test_db/test_models.py`
 
 - [ ] **Step 1: Add source_rule_id field to SecurityRule model**
 
 In `src/shuttle/db/models.py`, after line 86 (`enabled`), add:
+
 ```python
     source_rule_id: Mapped[str | None] = mapped_column(
         String(36), nullable=True, default=None
@@ -161,7 +176,9 @@ async def init_db(engine: AsyncEngine) -> None:
 - [ ] **Step 4: Update Pydantic schemas**
 
 In `src/shuttle/web/schemas.py`:
+
 - Add `source_rule_id: str | None = None` to `RuleCreate`
+
 - Add `source_rule_id: str | None = None` to `RuleResponse`
 
 - [ ] **Step 5: Run tests**
@@ -176,15 +193,18 @@ git add src/shuttle/db/models.py src/shuttle/db/repository.py src/shuttle/db/eng
 git commit -m "feat: add source_rule_id to SecurityRule for per-node rule inheritance"
 ```
 
----
+______________________________________________________________________
 
 ### Task 3: Add RuleRepo.list_effective() + API Endpoint
 
 **Depends on:** Task 2 (source_rule_id field must exist in RuleRepo.create())
 
 **Files:**
+
 - Modify: `src/shuttle/db/repository.py`
+
 - Modify: `src/shuttle/web/routes/rules.py`
+
 - Create: `tests/test_web/test_rules_effective.py`
 
 - [ ] **Step 1: Write failing test**
@@ -321,11 +341,12 @@ git add src/shuttle/db/repository.py src/shuttle/web/routes/rules.py tests/test_
 git commit -m "feat: add effective rules endpoint with per-node inheritance"
 ```
 
----
+______________________________________________________________________
 
 ### Task 4: Refactor CommandGuard.evaluate() to Async DB Query
 
 **Files:**
+
 - Modify: `src/shuttle/core/security.py:100-195`
 - Modify: `src/shuttle/mcp/tools.py:111`
 - Modify: `src/shuttle/mcp/server.py:88-102`
@@ -408,6 +429,7 @@ class CommandGuard:
 Remove `load_rules()`, `_CompiledRule`, and the `_rules` attribute entirely.
 
 Add the import at the top of the file:
+
 ```python
 from sqlalchemy import select
 ```
@@ -419,7 +441,9 @@ In `src/shuttle/mcp/tools.py`, the `_execute_command_logic` function calls `guar
 ```python
 decision = guard.evaluate(command, resolved_node, bypass_patterns)
 ```
+
 to:
+
 ```python
 async with db_session_ctx() as db_sess:
     decision = await guard.evaluate(command, resolved_node, db_sess, bypass_patterns)
@@ -448,9 +472,10 @@ guard = CommandGuard()
 - [ ] **Step 4: Update security tests**
 
 In `tests/test_core/test_security.py`, update all `evaluate()` calls to be async and pass a DB session. The test will need to:
+
 1. Create an in-memory SQLite DB
-2. Seed rules into the DB
-3. Pass the session to `evaluate()`
+1. Seed rules into the DB
+1. Pass the session to `evaluate()`
 
 Replace the `_guard()` helper and tests:
 
@@ -533,11 +558,12 @@ git add src/shuttle/core/security.py src/shuttle/mcp/tools.py src/shuttle/mcp/se
 git commit -m "refactor: CommandGuard.evaluate() async with per-call DB query for live rule updates"
 ```
 
----
+______________________________________________________________________
 
 ### Task 5: Fix CommandLog node_id Bug (name → UUID)
 
 **Files:**
+
 - Modify: `src/shuttle/mcp/tools.py:87-108, 175-187`
 
 - [ ] **Step 1: Resolve node to (name, uuid) tuple**
@@ -550,6 +576,7 @@ resolved_node_id: str | None = None  # node UUID (for DB logging)
 ```
 
 After resolving via session:
+
 ```python
 resolved_node = session_obj.node_id  # This is actually the node name
 # Look up UUID
@@ -560,6 +587,7 @@ async with db_session_ctx() as db_sess:
 ```
 
 After resolving via explicit node name or auto-select:
+
 ```python
 resolved_node = all_nodes[0].name
 resolved_node_id = all_nodes[0].id
@@ -589,12 +617,14 @@ git add src/shuttle/mcp/tools.py
 git commit -m "fix: store node UUID (not name) in CommandLog.node_id for correct FK"
 ```
 
----
+______________________________________________________________________
 
 ### Task 6: Add ssh_add_node and ssh_remove_node MCP Tools
 
 **Files:**
+
 - Modify: `src/shuttle/mcp/tools.py`
+
 - Modify: `src/shuttle/mcp/server.py` (pass credential_manager to register_tools)
 
 - [ ] **Step 1: Add tools to register_tools()**
@@ -708,11 +738,12 @@ git add src/shuttle/mcp/tools.py src/shuttle/mcp/server.py
 git commit -m "feat: add ssh_add_node and ssh_remove_node MCP tools"
 ```
 
----
+______________________________________________________________________
 
 ### Task 7: Refactor web/deps.py for Dependency Injection
 
 **Files:**
+
 - Modify: `src/shuttle/web/deps.py`
 - Modify: `src/shuttle/web/app.py`
 - Modify: `tests/test_web/conftest.py`
@@ -806,11 +837,12 @@ git add src/shuttle/web/deps.py src/shuttle/web/app.py
 git commit -m "refactor: deps.py supports injected engine/session_factory for service mode"
 ```
 
----
+______________________________________________________________________
 
 ### Task 8: Add `shuttle serve` Command (Service Mode)
 
 **Files:**
+
 - Modify: `src/shuttle/mcp/server.py`
 - Modify: `src/shuttle/cli.py`
 
@@ -1013,11 +1045,12 @@ git add src/shuttle/mcp/server.py src/shuttle/cli.py
 git commit -m "feat: add shuttle serve command — unified MCP + FastAPI on single ASGI app"
 ```
 
----
+______________________________________________________________________
 
 ### Task 9: Frontend — Activity Page + Sidebar Refactor
 
 **Files:**
+
 - Create: `web/src/pages/Activity.tsx`
 - Modify: `web/src/App.tsx`
 - Modify: `web/src/components/Sidebar.tsx`
@@ -1048,14 +1081,23 @@ export function useEffectiveRules(nodeId: string) {
 Create `web/src/pages/Activity.tsx` — the main view replacing Dashboard, Sessions, Logs, and SessionDetail:
 
 Key features:
+
 - Accepts optional `nodeId` from URL params or sidebar selection
+
 - Uses `useLogs({ node_id: selectedNodeId, page, page_size: 50 })` for data
+
 - Uses `useNodes()` to populate node list in sidebar
+
 - Each log entry: timestamp, command (monospace), exit_code (green ✓ / red ✗), duration, security badge
+
 - Click to expand stdout/stderr
+
 - Pagination at bottom
+
 - Auto-refresh toggle (polling every 5s when enabled)
+
 - Time range filter (today / 7d / 30d / all)
+
 - When no node selected → show all nodes' commands interleaved
 
 - [ ] **Step 3: Refactor Sidebar to node-first**
@@ -1118,12 +1160,14 @@ git add web/src/ && git rm web/src/pages/Dashboard.tsx web/src/pages/Sessions.ts
 git commit -m "feat(web): replace Dashboard/Sessions/Logs with per-node Activity view"
 ```
 
----
+______________________________________________________________________
 
 ### Task 10: Full Test Suite + Cleanup
 
 **Files:**
+
 - Various test files
+
 - Linting
 
 - [ ] **Step 1: Run full Python test suite**
@@ -1133,8 +1177,11 @@ cd /home/local-xiangw/workspace/ssh-mcp && uv run pytest tests/ -v --tb=short
 ```
 
 Fix any failures. Common issues:
+
 - Tests importing old `guard.load_rules()` — update to use DB-seeded rules
+
 - Tests using `guard.evaluate()` synchronously — make async
+
 - Tests expecting `web` CLI command — update to `serve`
 
 - [ ] **Step 2: Run linter**

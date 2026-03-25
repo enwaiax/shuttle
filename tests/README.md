@@ -1,12 +1,21 @@
 # {{RIPER-5:
-#   Action: "Added"
-#   Task_ID: "7037bed8-d479-44e6-9198-c81f69b9d05d"
-#   Timestamp: "2025-08-05T20:50:09+08:00"
-#   Authoring_Role: "LD"
-#   Principle_Applied: "文档即代码 + 用户友好性"
-#   Quality_Check: "完整的测试文档，包含运行指导、覆盖率要求、测试架构"
+
+# Action: "Added"
+
+# Task_ID: "7037bed8-d479-44e6-9198-c81f69b9d05d"
+
+# Timestamp: "2025-08-05T20:50:09+08:00"
+
+# Authoring_Role: "LD"
+
+# Principle_Applied: "文档即代码 + 用户友好性"
+
+# Quality_Check: "完整的测试文档，包含运行指导、覆盖率要求、测试架构"
+
 # }}
+
 # {{START_MODIFICATIONS}}
+
 # FastMCP SSH Server - Test Suite Documentation
 
 ## 📋 Overview
@@ -130,6 +139,7 @@ Tests for the core SSH connection management functionality:
 - **Resource Management**: Memory usage and connection cleanup
 
 **Key Test Classes:**
+
 - `TestSSHConnectionManager`: Core connection manager functionality
 - `TestSecurityValidator`: Security validation mechanisms
 
@@ -146,6 +156,7 @@ Tests for FastMCP tool implementations:
 - **Integration**: Tool interaction with SSH manager
 
 **Key Test Classes:**
+
 - `TestMCPToolRegistration`: Tool registration verification
 - `TestExecuteCommandTool`: Command execution tool tests
 - `TestUploadTool`: File upload tool tests
@@ -166,6 +177,7 @@ Tests for command line interface and argument parsing:
 - **Typer Integration**: CLI framework integration and validation
 
 **Key Test Classes:**
+
 - `TestSSHConnectionStringParsing`: SSH connection string parsing
 - `TestCLIArgumentParsing`: Complete CLI argument processing
 - `TestCLIErrorHandling`: Error handling and validation
@@ -184,6 +196,7 @@ End-to-end tests for complete system functionality:
 - **Recovery Testing**: Error recovery and system resilience
 
 **Key Test Classes:**
+
 - `TestFullServerIntegration`: Complete server functionality
 - `TestMCPToolsIntegration`: End-to-end tool operation
 - `TestLoggingIntegration`: Logging system integration
@@ -228,14 +241,17 @@ pytest --tb=long tests/test_ssh_manager.py
 ### Common Issues
 
 1. **Async Test Failures**
+
    - Ensure `pytest-asyncio` is installed
    - Check that async tests are properly marked with `async def`
 
-2. **Mock-Related Issues**
+1. **Mock-Related Issues**
+
    - Verify mock patches are correctly scoped
    - Check that mock return values match expected types
 
-3. **Import Errors**
+1. **Import Errors**
+
    - Ensure `src` is in Python path
    - Check that all required dependencies are installed
 
@@ -318,11 +334,11 @@ class TestNewComponent:
 ## 🎯 Test Quality Guidelines
 
 1. **Independence**: Tests should not depend on each other
-2. **Repeatability**: Tests should produce consistent results
-3. **Fast Execution**: Unit tests should complete in < 1 second
-4. **Clear Assertions**: Each test should have clear pass/fail criteria
-5. **Comprehensive Coverage**: Test both success and failure scenarios
-6. **Realistic Mocking**: Mocks should behave like real components
+1. **Repeatability**: Tests should produce consistent results
+1. **Fast Execution**: Unit tests should complete in < 1 second
+1. **Clear Assertions**: Each test should have clear pass/fail criteria
+1. **Comprehensive Coverage**: Test both success and failure scenarios
+1. **Realistic Mocking**: Mocks should behave like real components
 
 ## 🔍 Code Quality Checks
 
@@ -344,9 +360,10 @@ isort --check-only src/
 For test-related issues:
 
 1. Check this documentation for common solutions
-2. Review test output for specific error details
-3. Run tests with `--verbose` for detailed information
-4. Use `--pdb` flag to debug failing tests interactively
+1. Review test output for specific error details
+1. Run tests with `--verbose` for detailed information
+1. Use `--pdb` flag to debug failing tests interactively
 
 The test suite is designed to be comprehensive, maintainable, and provide confidence in the FastMCP SSH server implementation.
+
 # {{END_MODIFICATIONS}}

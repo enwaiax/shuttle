@@ -11,10 +11,10 @@ Common issues and solutions when using Shuttle.
 **Checklist:**
 
 1. Verify the node is reachable: `shuttle node test <name>`
-2. Check host/port are correct: `shuttle node list`
-3. Ensure SSH is running on the remote server
-4. Check firewall rules allow port 22 (or your custom port)
-5. If using a jump host, verify the jump host itself is reachable first
+1. Check host/port are correct: `shuttle node list`
+1. Ensure SSH is running on the remote server
+1. Check firewall rules allow port 22 (or your custom port)
+1. If using a jump host, verify the jump host itself is reachable first
 
 ### "Authentication failed"
 
@@ -33,8 +33,8 @@ Common issues and solutions when using Shuttle.
 **Checklist:**
 
 1. Verify the jump host node exists and is active: `shuttle node list`
-2. Test the jump host directly: `shuttle node test <jump-host-name>`
-3. Ensure the jump host can reach the target host on the target port
+1. Test the jump host directly: `shuttle node test <jump-host-name>`
+1. Ensure the jump host can reach the target host on the target port
 
 ## MCP Issues
 
@@ -62,8 +62,8 @@ Ensure `uvx shuttle-mcp --help` works, or run `uv tool install shuttle-mcp` and 
 **For service (HTTP) mode:**
 
 1. Start the service: `shuttle serve`
-2. Verify MCP endpoint responds: `curl http://localhost:9876/mcp/`
-3. Configure your AI client:
+1. Verify MCP endpoint responds: `curl http://localhost:9876/mcp/`
+1. Configure your AI client:
 
 ```json
 {
@@ -82,9 +82,9 @@ Ensure `uvx shuttle-mcp --help` works, or run `uv tool install shuttle-mcp` and 
 **Solutions:**
 
 1. Check security rules: open `http://localhost:9876` → Rules page
-2. Look for regex patterns that match your command too broadly
-3. Use the **Rule Tester** (Rules page → Test button) to see which rule matches
-4. Adjust or delete the overly broad rule
+1. Look for regex patterns that match your command too broadly
+1. Use the **Rule Tester** (Rules page → Test button) to see which rule matches
+1. Adjust or delete the overly broad rule
 
 ### CONFIRM token flow
 
@@ -93,7 +93,7 @@ Ensure `uvx shuttle-mcp --help` works, or run `uv tool install shuttle-mcp` and 
 This is expected for commands matching `confirm`-level rules (e.g., `sudo`, `rm -rf`). The AI should:
 
 1. Show the user the command and ask for confirmation
-2. Re-call `ssh_run` with the `confirm_token` parameter
+1. Re-call `ssh_run` with the `confirm_token` parameter
 
 ## Web Panel Issues
 
@@ -104,8 +104,8 @@ This is expected for commands matching `confirm`-level rules (e.g., `sudo`, `rm 
 **Checklist:**
 
 1. Ensure `shuttle serve` is running (not just `shuttle` which is stdio-only)
-2. Check the port isn't in use: `lsof -i :9876`
-3. If binding to a remote server, use `--host 0.0.0.0`
+1. Check the port isn't in use: `lsof -i :9876`
+1. If binding to a remote server, use `--host 0.0.0.0`
 
 ### Token authentication fails
 

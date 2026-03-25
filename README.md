@@ -18,7 +18,7 @@ Shuttle lets AI assistants (Claude Code, Cursor, etc.) securely execute commands
 
 </div>
 
----
+______________________________________________________________________
 
 ## Why Shuttle?
 
@@ -94,9 +94,9 @@ That's it. Your AI assistant can now execute commands on your remote servers.
 
 ## Two Running Modes
 
-| Mode | Command | MCP Transport | Web UI | Use Case |
-|------|---------|--------------|--------|----------|
-| **CLI** | `shuttle` | stdio | ❌ | Quick use, AI client manages lifecycle |
+| Mode        | Command         | MCP Transport   | Web UI                   | Use Case                               |
+| ----------- | --------------- | --------------- | ------------------------ | -------------------------------------- |
+| **CLI**     | `shuttle`       | stdio           | ❌                       | Quick use, AI client manages lifecycle |
 | **Service** | `shuttle serve` | streamable-http | ✅ http://localhost:9876 | Audit logs, manage rules, cloud deploy |
 
 Both modes share the same SQLite database — commands logged in CLI mode are visible in the Web UI when you switch to service mode.
@@ -105,13 +105,13 @@ Both modes share the same SQLite database — commands logged in CLI mode are vi
 
 AI assistants get these tools automatically:
 
-| Tool | Description |
-|------|-------------|
-| `ssh_run` | Run a command on a remote node (sessions auto-managed) |
-| `ssh_upload` | Upload a file via SFTP |
-| `ssh_download` | Download a file via SFTP |
-| `ssh_list_nodes` | List all configured nodes |
-| `ssh_add_node` | Add a new SSH node |
+| Tool             | Description                                            |
+| ---------------- | ------------------------------------------------------ |
+| `ssh_run`        | Run a command on a remote node (sessions auto-managed) |
+| `ssh_upload`     | Upload a file via SFTP                                 |
+| `ssh_download`   | Download a file via SFTP                               |
+| `ssh_list_nodes` | List all configured nodes                              |
+| `ssh_add_node`   | Add a new SSH node                                     |
 
 ### Example conversation
 
@@ -129,12 +129,12 @@ AI:  Training started. Epoch 1/10... (working directory preserved automatically)
 
 Commands are evaluated against a 4-level security system:
 
-| Level | Behavior | Example |
-|-------|----------|---------|
-| 🔴 **block** | Rejected immediately | `rm -rf /`, `mkfs`, fork bomb |
-| 🟡 **confirm** | Requires user confirmation | `sudo`, `rm -rf`, `shutdown` |
-| 🟠 **warn** | Executes with warning logged | `apt install`, `pip install` |
-| 🟢 **allow** | Executes normally | Everything else |
+| Level          | Behavior                     | Example                       |
+| -------------- | ---------------------------- | ----------------------------- |
+| 🔴 **block**   | Rejected immediately         | `rm -rf /`, `mkfs`, fork bomb |
+| 🟡 **confirm** | Requires user confirmation   | `sudo`, `rm -rf`, `shutdown`  |
+| 🟠 **warn**    | Executes with warning logged | `apt install`, `pip install`  |
+| 🟢 **allow**   | Executes normally            | Everything else               |
 
 Default rules are seeded on first startup. Customize via Web UI or directly in the database.
 
@@ -183,13 +183,13 @@ shuttle config show          # Display current config
 
 All settings can be overridden with environment variables (prefix `SHUTTLE_`):
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `SHUTTLE_DB_URL` | `sqlite+aiosqlite:///~/.shuttle/shuttle.db` | Database URL |
-| `SHUTTLE_WEB_PORT` | `9876` | Web panel port |
-| `SHUTTLE_POOL_MAX_TOTAL` | `50` | Max total SSH connections |
-| `SHUTTLE_POOL_MAX_PER_NODE` | `5` | Max connections per node |
-| `SHUTTLE_POOL_IDLE_TIMEOUT` | `300` | Idle connection timeout (seconds) |
+| Variable                    | Default                                     | Description                       |
+| --------------------------- | ------------------------------------------- | --------------------------------- |
+| `SHUTTLE_DB_URL`            | `sqlite+aiosqlite:///~/.shuttle/shuttle.db` | Database URL                      |
+| `SHUTTLE_WEB_PORT`          | `9876`                                      | Web panel port                    |
+| `SHUTTLE_POOL_MAX_TOTAL`    | `50`                                        | Max total SSH connections         |
+| `SHUTTLE_POOL_MAX_PER_NODE` | `5`                                         | Max connections per node          |
+| `SHUTTLE_POOL_IDLE_TIMEOUT` | `300`                                       | Idle connection timeout (seconds) |
 
 ### Using PostgreSQL
 
@@ -238,7 +238,7 @@ Developer ↔ AI Assistant ↔ Shuttle (MCP) ↔ SSH ↔ Remote Servers
 
 [MIT](LICENSE)
 
----
+______________________________________________________________________
 
 <div align="center">
   <sub>Built for developers who let AI do the SSH-ing.</sub>

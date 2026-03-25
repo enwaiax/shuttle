@@ -1,9 +1,6 @@
----
-name: Bug Report
-about: Report a bug in Shuttle
-title: "[Bug] "
-labels: bug
----
+______________________________________________________________________
+
+## name: Bug Report about: Report a bug in Shuttle title: "[Bug] " labels: bug
 
 **Shuttle version:** (`shuttle --version`)
 
@@ -18,8 +15,8 @@ A clear description of the bug.
 ## Steps to Reproduce
 
 1.
-2.
-3.
+1.
+1.
 
 ## Expected Behavior
 

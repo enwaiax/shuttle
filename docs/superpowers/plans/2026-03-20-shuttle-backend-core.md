@@ -12,7 +12,7 @@
 
 **Scope:** This is Plan 1 of 2. Plan 2 (Web Panel) will be written after this plan is complete.
 
----
+______________________________________________________________________
 
 ## File Structure
 
@@ -58,14 +58,18 @@ tests/
 pyproject.toml                   # shuttle-mcp package config
 ```
 
----
+______________________________________________________________________
 
 ### Task 1: Project Scaffold
 
 **Files:**
+
 - Create: `pyproject.toml`
+
 - Create: `src/shuttle/__init__.py`
+
 - Create: `src/shuttle/__main__.py`
+
 - Create: `tests/conftest.py`
 
 - [ ] **Step 1: Remove old source and create new project structure**
@@ -186,13 +190,21 @@ def tmp_shuttle_dir(tmp_path):
 - [ ] **Step 6: Create empty __init__.py files for all subpackages**
 
 Create these files with empty content (or a single docstring):
+
 - `src/shuttle/core/__init__.py`
+
 - `src/shuttle/db/__init__.py`
+
 - `src/shuttle/mcp/__init__.py`
+
 - `src/shuttle/web/__init__.py`
+
 - `src/shuttle/web/routes/__init__.py`
+
 - `tests/test_core/__init__.py`
+
 - `tests/test_db/__init__.py`
+
 - `tests/test_mcp/__init__.py`
 
 - [ ] **Step 7: Verify project installs and pytest runs**
@@ -214,13 +226,16 @@ Replace fastmcp-ssh-server with shuttle-mcp package.
 New directory layout: core/, db/, mcp/, web/."
 ```
 
----
+______________________________________________________________________
 
 ### Task 2: Database Models
 
 **Files:**
+
 - Create: `src/shuttle/db/models.py`
+
 - Create: `tests/test_db/test_models.py`
+
 - Modify: `tests/conftest.py` (add db_engine and db_session fixtures)
 
 - [ ] **Step 0: Add DB fixtures to conftest.py**
@@ -551,12 +566,14 @@ git add src/shuttle/db/models.py tests/test_db/test_models.py
 git commit -m "feat: add SQLAlchemy ORM models (Node, SecurityRule, Session, CommandLog, AppConfig)"
 ```
 
----
+______________________________________________________________________
 
 ### Task 3: Database Engine & Init
 
 **Files:**
+
 - Create: `src/shuttle/db/engine.py`
+
 - Modify: `src/shuttle/db/__init__.py`
 
 - [ ] **Step 1: Write src/shuttle/db/engine.py**
@@ -643,12 +660,14 @@ git add src/shuttle/db/
 git commit -m "feat: add database engine with SQLite WAL mode and async session factory"
 ```
 
----
+______________________________________________________________________
 
 ### Task 4: Repository Layer (CRUD)
 
 **Files:**
+
 - Create: `src/shuttle/db/repository.py`
+
 - Create: `tests/test_db/test_repository.py`
 
 - [ ] **Step 1: Write the test**
@@ -913,14 +932,18 @@ git add src/shuttle/db/repository.py tests/test_db/test_repository.py
 git commit -m "feat: add repository layer with CRUD for Node, SecurityRule, Session, CommandLog"
 ```
 
----
+______________________________________________________________________
 
 ### Task 5: Config & Credentials
 
 **Files:**
+
 - Create: `src/shuttle/core/config.py`
+
 - Create: `src/shuttle/core/credentials.py`
+
 - Create: `tests/test_core/test_config.py`
+
 - Create: `tests/test_core/test_credentials.py`
 
 - [ ] **Step 1: Write tests for credentials**
@@ -1097,12 +1120,14 @@ git add src/shuttle/core/ tests/test_core/
 git commit -m "feat: add ShuttleConfig and CredentialManager with Fernet encryption"
 ```
 
----
+______________________________________________________________________
 
 ### Task 6: Command Security (CommandGuard)
 
 **Files:**
+
 - Create: `src/shuttle/core/security.py`
+
 - Create: `tests/test_core/test_security.py`
 
 - [ ] **Step 1: Write tests**
@@ -1367,13 +1392,16 @@ git add src/shuttle/core/security.py tests/test_core/test_security.py
 git commit -m "feat: add CommandGuard with 4-level security and ConfirmTokenStore"
 ```
 
----
+______________________________________________________________________
 
 ### Task 7: Connection Pool
 
 **Files:**
+
 - Create: `src/shuttle/core/connection_pool.py`
+
 - Create: `src/shuttle/core/proxy.py`
+
 - Create: `tests/test_core/test_connection_pool.py`
 
 - [ ] **Step 1: Write tests**
@@ -1727,12 +1755,14 @@ git add src/shuttle/core/connection_pool.py src/shuttle/core/proxy.py tests/test
 git commit -m "feat: add SSH connection pool with context manager, eviction, and jump host support"
 ```
 
----
+______________________________________________________________________
 
 ### Task 8: Session Manager
 
 **Files:**
+
 - Create: `src/shuttle/core/session.py`
+
 - Create: `tests/test_core/test_session.py`
 
 - [ ] **Step 1: Write tests**
@@ -1963,12 +1993,14 @@ git add src/shuttle/core/session.py tests/test_core/test_session.py
 git commit -m "feat: add SessionManager with working directory tracking via pwd sentinel"
 ```
 
----
+______________________________________________________________________
 
 ### Task 9: MCP Tools
 
 **Files:**
+
 - Create: `src/shuttle/mcp/tools.py`
+
 - Create: `tests/test_mcp/test_tools.py`
 
 - [ ] **Step 1: Write tests**
@@ -2342,13 +2374,16 @@ git add src/shuttle/mcp/tools.py tests/test_mcp/test_tools.py
 git commit -m "feat: add MCP tools (ssh_execute, ssh_upload, ssh_download, ssh_session_*, ssh_list_nodes)"
 ```
 
----
+______________________________________________________________________
 
 ### Task 10: MCP Server Orchestration
 
 **Files:**
+
 - Create: `src/shuttle/mcp/server.py`
+
 - Create: `tests/test_mcp/test_server.py`
+
 - Modify: `src/shuttle/mcp/__init__.py`
 
 - [ ] **Step 1: Write test**
@@ -2533,12 +2568,14 @@ git add src/shuttle/mcp/ tests/test_mcp/test_server.py
 git commit -m "feat: add MCP server orchestration with DB init, pool setup, and tool registration"
 ```
 
----
+______________________________________________________________________
 
 ### Task 11: CLI & Entry Point
 
 **Files:**
+
 - Create: `src/shuttle/cli.py`
+
 - Modify: `src/shuttle/__init__.py`
 
 - [ ] **Step 1: Write src/shuttle/cli.py**
@@ -2843,11 +2880,12 @@ git add src/shuttle/cli.py
 git commit -m "feat: add Typer CLI with shuttle, shuttle web, shuttle node, shuttle config commands"
 ```
 
----
+______________________________________________________________________
 
 ### Task 12: Default Security Rules Seeding
 
 **Files:**
+
 - Create: `src/shuttle/db/seeds.py`
 
 - [ ] **Step 1: Write src/shuttle/db/seeds.py**
@@ -2911,11 +2949,12 @@ git add src/shuttle/db/seeds.py src/shuttle/mcp/server.py
 git commit -m "feat: add default security rule seeding on first startup"
 ```
 
----
+______________________________________________________________________
 
 ### Task 13: Integration Test — Full MCP Flow
 
 **Files:**
+
 - Create: `tests/test_mcp/test_integration.py`
 
 - [ ] **Step 1: Write integration test**
@@ -2985,7 +3024,7 @@ git add tests/test_mcp/test_integration.py
 git commit -m "test: add MCP server integration tests"
 ```
 
----
+______________________________________________________________________
 
 ### Task 14: Run Full Test Suite & Cleanup
 
@@ -3018,6 +3057,7 @@ Expected: All commands work without errors.
 - [ ] **Step 4: Update .gitignore if needed**
 
 Ensure `.gitignore` has entries for:
+
 ```
 __pycache__/
 *.egg-info/
@@ -3031,26 +3071,26 @@ git add -A
 git commit -m "chore: cleanup and verify full test suite passes"
 ```
 
----
+______________________________________________________________________
 
 ## Summary
 
-| Task | Component | Files | Tests |
-|------|-----------|-------|-------|
-| 1 | Project Scaffold | pyproject.toml, __init__, __main__, conftest | — |
-| 2 | DB Models | db/models.py | 5 tests |
-| 3 | DB Engine | db/engine.py | (existing pass) |
-| 4 | Repository | db/repository.py | 6 tests |
-| 5 | Config & Credentials | core/config.py, core/credentials.py | 6 tests |
-| 6 | Command Security | core/security.py | 12 tests |
-| 7 | Connection Pool | core/connection_pool.py, core/proxy.py | 5 tests |
-| 8 | Session Manager | core/session.py | 3 tests |
-| 9 | MCP Tools | mcp/tools.py | 3 tests |
-| 10 | MCP Server | mcp/server.py | 1 test |
-| 11 | CLI | cli.py | (manual verify) |
-| 12 | Security Seeds | db/seeds.py | (via integration) |
-| 13 | Integration Test | test_integration.py | 2 tests |
-| 14 | Cleanup | — | Full suite |
+| Task | Component            | Files                                        | Tests             |
+| ---- | -------------------- | -------------------------------------------- | ----------------- |
+| 1    | Project Scaffold     | pyproject.toml, __init__, __main__, conftest | —                 |
+| 2    | DB Models            | db/models.py                                 | 5 tests           |
+| 3    | DB Engine            | db/engine.py                                 | (existing pass)   |
+| 4    | Repository           | db/repository.py                             | 6 tests           |
+| 5    | Config & Credentials | core/config.py, core/credentials.py          | 6 tests           |
+| 6    | Command Security     | core/security.py                             | 12 tests          |
+| 7    | Connection Pool      | core/connection_pool.py, core/proxy.py       | 5 tests           |
+| 8    | Session Manager      | core/session.py                              | 3 tests           |
+| 9    | MCP Tools            | mcp/tools.py                                 | 3 tests           |
+| 10   | MCP Server           | mcp/server.py                                | 1 test            |
+| 11   | CLI                  | cli.py                                       | (manual verify)   |
+| 12   | Security Seeds       | db/seeds.py                                  | (via integration) |
+| 13   | Integration Test     | test_integration.py                          | 2 tests           |
+| 14   | Cleanup              | —                                            | Full suite        |
 
 **Total: ~43 tests across 14 tasks.**
 

@@ -6,11 +6,11 @@ Shuttle exposes its tools through the [Model Context Protocol (MCP)](https://mod
 
 The PyPI package is **`shuttle-mcp`**, but the primary CLI command has always been **`shuttle`**. `uvx <name>` looks for a console script **with the same name as the package**, so:
 
-| Situation | What to use |
-|-----------|----------------|
+| Situation                                                                   | What to use                                                          |
+| --------------------------------------------------------------------------- | -------------------------------------------------------------------- |
 | **Current PyPI releases** (with `shuttle-mcp` script; see `pyproject.toml`) | `"command": "uvx", "args": ["shuttle-mcp"]` or run `uvx shuttle-mcp` |
-| **Very old wheels** (no `shuttle-mcp` entry point) | `"args": ["--from", "shuttle-mcp", "shuttle"]` |
-| **After `uv tool install shuttle-mcp`** (CLI on `PATH`) | `"command": "shuttle"` (no `uvx`) |
+| **Very old wheels** (no `shuttle-mcp` entry point)                          | `"args": ["--from", "shuttle-mcp", "shuttle"]`                       |
+| **After `uv tool install shuttle-mcp`** (CLI on `PATH`)                     | `"command": "shuttle"` (no `uvx`)                                    |
 
 This is a **small usability / documentation issue**, not a security or protocol bug. Prefer **`uvx shuttle-mcp`** in MCP config when you do not install globally; use **`--from shuttle-mcp shuttle`** only if your PyPI wheel predates the `shuttle-mcp` console script.
 
@@ -38,7 +38,7 @@ Use the same JSON in **Claude Code** (`.mcp.json` / `~/.mcp.json`) or **Cursor**
 ### streamable-http (`shuttle serve`)
 
 1. Start the service: `shuttle serve` (note host/port and the **API token** printed for the **web panel** only).
-2. Point the MCP client at the HTTP endpoint (trailing slash required):
+1. Point the MCP client at the HTTP endpoint (trailing slash required):
 
 ```json
 {
@@ -56,10 +56,10 @@ Remote machine: use `http://<host>:<port>/mcp/` and ensure firewall / `--host 0.
 
 ## Transport Modes
 
-| Mode | How you start Shuttle | Transport | Web UI | Best for |
-|------|------------------------|-----------|--------|----------|
-| **stdio** | AI runs `uvx … shuttle` or `shuttle` | stdin/stdout | No | Single-user, client manages process |
-| **streamable-http** | `shuttle serve` | HTTP `…/mcp/` | Yes | Long-running service, audit panel, multiple clients |
+| Mode                | How you start Shuttle                | Transport     | Web UI | Best for                                            |
+| ------------------- | ------------------------------------ | ------------- | ------ | --------------------------------------------------- |
+| **stdio**           | AI runs `uvx … shuttle` or `shuttle` | stdin/stdout  | No     | Single-user, client manages process                 |
+| **streamable-http** | `shuttle serve`                      | HTTP `…/mcp/` | Yes    | Long-running service, audit panel, multiple clients |
 
 Both modes can share the same database; see [Configuration](configuration.md) for `SHUTTLE_DB_URL`.
 
@@ -136,8 +136,8 @@ Or edit **`.cursor/mcp.json`** (project) or the user-level MCP JSON your build e
 ### streamable-http
 
 1. Run `shuttle serve`.
-2. **Type:** URL
-3. **URL:** `http://localhost:9876/mcp/`
+1. **Type:** URL
+1. **URL:** `http://localhost:9876/mcp/`
 
 ```json
 {

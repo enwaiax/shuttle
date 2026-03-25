@@ -33,6 +33,7 @@ SSH MCP Tools v2 represents a complete architectural evolution while maintaining
 ### Direct Decorator Pattern
 
 **v1 Architecture** (Function-based registration):
+
 ```python
 def register_execute_command_tool(mcp: FastMCP, ssh_manager: SSHConnectionManager):
     @mcp.tool("execute-command")
@@ -46,6 +47,7 @@ def register_execute_command_tool(mcp: FastMCP, ssh_manager: SSHConnectionManage
 ```
 
 **v2 Architecture** (Direct decorator pattern):
+
 ```python
 @mcp.tool("execute-command")
 async def execute_command(
@@ -75,10 +77,10 @@ async def execute_command(
 ### Benefits of Direct Decoration
 
 1. **Self-Contained Tools**: Each tool is a complete, standalone unit
-2. **Automatic Registration**: Tools register themselves when imported
-3. **Cleaner Code**: No boilerplate registration functions
-4. **Better IDE Support**: Enhanced autocomplete and type checking
-5. **Easier Testing**: Tools can be tested in isolation
+1. **Automatic Registration**: Tools register themselves when imported
+1. **Cleaner Code**: No boilerplate registration functions
+1. **Better IDE Support**: Enhanced autocomplete and type checking
+1. **Easier Testing**: Tools can be tested in isolation
 
 ## 🔌 Context Dependency Injection
 
@@ -109,6 +111,7 @@ async def my_tool(param: str, ctx: Context | None = None) -> str:
 ### Context Capabilities
 
 #### 1. Structured Logging
+
 ```python
 if ctx:
     # Basic logging
@@ -125,6 +128,7 @@ if ctx:
 ```
 
 #### 2. Progress Reporting
+
 ```python
 if ctx:
     # Start operation
@@ -140,6 +144,7 @@ if ctx:
 ```
 
 #### 3. Server State Access
+
 ```python
 if ctx:
     # Get server information
@@ -151,6 +156,7 @@ if ctx:
 ```
 
 #### 4. Custom Metadata
+
 ```python
 if ctx:
     # Set custom metadata for this operation
@@ -162,6 +168,7 @@ if ctx:
 ### Context Integration Examples
 
 #### Execute Command with Context
+
 ```python
 @mcp.tool("execute-command")
 async def execute_command(
@@ -285,10 +292,10 @@ async def execute_command(...):
 ### Metadata Benefits
 
 1. **Better LLM Understanding**: Rich descriptions help AI assistants understand tool capabilities
-2. **API Documentation**: Automatic generation of API documentation
-3. **Tool Discovery**: Enhanced tool browsing and filtering
-4. **Version Management**: Track tool versions and compatibility
-5. **Security Classification**: Categorize tools by security requirements
+1. **API Documentation**: Automatic generation of API documentation
+1. **Tool Discovery**: Enhanced tool browsing and filtering
+1. **Version Management**: Track tool versions and compatibility
+1. **Security Classification**: Categorize tools by security requirements
 
 ### Accessing Tool Metadata
 
@@ -306,6 +313,7 @@ print(f"Tags: {', '.join(tool_info.tags)}")
 ### Zero-Configuration Setup
 
 **v1 Manual Registration**:
+
 ```python
 # Multiple manual registration calls required
 def _register_tools(self) -> None:
@@ -323,6 +331,7 @@ def _register_tools(self) -> None:
 ```
 
 **v2 Automatic Registration**:
+
 ```python
 # Tools automatically register when imported
 from .ssh_tools import mcp  # All 4 tools now registered!
@@ -333,9 +342,9 @@ from .ssh_tools import mcp  # All 4 tools now registered!
 ### Registration Process
 
 1. **Import Time**: Tools register themselves when the module is imported
-2. **Decorator Magic**: `@mcp.tool()` decorator handles registration
-3. **Global Registry**: Tools are added to a global MCP instance
-4. **Validation**: Automatic validation of tool signatures and metadata
+1. **Decorator Magic**: `@mcp.tool()` decorator handles registration
+1. **Global Registry**: Tools are added to a global MCP instance
+1. **Validation**: Automatic validation of tool signatures and metadata
 
 ### Benefits
 
@@ -464,6 +473,7 @@ async def execute_command_with_retry(
 ### Enhanced IDE Support
 
 **Type Safety**:
+
 ```python
 # Full type annotations
 @mcp.tool("execute-command")
@@ -482,6 +492,7 @@ async def execute_command(
 ### Debugging Capabilities
 
 **Enhanced Stack Traces**:
+
 ```python
 # Context provides rich debugging information
 if ctx:
@@ -496,6 +507,7 @@ if ctx:
 ```
 
 **Operation Tracing**:
+
 ```python
 # Automatic operation correlation
 operation_id = ctx.get_operation_id()  # Unique ID for this operation
@@ -505,6 +517,7 @@ operation_id = ctx.get_operation_id()  # Unique ID for this operation
 ### Testing Improvements
 
 **Mock Context for Testing**:
+
 ```python
 import pytest
 from unittest.mock import Mock
@@ -532,6 +545,7 @@ async def test_execute_command():
 ### Efficient Resource Usage
 
 **Connection Pooling**:
+
 ```python
 # v2 uses optimized connection management
 ssh_manager = get_ssh_manager()  # Singleton pattern
@@ -539,6 +553,7 @@ ssh_manager = get_ssh_manager()  # Singleton pattern
 ```
 
 **Lazy Loading**:
+
 ```python
 # Tools are only loaded when needed
 @mcp.tool("heavy-operation")
@@ -549,6 +564,7 @@ async def heavy_operation(ctx: Context | None = None):
 ```
 
 **Memory Optimization**:
+
 ```python
 # Context objects are lightweight and reused
 # No memory leaks from tool registration
@@ -572,46 +588,46 @@ async def parallel_commands():
 
 ### v1 vs v2 Feature Matrix
 
-| Feature | v1 | v2 | Improvement |
-|---------|----|----|-------------|
-| **Core Functionality** |
-| execute-command | ✅ | ✅ | API Compatible |
-| upload | ✅ | ✅ | API Compatible |
-| download | ✅ | ✅ | API Compatible |
-| list-servers | ✅ | ✅ | API Compatible |
-| **Architecture** |
-| Tool Registration | Manual | Automatic | 🚀 Zero config |
-| Code Organization | Function-based | Decorator-based | 🏗️ Modern patterns |
-| Dependency Injection | ❌ | Context | 🔌 Enhanced capabilities |
-| **Observability** |
-| Basic Logging | ✅ | ✅ | Compatible |
-| Structured Logging | ❌ | ✅ | 📊 Rich context |
-| Progress Reporting | ❌ | ✅ | 📈 Real-time updates |
-| Error Correlation | ❌ | ✅ | 🔍 Better debugging |
-| **Metadata** |
-| Tool Descriptions | Basic | Rich | 📝 Enhanced |
-| Tool Annotations | ❌ | ✅ | 🏷️ Categorization |
-| Version Tracking | ❌ | ✅ | 📌 Better management |
-| **Developer Experience** |
-| Type Safety | Partial | Full | 🛡️ Better IDE support |
-| Auto-completion | Basic | Enhanced | 💡 Better DX |
-| Testing Support | Manual | Integrated | 🧪 Easier testing |
-| **Performance** |
-| Startup Time | 2.0s | 2.2s | ~10% overhead |
-| Memory Usage | 45MB | 52MB | ~15% increase |
-| Tool Latency | 100ms | 105ms | ~5% overhead |
-| **Compatibility** |
-| API Compatibility | N/A | 100% | ✅ Zero breaking changes |
-| Configuration | N/A | 100% | ✅ Drop-in replacement |
+| Feature                  | v1             | v2              | Improvement              |
+| ------------------------ | -------------- | --------------- | ------------------------ |
+| **Core Functionality**   |                |                 |                          |
+| execute-command          | ✅             | ✅              | API Compatible           |
+| upload                   | ✅             | ✅              | API Compatible           |
+| download                 | ✅             | ✅              | API Compatible           |
+| list-servers             | ✅             | ✅              | API Compatible           |
+| **Architecture**         |                |                 |                          |
+| Tool Registration        | Manual         | Automatic       | 🚀 Zero config           |
+| Code Organization        | Function-based | Decorator-based | 🏗️ Modern patterns       |
+| Dependency Injection     | ❌             | Context         | 🔌 Enhanced capabilities |
+| **Observability**        |                |                 |                          |
+| Basic Logging            | ✅             | ✅              | Compatible               |
+| Structured Logging       | ❌             | ✅              | 📊 Rich context          |
+| Progress Reporting       | ❌             | ✅              | 📈 Real-time updates     |
+| Error Correlation        | ❌             | ✅              | 🔍 Better debugging      |
+| **Metadata**             |                |                 |                          |
+| Tool Descriptions        | Basic          | Rich            | 📝 Enhanced              |
+| Tool Annotations         | ❌             | ✅              | 🏷️ Categorization        |
+| Version Tracking         | ❌             | ✅              | 📌 Better management     |
+| **Developer Experience** |                |                 |                          |
+| Type Safety              | Partial        | Full            | 🛡️ Better IDE support    |
+| Auto-completion          | Basic          | Enhanced        | 💡 Better DX             |
+| Testing Support          | Manual         | Integrated      | 🧪 Easier testing        |
+| **Performance**          |                |                 |                          |
+| Startup Time             | 2.0s           | 2.2s            | ~10% overhead            |
+| Memory Usage             | 45MB           | 52MB            | ~15% increase            |
+| Tool Latency             | 100ms          | 105ms           | ~5% overhead             |
+| **Compatibility**        |                |                 |                          |
+| API Compatibility        | N/A            | 100%            | ✅ Zero breaking changes |
+| Configuration            | N/A            | 100%            | ✅ Drop-in replacement   |
 
 ### Code Metrics Comparison
 
-| Metric | v1 | v2 | Change |
-|--------|----|----|--------|
-| Tool Definition LoC | ~25 | ~15 | -40% (less boilerplate) |
-| Registration Code LoC | ~20 | ~0 | -100% (automatic) |
-| Error Handling LoC | ~10 | ~15 | +50% (enhanced) |
-| Total Implementation | ~55 | ~30 | -45% (cleaner) |
+| Metric                | v1  | v2  | Change                  |
+| --------------------- | --- | --- | ----------------------- |
+| Tool Definition LoC   | ~25 | ~15 | -40% (less boilerplate) |
+| Registration Code LoC | ~20 | ~0  | -100% (automatic)       |
+| Error Handling LoC    | ~10 | ~15 | +50% (enhanced)         |
+| Total Implementation  | ~55 | ~30 | -45% (cleaner)          |
 
 ## 🎯 Best Practices for v2
 
@@ -678,7 +694,7 @@ v2 provides a foundation for future enhancements:
 - **Advanced Monitoring**: Integration with monitoring systems
 - **Multi-tenancy**: Support for multiple isolated environments
 
----
+______________________________________________________________________
 
 *Features Guide Version: 1.0.0*
 *Last Updated: August 2025*

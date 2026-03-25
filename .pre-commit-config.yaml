@@ -1,7 +1,7 @@
 exclude: '\.tsbuildinfo$'
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -13,14 +13,25 @@ repos:
         args: [--unsafe]
       - id: check-json
 
+  # Markdown formatting
+  - repo: https://github.com/executablebooks/mdformat
+    rev: 0.7.22
+    hooks:
+      - id: mdformat
+        files: \.md$
+        additional_dependencies:
+          - mdformat-gfm
+
+  # Python lint + format
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.11.6
+    rev: v0.14.6
     hooks:
       - id: ruff
-        args: [--fix]
+        args: [--fix, --unsafe-fixes]
       - id: ruff-format
 
+  # Lock file sync
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.7.8
+    rev: 0.9.11
     hooks:
       - id: uv-lock

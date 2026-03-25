@@ -42,6 +42,7 @@ The completed migration followed the principle of **"Zero Disruption, Maximum Be
 ### 1. Modern Tool Architecture
 
 **v1 (Traditional)**:
+
 ```python
 def register_execute_command_tool(mcp: FastMCP, ssh_manager: SSHConnectionManager):
     @mcp.tool("execute-command")
@@ -50,6 +51,7 @@ def register_execute_command_tool(mcp: FastMCP, ssh_manager: SSHConnectionManage
 ```
 
 **v2 (Enhanced)**:
+
 ```python
 @mcp.tool("execute-command")
 async def execute_command(
@@ -63,6 +65,7 @@ async def execute_command(
 ### 2. Context Dependency Injection
 
 v2 tools receive a `Context` object providing:
+
 - **Structured Logging**: `ctx.logger.info("Operation started")`
 - **Progress Reporting**: `ctx.progress.update(50, "Processing...")`
 - **State Management**: Access to MCP server state and configuration
@@ -91,6 +94,7 @@ v2 tools receive a `Context` object providing:
 ### 4. Automatic Tool Registration
 
 **v1**: Manual registration required
+
 ```python
 # Multiple registration calls needed
 register_execute_command_tool(mcp, ssh_manager)
@@ -100,6 +104,7 @@ register_list_servers_tool(mcp, ssh_manager)
 ```
 
 **v2**: Automatic via decorators
+
 ```python
 # Tools auto-register when imported
 from .ssh_tools import mcp  # All tools already registered
@@ -109,16 +114,16 @@ from .ssh_tools import mcp  # All tools already registered
 
 ### API Compatibility Matrix
 
-| Feature | v1 | v2 | Compatible |
-|---------|----|----|------------|
-| execute-command | ✅ | ✅ | 100% |
-| upload | ✅ | ✅ | 100% |
-| download | ✅ | ✅ | 100% |
-| list-servers | ✅ | ✅ | 100% |
-| Input Parameters | ✅ | ✅ | 100% |
-| Output Format | ✅ | ✅ | 100% |
-| Error Handling | ✅ | ✅ | 100% |
-| SSH Connection Management | ✅ | ✅ | 100% |
+| Feature                   | v1  | v2  | Compatible |
+| ------------------------- | --- | --- | ---------- |
+| execute-command           | ✅  | ✅  | 100%       |
+| upload                    | ✅  | ✅  | 100%       |
+| download                  | ✅  | ✅  | 100%       |
+| list-servers              | ✅  | ✅  | 100%       |
+| Input Parameters          | ✅  | ✅  | 100%       |
+| Output Format             | ✅  | ✅  | 100%       |
+| Error Handling            | ✅  | ✅  | 100%       |
+| SSH Connection Management | ✅  | ✅  | 100%       |
 
 ### Breaking Changes
 
@@ -135,17 +140,20 @@ from .ssh_tools import mcp  # All tools already registered
 ### Phase 1: Preparation (5 minutes)
 
 1. **Backup Current Configuration**
+
    ```bash
    cp ~/.config/mcp/settings.json ~/.config/mcp/settings.json.backup
    ```
 
-2. **Verify Current Setup**
+1. **Verify Current Setup**
+
    ```bash
    fastmcp-ssh-server --version
    fastmcp-ssh-server --help | grep tools-version
    ```
 
-3. **Test Current Functionality**
+1. **Test Current Functionality**
+
    - Verify all SSH connections work
    - Test each tool: execute-command, upload, download, list-servers
    - Document any custom configurations
@@ -153,18 +161,21 @@ from .ssh_tools import mcp  # All tools already registered
 ### Phase 2: Environment Testing (10 minutes)
 
 1. **Test v2 in Development**
+
    ```bash
    # Test v2 with existing configuration
    fastmcp-ssh-server --host YOUR_HOST --username YOUR_USER --tools-version v2
    ```
 
-2. **Validate Tool Functionality**
+1. **Validate Tool Functionality**
+
    ```bash
    # Run the same tests as v1
    # Verify identical outputs and behavior
    ```
 
-3. **Monitor Performance**
+1. **Monitor Performance**
+
    - Check startup time
    - Observe memory usage
    - Test command execution speed
@@ -193,11 +204,13 @@ Choose one of these migration strategies:
 #### Strategy B: Environment-Based Migration (Recommended for production)
 
 1. **Set up environment control**:
+
    ```bash
    export SSH_MCP_TOOLS_VERSION=v2
    ```
 
-2. **Use auto mode**:
+1. **Use auto mode**:
+
    ```json
    {
      "mcpServers": {
@@ -213,7 +226,8 @@ Choose one of these migration strategies:
    }
    ```
 
-3. **Test and rollback if needed**:
+1. **Test and rollback if needed**:
+
    ```bash
    unset SSH_MCP_TOOLS_VERSION  # Falls back to v1
    ```
@@ -221,6 +235,7 @@ Choose one of these migration strategies:
 #### Strategy C: Blue-Green Deployment
 
 1. **Deploy v2 alongside v1**:
+
    ```json
    {
      "mcpServers": {
@@ -236,24 +251,29 @@ Choose one of these migration strategies:
    }
    ```
 
-2. **Test both versions**
-3. **Switch traffic to v2**
-4. **Remove v1 configuration**
+1. **Test both versions**
+
+1. **Switch traffic to v2**
+
+1. **Remove v1 configuration**
 
 ### Phase 4: Validation (15 minutes)
 
 1. **Functional Testing**
+
    ```bash
    # Test all operations
    echo "ls -la" | fastmcp-ssh-server --host server --username user --tools-version v2
    ```
 
-2. **Performance Validation**
+1. **Performance Validation**
+
    - Compare response times
    - Monitor resource usage
    - Check log output quality
 
-3. **Integration Testing**
+1. **Integration Testing**
+
    - Test with your AI assistant
    - Verify all workflows function correctly
    - Check error handling
@@ -344,25 +364,28 @@ diff v1_output.txt v2_output.txt  # Should be identical
 
 ### Expected Performance Characteristics
 
-| Metric | v1 | v2 | Notes |
-|--------|----|----|-------|
-| Startup Time | ~2s | ~2.5s | Slight increase due to enhanced features |
-| Memory Usage | 45MB | 50MB | Additional Context and logging overhead |
-| Command Latency | 100ms | 105ms | Minimal impact from Context injection |
-| Throughput | 50 req/s | 48 req/s | Negligible difference in real usage |
+| Metric          | v1       | v2       | Notes                                    |
+| --------------- | -------- | -------- | ---------------------------------------- |
+| Startup Time    | ~2s      | ~2.5s    | Slight increase due to enhanced features |
+| Memory Usage    | 45MB     | 50MB     | Additional Context and logging overhead  |
+| Command Latency | 100ms    | 105ms    | Minimal impact from Context injection    |
+| Throughput      | 50 req/s | 48 req/s | Negligible difference in real usage      |
 
 ### Performance Optimization Tips
 
 1. **Disable Debug Logging in Production**:
+
    ```bash
    export LOG_LEVEL=INFO  # Instead of DEBUG
    ```
 
-2. **Use Connection Pooling**:
+1. **Use Connection Pooling**:
+
    - Reuse SSH connections when possible
    - Configure appropriate connection timeouts
 
-3. **Monitor Resource Usage**:
+1. **Monitor Resource Usage**:
+
    ```bash
    # Monitor memory and CPU usage
    top -p $(pgrep -f fastmcp-ssh-server)
@@ -375,12 +398,14 @@ diff v1_output.txt v2_output.txt  # Should be identical
 If you encounter issues, rollback immediately:
 
 #### Method 1: Change CLI Parameter
+
 ```bash
 # Change from v2 to v1
 fastmcp-ssh-server --host server --username user --tools-version v1
 ```
 
 #### Method 2: Environment Variable
+
 ```bash
 # If using auto mode
 export SSH_MCP_TOOLS_VERSION=v1
@@ -389,6 +414,7 @@ unset SSH_MCP_TOOLS_VERSION
 ```
 
 #### Method 3: Configuration File
+
 ```json
 {
   "mcpServers": {
@@ -407,6 +433,7 @@ unset SSH_MCP_TOOLS_VERSION
 ### Rollback Verification
 
 After rollback, verify:
+
 - [ ] Server starts with v1 message: "🔧 Using stable v1 tools implementation"
 - [ ] All functionality restored
 - [ ] Performance returns to baseline
@@ -419,6 +446,7 @@ After rollback, verify:
 **Symptoms**: Warning messages about Context not being available
 
 **Solution**: This is informational only in v2. Tools work without Context.
+
 ```bash
 # These warnings are safe to ignore:
 # "Context not provided, using fallback logging"
@@ -429,6 +457,7 @@ After rollback, verify:
 **Symptoms**: Higher memory consumption with v2
 
 **Solution**: Expected due to enhanced features. Monitor and optimize if needed:
+
 ```bash
 # Check memory usage
 ps aux | grep fastmcp-ssh-server
@@ -439,6 +468,7 @@ ps aux | grep fastmcp-ssh-server
 **Symptoms**: `--tools-version auto` not using environment variable
 
 **Solution**: Ensure correct variable name and value:
+
 ```bash
 export SSH_MCP_TOOLS_VERSION=v2  # Not SSH_TOOLS_VERSION
 fastmcp-ssh-server --tools-version auto  # Must specify auto
@@ -449,6 +479,7 @@ fastmcp-ssh-server --tools-version auto  # Must specify auto
 **Symptoms**: "Tool not found" errors with v2
 
 **Solution**: Verify installation and imports:
+
 ```bash
 # Reinstall if needed
 uv sync
@@ -460,9 +491,10 @@ uv run fastmcp-ssh-server --version
 **Symptoms**: Noticeably slower performance with v2
 
 **Solution**:
+
 1. Check system resources
-2. Verify SSH connection stability
-3. Consider reverting to v1 if performance is critical
+1. Verify SSH connection stability
+1. Consider reverting to v1 if performance is critical
 
 ```bash
 # Quick performance test
@@ -474,9 +506,9 @@ time echo "date" | fastmcp-ssh-server --host server --username user --tools-vers
 ### Getting Help
 
 1. **Documentation**: Refer to `docs/TOOLS_V2_FEATURES.md` for detailed feature documentation
-2. **Best Practices**: See `docs/FASTMCP_BEST_PRACTICES.md` for implementation guidelines
-3. **GitHub Issues**: Report problems or request features
-4. **Performance Analysis**: Use the comparison tools in `tests/`
+1. **Best Practices**: See `docs/FASTMCP_BEST_PRACTICES.md` for implementation guidelines
+1. **GitHub Issues**: Report problems or request features
+1. **Performance Analysis**: Use the comparison tools in `tests/`
 
 ### Useful Commands
 
@@ -504,13 +536,14 @@ Migrating to SSH MCP Tools v2 provides significant benefits with minimal risk:
 The migration is designed to be **safe, gradual, and reversible**. Start with testing in a development environment, then proceed with confidence knowing you can rollback instantly if needed.
 
 **Next Steps**:
-1. Read `docs/TOOLS_V2_FEATURES.md` for detailed feature documentation
-2. Test v2 in your environment
-3. Plan your migration strategy
-4. Execute the migration
-5. Enjoy the enhanced capabilities!
 
----
+1. Read `docs/TOOLS_V2_FEATURES.md` for detailed feature documentation
+1. Test v2 in your environment
+1. Plan your migration strategy
+1. Execute the migration
+1. Enjoy the enhanced capabilities!
+
+______________________________________________________________________
 
 *Migration Guide Version: 1.0.0*
 *Last Updated: August 2025*

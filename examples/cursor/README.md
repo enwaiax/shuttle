@@ -29,7 +29,7 @@ After nodes exist (`shuttle node add`), restart Cursor and ask the AI to use Shu
 ## streamable-http (`shuttle serve`)
 
 1. Terminal: `shuttle serve` (note port; default `9876`).
-2. Cursor: add MCP server type **URL**:
+1. Cursor: add MCP server type **URL**:
 
 ```json
 {
@@ -45,10 +45,10 @@ Trailing **`/`** on `/mcp/` is required. The **web panel** Bearer token is **not
 
 ## Files here
 
-| File | Purpose |
-|------|---------|
-| `basic-config.json` | Minimal stdio template |
-| `serve-config.json` | Minimal HTTP template (`shuttle serve`) |
+| File                  | Purpose                                                |
+| --------------------- | ------------------------------------------------------ |
+| `basic-config.json`   | Minimal stdio template                                 |
+| `serve-config.json`   | Minimal HTTP template (`shuttle serve`)                |
 | `setup-cursor-mcp.sh` | Writes a **stdio** `.cursor/mcp.json` in the repo root |
 
 ## Legacy

@@ -12,11 +12,11 @@
 
 Shuttle 让 AI 助手（Claude Code、Cursor 等）安全地在你的远程 SSH 服务器上执行命令 — 支持连接池、会话隔离、命令安全规则和 Web 审计面板。
 
-[快速开始](#快速开始) · [MCP 工具](#mcp-工具) · [Web 面板](#web-面板) · [安全规则](#安全规则) · [文档](https://enwaiax.github.io/shuttle/) · [English](README.md)
+[快速开始](#%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B) · [MCP 工具](#mcp-%E5%B7%A5%E5%85%B7) · [Web 面板](#web-%E9%9D%A2%E6%9D%BF) · [安全规则](#%E5%AE%89%E5%85%A8%E8%A7%84%E5%88%99) · [文档](https://enwaiax.github.io/shuttle/) · [English](README.md)
 
 </div>
 
----
+______________________________________________________________________
 
 ## 为什么选择 Shuttle？
 
@@ -91,10 +91,10 @@ shuttle serve
 
 ## 两种运行模式
 
-| 模式 | 命令 | MCP 传输 | Web UI | 适用场景 |
-|------|------|---------|--------|---------|
-| **CLI** | `shuttle` | stdio | ❌ | 快速使用，AI 客户端管理生命周期 |
-| **Service** | `shuttle serve` | streamable-http | ✅ http://localhost:9876 | 审计日志、管理规则、云端部署 |
+| 模式        | 命令            | MCP 传输        | Web UI                   | 适用场景                        |
+| ----------- | --------------- | --------------- | ------------------------ | ------------------------------- |
+| **CLI**     | `shuttle`       | stdio           | ❌                       | 快速使用，AI 客户端管理生命周期 |
+| **Service** | `shuttle serve` | streamable-http | ✅ http://localhost:9876 | 审计日志、管理规则、云端部署    |
 
 两种模式共享同一个 SQLite 数据库 — CLI 模式记录的命令，在 Service 模式的 Web UI 中同样可见。
 
@@ -102,13 +102,13 @@ shuttle serve
 
 AI 助手自动获得以下工具：
 
-| 工具 | 说明 |
-|------|------|
-| `ssh_run` | 在远程节点上执行命令（会话自动管理） |
-| `ssh_upload` | 通过 SFTP 上传文件 |
-| `ssh_download` | 通过 SFTP 下载文件 |
-| `ssh_list_nodes` | 列出所有配置的节点 |
-| `ssh_add_node` | 添加新的 SSH 节点 |
+| 工具             | 说明                                 |
+| ---------------- | ------------------------------------ |
+| `ssh_run`        | 在远程节点上执行命令（会话自动管理） |
+| `ssh_upload`     | 通过 SFTP 上传文件                   |
+| `ssh_download`   | 通过 SFTP 下载文件                   |
+| `ssh_list_nodes` | 列出所有配置的节点                   |
+| `ssh_add_node`   | 添加新的 SSH 节点                    |
 
 ### 对话示例
 
@@ -126,12 +126,12 @@ AI：训练已启动。Epoch 1/10...（工作目录自动保持）
 
 命令通过 4 级安全系统进行评估：
 
-| 级别 | 行为 | 示例 |
-|------|------|------|
-| 🔴 **block** | 立即拒绝 | `rm -rf /`、`mkfs`、fork 炸弹 |
-| 🟡 **confirm** | 需要用户确认 | `sudo`、`rm -rf`、`shutdown` |
-| 🟠 **warn** | 执行但记录警告 | `apt install`、`pip install` |
-| 🟢 **allow** | 正常执行 | 其他所有命令 |
+| 级别           | 行为           | 示例                          |
+| -------------- | -------------- | ----------------------------- |
+| 🔴 **block**   | 立即拒绝       | `rm -rf /`、`mkfs`、fork 炸弹 |
+| 🟡 **confirm** | 需要用户确认   | `sudo`、`rm -rf`、`shutdown`  |
+| 🟠 **warn**    | 执行但记录警告 | `apt install`、`pip install`  |
+| 🟢 **allow**   | 正常执行       | 其他所有命令                  |
 
 首次启动时自动生成默认规则。可通过 Web UI 或数据库自定义。
 
@@ -181,13 +181,13 @@ shuttle config show          # 显示当前配置
 
 所有配置均可通过环境变量覆盖（前缀 `SHUTTLE_`）：
 
-| 变量 | 默认值 | 说明 |
-|------|--------|------|
-| `SHUTTLE_DB_URL` | `sqlite+aiosqlite:///~/.shuttle/shuttle.db` | 数据库 URL |
-| `SHUTTLE_WEB_PORT` | `9876` | Web 面板端口 |
-| `SHUTTLE_POOL_MAX_TOTAL` | `50` | 最大 SSH 连接总数 |
-| `SHUTTLE_POOL_MAX_PER_NODE` | `5` | 每节点最大连接数 |
-| `SHUTTLE_POOL_IDLE_TIMEOUT` | `300` | 空闲连接超时（秒） |
+| 变量                        | 默认值                                      | 说明               |
+| --------------------------- | ------------------------------------------- | ------------------ |
+| `SHUTTLE_DB_URL`            | `sqlite+aiosqlite:///~/.shuttle/shuttle.db` | 数据库 URL         |
+| `SHUTTLE_WEB_PORT`          | `9876`                                      | Web 面板端口       |
+| `SHUTTLE_POOL_MAX_TOTAL`    | `50`                                        | 最大 SSH 连接总数  |
+| `SHUTTLE_POOL_MAX_PER_NODE` | `5`                                         | 每节点最大连接数   |
+| `SHUTTLE_POOL_IDLE_TIMEOUT` | `300`                                       | 空闲连接超时（秒） |
 
 ### 使用 PostgreSQL
 
@@ -236,7 +236,7 @@ cd web && npm install && npm run dev
 
 [MIT](LICENSE)
 
----
+______________________________________________________________________
 
 <div align="center">
   <sub>为让 AI 帮你 SSH 而生。</sub>

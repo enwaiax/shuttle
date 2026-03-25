@@ -50,13 +50,13 @@ See [MCP Setup](mcp-setup.md) for detailed instructions for Claude Code, Cursor,
 
 AI assistants get these tools automatically:
 
-| Tool | Description |
-|------|-------------|
-| `ssh_run` | Run a command on a remote node (sessions auto-managed) |
-| `ssh_upload` | Upload a file via SFTP |
-| `ssh_download` | Download a file via SFTP |
-| `ssh_list_nodes` | List all configured nodes |
-| `ssh_add_node` | Add a new SSH node |
+| Tool             | Description                                            |
+| ---------------- | ------------------------------------------------------ |
+| `ssh_run`        | Run a command on a remote node (sessions auto-managed) |
+| `ssh_upload`     | Upload a file via SFTP                                 |
+| `ssh_download`   | Download a file via SFTP                               |
+| `ssh_list_nodes` | List all configured nodes                              |
+| `ssh_add_node`   | Add a new SSH node                                     |
 
 ## Architecture
 

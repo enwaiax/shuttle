@@ -12,7 +12,7 @@
 
 **Depends on:** Plan 1 (Backend Core) — completed. All `shuttle.db.*` and `shuttle.core.*` modules exist.
 
----
+______________________________________________________________________
 
 ## File Structure
 
@@ -78,14 +78,18 @@ tests/
 │   └── test_data_api.py         # Export/import tests
 ```
 
----
+______________________________________________________________________
 
 ### Task 1: FastAPI App Factory & Dependencies
 
 **Files:**
+
 - Create: `src/shuttle/web/app.py`
+
 - Create: `src/shuttle/web/deps.py`
+
 - Create: `tests/test_web/__init__.py`
+
 - Create: `tests/test_web/conftest.py`
 
 - [ ] **Step 1: Create test fixtures**
@@ -326,11 +330,12 @@ git add src/shuttle/web/app.py src/shuttle/web/deps.py src/shuttle/web/routes/st
 git commit -m "feat(web): add FastAPI app factory, deps, and stats endpoint"
 ```
 
----
+______________________________________________________________________
 
 ### Task 2: Pydantic Schemas
 
 **Files:**
+
 - Create: `src/shuttle/web/schemas.py`
 
 All request/response models for every endpoint. Defined upfront so routes can import them.
@@ -505,13 +510,16 @@ git add src/shuttle/web/schemas.py
 git commit -m "feat(web): add Pydantic request/response schemas for all endpoints"
 ```
 
----
+______________________________________________________________________
 
 ### Task 3: Nodes API
 
 **Files:**
+
 - Create: `src/shuttle/web/routes/nodes.py`
+
 - Modify: `src/shuttle/web/app.py` (add router include)
+
 - Create: `tests/test_web/test_nodes_api.py` (full test suite)
 
 - [ ] **Step 1: Write failing tests**
@@ -831,13 +839,16 @@ git add src/shuttle/web/routes/nodes.py src/shuttle/web/app.py tests/test_web/te
 git commit -m "feat(web): add nodes CRUD API with tests"
 ```
 
----
+______________________________________________________________________
 
 ### Task 4: Security Rules API
 
 **Files:**
+
 - Create: `src/shuttle/web/routes/rules.py`
+
 - Modify: `src/shuttle/web/app.py` (add router)
+
 - Create: `tests/test_web/test_rules_api.py`
 
 - [ ] **Step 1: Write failing tests**
@@ -1006,15 +1017,20 @@ git add src/shuttle/web/routes/rules.py src/shuttle/web/app.py tests/test_web/te
 git commit -m "feat(web): add security rules CRUD + reorder API"
 ```
 
----
+______________________________________________________________________
 
 ### Task 5: Sessions & Logs API
 
 **Files:**
+
 - Create: `src/shuttle/web/routes/sessions.py`
+
 - Create: `src/shuttle/web/routes/logs.py`
+
 - Modify: `src/shuttle/web/app.py`
+
 - Create: `tests/test_web/test_sessions_api.py`
+
 - Create: `tests/test_web/test_logs_api.py`
 
 - [ ] **Step 1: Write failing session tests**
@@ -1379,15 +1395,20 @@ git add src/shuttle/web/routes/sessions.py src/shuttle/web/routes/logs.py src/sh
 git commit -m "feat(web): add sessions and command logs API with pagination"
 ```
 
----
+______________________________________________________________________
 
 ### Task 6: Settings & Data Export/Import API
 
 **Files:**
+
 - Create: `src/shuttle/web/routes/settings.py`
+
 - Create: `src/shuttle/web/routes/data.py`
+
 - Modify: `src/shuttle/web/app.py`
+
 - Create: `tests/test_web/test_settings_api.py`
+
 - Create: `tests/test_web/test_data_api.py`
 
 - [ ] **Step 1: Write failing settings tests**
@@ -1562,12 +1583,14 @@ git add src/shuttle/web/routes/settings.py src/shuttle/web/routes/data.py src/sh
 git commit -m "feat(web): add settings and data export/import API"
 ```
 
----
+______________________________________________________________________
 
 ### Task 7: Wire CLI `shuttle web` Command
 
 **Files:**
+
 - Modify: `src/shuttle/cli.py`
+
 - Modify: `src/shuttle/core/config.py` (update web_port default to 9876)
 
 - [ ] **Step 1: Update ShuttleConfig web_port default**
@@ -1622,17 +1645,24 @@ git add src/shuttle/cli.py
 git commit -m "feat(web): wire shuttle web CLI command to FastAPI + uvicorn"
 ```
 
----
+______________________________________________________________________
 
 ### Task 8: React Project Scaffold
 
 **Files:**
+
 - Create: `web/package.json`
+
 - Create: `web/tsconfig.json`
+
 - Create: `web/vite.config.ts`
+
 - Create: `web/index.html`
+
 - Create: `web/src/main.tsx`
+
 - Create: `web/src/App.tsx`
+
 - Create: `web/src/vite-env.d.ts`
 
 - [ ] **Step 1: Initialize the React project**
@@ -1821,12 +1851,14 @@ git add web/
 git commit -m "feat(web): scaffold React project with Vite, Tailwind, React Router, TanStack Query"
 ```
 
----
+______________________________________________________________________
 
 ### Task 9: TypeScript Types & API Client
 
 **Files:**
+
 - Create: `web/src/types/index.ts`
+
 - Create: `web/src/api/client.ts`
 
 - [ ] **Step 1: Create TypeScript interfaces**
@@ -2107,11 +2139,12 @@ git add web/src/types/ web/src/api/
 git commit -m "feat(web): add TypeScript types and TanStack Query API client"
 ```
 
----
+______________________________________________________________________
 
 ### Task 10: Shared UI Components
 
 **Files:**
+
 - Create: `web/src/components/Layout.tsx`
 - Create: `web/src/components/Sidebar.tsx`
 - Create: `web/src/components/Badge.tsx`
@@ -2377,6 +2410,7 @@ export default function ConfirmDialog({
 ```bash
 cd /home/local-xiangw/workspace/ssh-mcp/web && npx tsc --noEmit
 ```
+
 Expected: No errors
 
 - [ ] **Step 5: Commit**
@@ -2387,11 +2421,12 @@ git add web/src/components/
 git commit -m "feat(web): add shared UI components (Layout, Sidebar, Badge, DataTable, ConfirmDialog)"
 ```
 
----
+______________________________________________________________________
 
 ### Task 11: Dashboard Page
 
 **Files:**
+
 - Create: `web/src/pages/Dashboard.tsx`
 
 - [ ] **Step 1: Create Dashboard page**
@@ -2477,13 +2512,16 @@ git add web/src/pages/Dashboard.tsx
 git commit -m "feat(web): add Dashboard page with stat cards"
 ```
 
----
+______________________________________________________________________
 
 ### Task 12: Nodes Page
 
 **Files:**
+
 - Create: `web/src/pages/Nodes.tsx`
+
 - Create: `web/src/pages/NodeForm.tsx`
+
 - Modify: `web/src/App.tsx` (add route)
 
 - [ ] **Step 1: Create Nodes list page**
@@ -2737,11 +2775,12 @@ git add web/src/pages/Nodes.tsx web/src/pages/NodeForm.tsx web/src/App.tsx
 git commit -m "feat(web): add Nodes list page with create/delete"
 ```
 
----
+______________________________________________________________________
 
 ### Task 13: Rules, Sessions, Logs, Settings Pages
 
 **Files:**
+
 - Create: `web/src/pages/Rules.tsx`
 - Create: `web/src/pages/RuleForm.tsx`
 - Create: `web/src/pages/Sessions.tsx`
@@ -2811,12 +2850,14 @@ git add web/src/pages/ web/src/App.tsx
 git commit -m "feat(web): add Rules, Sessions, Logs, and Settings pages"
 ```
 
----
+______________________________________________________________________
 
 ### Task 14: Build Pipeline & .gitignore
 
 **Files:**
+
 - Modify: `.gitignore`
+
 - Modify: `pyproject.toml` (add `web/` as package data)
 
 - [ ] **Step 1: Update .gitignore**
@@ -2853,6 +2894,7 @@ packages = ["src/shuttle"]
 cd /home/local-xiangw/workspace/ssh-mcp/web && npm run build
 ls -la ../src/shuttle/web/static/
 ```
+
 Expected: `index.html`, `assets/` directory with JS/CSS bundles.
 
 - [ ] **Step 4: Test full flow**
@@ -2871,11 +2913,12 @@ git add .gitignore pyproject.toml src/shuttle/web/static/.gitkeep
 git commit -m "chore: add build pipeline, static file packaging, and gitignore rules"
 ```
 
----
+______________________________________________________________________
 
 ### Task 15: Run Full Test Suite & Cleanup
 
 **Files:**
+
 - No new files
 
 - [ ] **Step 1: Run full Python test suite**
@@ -2883,6 +2926,7 @@ git commit -m "chore: add build pipeline, static file packaging, and gitignore r
 ```bash
 cd /home/local-xiangw/workspace/ssh-mcp && uv run pytest tests/ -v --tb=short
 ```
+
 Expected: ALL PASS
 
 - [ ] **Step 2: Run linter**
@@ -2890,6 +2934,7 @@ Expected: ALL PASS
 ```bash
 cd /home/local-xiangw/workspace/ssh-mcp && uv run ruff check src/shuttle/web/ tests/test_web/
 ```
+
 Fix any issues.
 
 - [ ] **Step 3: Run frontend type check**

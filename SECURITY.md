@@ -20,7 +20,7 @@ You will receive a response within 48 hours. We will work with you to understand
 ## Supported Versions
 
 | Version | Supported |
-|---------|-----------|
+| ------- | --------- |
 | 0.2.x   | Yes       |
 | < 0.2   | No        |
 

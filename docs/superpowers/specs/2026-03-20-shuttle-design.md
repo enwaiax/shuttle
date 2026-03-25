@@ -4,7 +4,7 @@
 **Status:** Approved
 **Author:** Claude + enwaiax
 
----
+______________________________________________________________________
 
 ## 1. Overview
 
@@ -29,7 +29,7 @@ Shuttle is an AI developer tool that enables Claude Code, Cursor, and other MCP-
 - `uvx shuttle` zero-config startup
 - SQLAlchemy ORM with default SQLite, swappable to PostgreSQL/MySQL
 
----
+______________________________________________________________________
 
 ## 2. Architecture
 
@@ -70,7 +70,7 @@ Shuttle is an AI developer tool that enables Claude Code, Cursor, and other MCP-
 - Web crash does not affect MCP operations
 - SQLite WAL supports concurrent readers + single writer across processes
 
----
+______________________________________________________________________
 
 ## 3. Project Structure
 
@@ -129,7 +129,7 @@ shuttle/
     └── conftest.py
 ```
 
----
+______________________________________________________________________
 
 ## 4. Core Engine
 
@@ -139,15 +139,16 @@ Manages SSH connections with pooling, health checks, and automatic eviction.
 
 **Configuration (all user-adjustable):**
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `max_total` | 50 | Global maximum connections |
-| `max_per_node` | 5 | Max connections per node |
-| `idle_timeout` | 300s | Idle connection eviction |
-| `max_lifetime` | 3600s | Max connection age |
-| `queue_size` | 10 | Wait queue when pool is full |
+| Parameter      | Default | Description                  |
+| -------------- | ------- | ---------------------------- |
+| `max_total`    | 50      | Global maximum connections   |
+| `max_per_node` | 5       | Max connections per node     |
+| `idle_timeout` | 300s    | Idle connection eviction     |
+| `max_lifetime` | 3600s   | Max connection age           |
+| `queue_size`   | 10      | Wait queue when pool is full |
 
 **Key behaviors:**
+
 - Lazy connection: no connections at startup, created on first `acquire()`
 - SSH multiplexing: single `asyncssh.SSHClientConnection` supports multiple concurrent channels
 - Background eviction task: runs every 60s, removes expired and dead connections
@@ -212,22 +213,24 @@ Commands are wrapped as `cd {working_directory} && {command}`. The working direc
 
 4-level command classification with regex pattern matching:
 
-| Level | Behavior | Default Patterns |
-|-------|----------|-----------------|
-| **block** | Always reject, no bypass | `rm -rf /`, `mkfs`, `dd if=.* of=/dev/`, fork bombs |
+| Level       | Behavior                                    | Default Patterns                                                     |
+| ----------- | ------------------------------------------- | -------------------------------------------------------------------- |
+| **block**   | Always reject, no bypass                    | `rm -rf /`, `mkfs`, `dd if=.* of=/dev/`, fork bombs                  |
 | **confirm** | Require confirmation token, supports bypass | `sudo .*`, `rm -rf .*`, `chmod 777`, `shutdown`, `reboot`, `kill -9` |
-| **warn** | Log warning, proceed | `apt install`, `pip install`, `curl .* \| bash` |
-| **allow** | Silent pass-through | Everything else |
+| **warn**    | Log warning, proceed                        | `apt install`, `pip install`, `curl .* \| bash`                      |
+| **allow**   | Silent pass-through                         | Everything else                                                      |
 
 **Rule evaluation order:** Rules are matched by priority (lower number = higher priority). First match wins. Node-specific rules take precedence over global rules.
 
 **Regex matching semantics:**
+
 - Patterns are matched against the **full command string** using `re.search()` (substring match).
 - Patterns are compiled at rule creation time; invalid regex is rejected.
 - To anchor a match, use `^` and `$` explicitly (e.g., `^rm -rf /$` for exact match).
 - Rule creation validates regex and rejects patterns with known ReDoS risks (nested quantifiers). A 100ms execution timeout is enforced per pattern match as a safety net.
 
 **Bypass levels:**
+
 - **Single-use:** confirm once for this exact command invocation
 - **Session-level:** allow this pattern for the remainder of the session (requested via `bypass_scope="session"` parameter on `ssh_execute`)
 - **Permanent:** downgrade rule level via Web panel
@@ -255,7 +258,7 @@ Jump hosts are themselves nodes in the DB (with a `jump_host_id` foreign key), s
 
 **Tunnel lifecycle:** Jump host connections are managed as separate entries in the connection pool, keyed by the jump host's `node_id`. They are reference-counted: the pool tracks how many child connections depend on each tunnel. When the last child connection is released/evicted, the tunnel connection is also eligible for eviction (subject to normal idle timeout). If a jump host connection drops, all child connections tunneled through it are cascade-closed and evicted from the pool.
 
----
+______________________________________________________________________
 
 ## 5. Data Layer
 
@@ -361,27 +364,28 @@ Configurable: `postgresql+asyncpg://...`, `mysql+aiomysql://...`
 Passwords and key contents encrypted with `cryptography.fernet`.
 
 **Key management:**
+
 - On first run, a random Fernet key is generated and stored in `~/.shuttle/keyfile` with `chmod 600` permissions.
 - The keyfile is never derived from hardware fingerprints (which are mutable and unreliable).
 - If the keyfile is lost or corrupted, all encrypted credentials become unrecoverable. Shuttle detects this on startup and logs a clear error message directing the user to re-add credentials via `shuttle node add` or the Web panel.
 - For machine migration: export config via `POST /api/data/export` (credentials excluded), copy `keyfile` to the new machine, then import.
 - Users connecting to external databases should use their own secrets management (e.g., HashiCorp Vault).
 
----
+______________________________________________________________________
 
 ## 6. MCP Server
 
 ### 6.1 Tool Definitions
 
-| Tool | Parameters | Description |
-|------|-----------|-------------|
-| `ssh_execute` | `command`, `node?`, `session_id?`, `timeout?`, `confirm_token?`, `bypass_scope?` | Execute command on remote node |
-| `ssh_upload` | `local_path`, `remote_path`, `node` | Upload file via SFTP |
-| `ssh_download` | `remote_path`, `local_path`, `node` | Download file via SFTP |
-| `ssh_list_nodes` | — | List all nodes with status |
-| `ssh_session_start` | `node` | Create new session, return session_id |
-| `ssh_session_end` | `session_id` | Close session, cleanup resources |
-| `ssh_session_list` | — | List active sessions |
+| Tool                | Parameters                                                                       | Description                           |
+| ------------------- | -------------------------------------------------------------------------------- | ------------------------------------- |
+| `ssh_execute`       | `command`, `node?`, `session_id?`, `timeout?`, `confirm_token?`, `bypass_scope?` | Execute command on remote node        |
+| `ssh_upload`        | `local_path`, `remote_path`, `node`                                              | Upload file via SFTP                  |
+| `ssh_download`      | `remote_path`, `local_path`, `node`                                              | Download file via SFTP                |
+| `ssh_list_nodes`    | —                                                                                | List all nodes with status            |
+| `ssh_session_start` | `node`                                                                           | Create new session, return session_id |
+| `ssh_session_end`   | `session_id`                                                                     | Close session, cleanup resources      |
+| `ssh_session_list`  | —                                                                                | List active sessions                  |
 
 ### 6.2 Confirm Mechanism
 
@@ -404,10 +408,11 @@ The AI client displays this to the user. Upon user approval, the AI re-calls wit
 **`bypass_scope` parameter:** Optional, values `"once"` (default) or `"session"`. When `"session"` is used with a valid `confirm_token`, the matched rule's regex pattern string is added to `SSHSession.bypass_patterns` (an in-memory `set[str]`). During security evaluation, `bypass_patterns` is checked before the rule table — if the command matches any bypassed pattern, it is treated as `allow` regardless of the rule level. Session-level bypasses are not persisted to DB; they are lost when the session ends or the MCP process restarts.
 
 **Node resolution order for `ssh_execute`:**
+
 1. If `session_id` provided → use the session's bound node
-2. If `node` provided → use that node by name
-3. If neither provided and exactly one node exists → auto-select it
-4. Otherwise → return error listing available nodes
+1. If `node` provided → use that node by name
+1. If neither provided and exactly one node exists → auto-select it
+1. Otherwise → return error listing available nodes
 
 ### 6.3 Startup Flow
 
@@ -424,7 +429,7 @@ uvx shuttle
 
 **No nodes configured?** `ssh_execute` returns a friendly onboarding message directing the user to `shuttle node add` or `shuttle web`.
 
----
+______________________________________________________________________
 
 ## 7. Web Server
 
@@ -468,24 +473,24 @@ SPA fallback: all non-`/api` requests serve `index.html`.
 
 **Tech stack:**
 
-| Component | Choice | Rationale |
-|-----------|--------|-----------|
-| Build | Vite | Fastest SPA bundler |
-| UI | Tailwind CSS + Radix UI | Customizable macOS-like styling + accessible primitives |
-| State | TanStack Query | Server-state focused, no Redux overhead |
-| Router | React Router v7 | Standard choice |
-| Table | TanStack Table | Virtual scrolling for logs |
-| Charts | Recharts | Dashboard statistics |
-| Drag & Drop | dnd-kit | Rule priority reordering |
+| Component   | Choice                  | Rationale                                               |
+| ----------- | ----------------------- | ------------------------------------------------------- |
+| Build       | Vite                    | Fastest SPA bundler                                     |
+| UI          | Tailwind CSS + Radix UI | Customizable macOS-like styling + accessible primitives |
+| State       | TanStack Query          | Server-state focused, no Redux overhead                 |
+| Router      | React Router v7         | Standard choice                                         |
+| Table       | TanStack Table          | Virtual scrolling for logs                              |
+| Charts      | Recharts                | Dashboard statistics                                    |
+| Drag & Drop | dnd-kit                 | Rule priority reordering                                |
 
 **Pages:**
 
 1. **Dashboard** — Node status overview, active sessions, today's command count, recent warnings
-2. **Nodes** — Node list (card/table view toggle), add/edit/delete/test, tag grouping, jump host config
-3. **Security** — Rule list (drag-to-reorder), 4-level color coding, regex editor with live preview, rule tester
-4. **Sessions** — Active session list, session detail with command history timeline, manual close
-5. **Logs** — Global command history, filter by node/session/level/time, search, export
-6. **Settings** — Connection pool params, database config, data import/export, about
+1. **Nodes** — Node list (card/table view toggle), add/edit/delete/test, tag grouping, jump host config
+1. **Security** — Rule list (drag-to-reorder), 4-level color coding, regex editor with live preview, rule tester
+1. **Sessions** — Active session list, session detail with command history timeline, manual close
+1. **Logs** — Global command history, filter by node/session/level/time, search, export
+1. **Settings** — Connection pool params, database config, data import/export, about
 
 **macOS design language:**
 
@@ -498,39 +503,39 @@ SPA fallback: all non-`/api` requests serve `index.html`.
 
 **Build output:** `web/` source builds to `src/shuttle/web/static/` via Vite. Included in the Python package wheel. CI handles the build; end users never need Node.js.
 
----
+______________________________________________________________________
 
 ## 8. CLI Commands
 
-| Command | Action |
-|---------|--------|
-| `uvx shuttle` | Start MCP server (stdio, for AI clients) |
-| `uvx shuttle web` | Start Web panel (default: http://localhost:9876) |
-| `uvx shuttle web --port 8080` | Custom Web port |
-| `uvx shuttle node add` | Add SSH node (interactive) |
-| `uvx shuttle node list` | List all nodes |
-| `uvx shuttle node edit <name>` | Edit node (interactive) |
-| `uvx shuttle node test <name>` | Test node connectivity |
-| `uvx shuttle node remove <name>` | Remove node |
-| `uvx shuttle config init` | Initialize config (guided) |
-| `uvx shuttle config show` | Show current config |
-| `uvx shuttle config cleanup` | Run data cleanup |
+| Command                          | Action                                           |
+| -------------------------------- | ------------------------------------------------ |
+| `uvx shuttle`                    | Start MCP server (stdio, for AI clients)         |
+| `uvx shuttle web`                | Start Web panel (default: http://localhost:9876) |
+| `uvx shuttle web --port 8080`    | Custom Web port                                  |
+| `uvx shuttle node add`           | Add SSH node (interactive)                       |
+| `uvx shuttle node list`          | List all nodes                                   |
+| `uvx shuttle node edit <name>`   | Edit node (interactive)                          |
+| `uvx shuttle node test <name>`   | Test node connectivity                           |
+| `uvx shuttle node remove <name>` | Remove node                                      |
+| `uvx shuttle config init`        | Initialize config (guided)                       |
+| `uvx shuttle config show`        | Show current config                              |
+| `uvx shuttle config cleanup`     | Run data cleanup                                 |
 
----
+______________________________________________________________________
 
 ## 9. Performance & Reliability
 
 ### 9.1 Performance Targets
 
-| Metric | Target | Mechanism |
-|--------|--------|-----------|
-| MCP startup | < 500ms | Lazy connections, lightweight init |
-| Command latency (pooled) | < 50ms overhead | Connection reuse, zero handshake |
-| Command latency (new conn) | < 2s | asyncssh connect + optional jump host |
-| Web panel startup | < 1s | Static SPA, FastAPI lightweight |
-| API response | < 100ms | Async full-stack + SQLite WAL |
-| Log query (100K rows) | < 500ms | SQLite indexes + pagination |
-| Concurrent sessions | 50+ | asyncio event loop, no thread overhead |
+| Metric                     | Target          | Mechanism                              |
+| -------------------------- | --------------- | -------------------------------------- |
+| MCP startup                | < 500ms         | Lazy connections, lightweight init     |
+| Command latency (pooled)   | < 50ms overhead | Connection reuse, zero handshake       |
+| Command latency (new conn) | < 2s            | asyncssh connect + optional jump host  |
+| Web panel startup          | < 1s            | Static SPA, FastAPI lightweight        |
+| API response               | < 100ms         | Async full-stack + SQLite WAL          |
+| Log query (100K rows)      | < 500ms         | SQLite indexes + pagination            |
+| Concurrent sessions        | 50+             | asyncio event loop, no thread overhead |
 
 ### 9.2 Optimizations
 
@@ -540,13 +545,13 @@ SPA fallback: all non-`/api` requests serve `index.html`.
 
 ### 9.3 Error Recovery
 
-| Scenario | Handling |
-|----------|----------|
-| SSH connection dropped | Auto-evict from pool, rebuild on next acquire |
-| Jump host dropped | Cascade-close all tunneled connections, trigger reconnect |
-| DB lock timeout | WAL mode + busy_timeout=5000ms, retry 3x on contention |
-| MCP process crash | Orphan detection: the MCP process writes its PID to `~/.shuttle/mcp.pid` on startup. The Web process periodically checks (every 60s) if the PID is alive. Sessions belonging to a dead MCP process are marked `orphaned` and auto-closed after 1h. |
-| Web process crash | No impact on MCP; restart recovers all state from DB |
+| Scenario               | Handling                                                                                                                                                                                                                                           |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SSH connection dropped | Auto-evict from pool, rebuild on next acquire                                                                                                                                                                                                      |
+| Jump host dropped      | Cascade-close all tunneled connections, trigger reconnect                                                                                                                                                                                          |
+| DB lock timeout        | WAL mode + busy_timeout=5000ms, retry 3x on contention                                                                                                                                                                                             |
+| MCP process crash      | Orphan detection: the MCP process writes its PID to `~/.shuttle/mcp.pid` on startup. The Web process periodically checks (every 60s) if the PID is alive. Sessions belonging to a dead MCP process are marked `orphaned` and auto-closed after 1h. |
+| Web process crash      | No impact on MCP; restart recovers all state from DB                                                                                                                                                                                               |
 
 ### 9.4 Data Cleanup
 
@@ -559,65 +564,66 @@ cleanup:
 
 Runs on Web process startup and via `shuttle config cleanup`.
 
----
+______________________________________________________________________
 
 ## 10. Dependencies
 
 ### Python (Core)
 
-| Package | Version | Purpose |
-|---------|---------|---------|
-| fastmcp | >= 2.0.0 | MCP protocol framework |
-| asyncssh | >= 2.14.0 | SSH connections (async, multiplexing, jump host) |
-| fastapi | >= 0.110.0 | Web API server |
-| uvicorn | >= 0.27.0 | ASGI server |
-| sqlalchemy[asyncio] | >= 2.0.0 | ORM with async support |
-| aiosqlite | >= 0.19.0 | SQLite async driver |
-| pydantic | >= 2.0.0 | Data validation |
-| pydantic-settings | >= 2.0.0 | Configuration management |
-| typer | >= 0.12.0 | CLI framework |
-| cryptography | >= 41.0.0 | Credential encryption |
-| loguru | >= 0.7.0 | Logging |
+| Package             | Version    | Purpose                                          |
+| ------------------- | ---------- | ------------------------------------------------ |
+| fastmcp             | >= 2.0.0   | MCP protocol framework                           |
+| asyncssh            | >= 2.14.0  | SSH connections (async, multiplexing, jump host) |
+| fastapi             | >= 0.110.0 | Web API server                                   |
+| uvicorn             | >= 0.27.0  | ASGI server                                      |
+| sqlalchemy[asyncio] | >= 2.0.0   | ORM with async support                           |
+| aiosqlite           | >= 0.19.0  | SQLite async driver                              |
+| pydantic            | >= 2.0.0   | Data validation                                  |
+| pydantic-settings   | >= 2.0.0   | Configuration management                         |
+| typer               | >= 0.12.0  | CLI framework                                    |
+| cryptography        | >= 41.0.0  | Credential encryption                            |
+| loguru              | >= 0.7.0   | Logging                                          |
 
 ### JavaScript (Frontend)
 
-| Package | Purpose |
-|---------|---------|
-| react, react-dom | UI framework |
-| vite | Build tool |
-| tailwindcss | Styling |
-| @radix-ui/* | Accessible UI primitives |
-| @tanstack/react-query | Server state management |
-| @tanstack/react-table | Virtual scrolling tables |
-| react-router | Client-side routing |
-| recharts | Dashboard charts |
-| @dnd-kit/* | Drag-and-drop rule reordering |
+| Package               | Purpose                       |
+| --------------------- | ----------------------------- |
+| react, react-dom      | UI framework                  |
+| vite                  | Build tool                    |
+| tailwindcss           | Styling                       |
+| @radix-ui/\*          | Accessible UI primitives      |
+| @tanstack/react-query | Server state management       |
+| @tanstack/react-table | Virtual scrolling tables      |
+| react-router          | Client-side routing           |
+| recharts              | Dashboard charts              |
+| @dnd-kit/\*           | Drag-and-drop rule reordering |
 
----
+______________________________________________________________________
 
 ## 11. Migration from Current Codebase
 
 The current `fastmcp-ssh-server` codebase will be fully replaced. Key changes:
 
-| Aspect | Current | Shuttle |
-|--------|---------|---------|
-| Package name | `fastmcp-ssh-server` | `shuttle-mcp` |
-| CLI entry | `fastmcp-ssh-server` | `shuttle` |
-| Config source | CLI args | SQLite DB + Web UI |
-| Connection model | Singleton manager | Connection pool |
-| Session support | None | Full session isolation |
-| Security | Basic whitelist/blacklist | 4-level with confirm tokens |
-| Web UI | None | React SPA control panel |
-| Proxy | None | SSH Jump Host |
-| Data persistence | None | SQLAlchemy ORM |
+| Aspect           | Current                   | Shuttle                     |
+| ---------------- | ------------------------- | --------------------------- |
+| Package name     | `fastmcp-ssh-server`      | `shuttle-mcp`               |
+| CLI entry        | `fastmcp-ssh-server`      | `shuttle`                   |
+| Config source    | CLI args                  | SQLite DB + Web UI          |
+| Connection model | Singleton manager         | Connection pool             |
+| Session support  | None                      | Full session isolation      |
+| Security         | Basic whitelist/blacklist | 4-level with confirm tokens |
+| Web UI           | None                      | React SPA control panel     |
+| Proxy            | None                      | SSH Jump Host               |
+| Data persistence | None                      | SQLAlchemy ORM              |
 
 Reusable components from current code:
+
 - asyncssh connection logic (refactored into pool)
 - Basic command validation patterns (migrated to SecurityRule seeds)
 - FastMCP tool registration patterns
 - CLI structure (Typer, migrated to new commands)
 
----
+______________________________________________________________________
 
 ## 12. Future Considerations (Out of Scope for v1)
 
