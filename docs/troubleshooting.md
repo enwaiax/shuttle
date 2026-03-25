@@ -6,7 +6,7 @@ Common issues and solutions when using Shuttle.
 
 ### "Connection refused" or timeout
 
-**Symptom:** `ssh_execute` returns a connection error.
+**Symptom:** `ssh_run` returns a connection error.
 
 **Checklist:**
 
@@ -77,7 +77,7 @@ Ensure `uvx shuttle-mcp --help` works, or run `uv tool install shuttle-mcp` and 
 
 ### Commands blocked unexpectedly
 
-**Symptom:** `ssh_execute` returns "BLOCKED" for a command you expect to work.
+**Symptom:** `ssh_run` returns "BLOCKED" for a command you expect to work.
 
 **Solutions:**
 
@@ -93,7 +93,7 @@ Ensure `uvx shuttle-mcp --help` works, or run `uv tool install shuttle-mcp` and 
 This is expected for commands matching `confirm`-level rules (e.g., `sudo`, `rm -rf`). The AI should:
 
 1. Show the user the command and ask for confirmation
-2. Re-call `ssh_execute` with the `confirm_token` parameter
+2. Re-call `ssh_run` with the `confirm_token` parameter
 
 ## Web Panel Issues
 

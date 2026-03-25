@@ -114,7 +114,7 @@ When a command matches a **confirm**-level rule, Shuttle does not execute it. In
 
 1. The AI assistant receives the confirm response and presents it to the user.
 2. The user approves the command.
-3. The AI re-submits the same `ssh_execute` call with the `confirm_token` parameter.
+3. The AI re-submits the same `ssh_run` call with the `confirm_token` parameter.
 4. Shuttle validates the token:
    - Token must exist in the in-memory store
    - Token must match the exact same command and node

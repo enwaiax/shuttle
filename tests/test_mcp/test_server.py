@@ -9,19 +9,17 @@ import pytest
 from shuttle.mcp.server import create_mcp_server
 
 EXPECTED_TOOLS = {
-    "ssh_execute",
+    "ssh_run",
     "ssh_list_nodes",
-    "ssh_session_start",
-    "ssh_session_end",
-    "ssh_session_list",
     "ssh_upload",
     "ssh_download",
+    "ssh_add_node",
 }
 
 
 @pytest.mark.asyncio
 async def test_create_mcp_server_registers_expected_tools(tmp_path):
-    """create_mcp_server returns a FastMCP with all 7 Shuttle tools registered."""
+    """create_mcp_server returns a FastMCP with all 5 Shuttle tools registered."""
     shuttle_dir = tmp_path / ".shuttle"
     shuttle_dir.mkdir()
     db_url = f"sqlite+aiosqlite:///{tmp_path / 'test.db'}"

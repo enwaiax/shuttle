@@ -47,7 +47,9 @@ def _make_session_mgr(session: SSHSession | None = None, execute_result=None):
                 "working_directory": "/home/user",
             }
         )
-    mgr.list_active.return_value = []
+    # Return the session in list_active so auto-session finds it
+    mgr.list_active.return_value = [session] if session else []
+    mgr.create = AsyncMock(return_value=session)
     return mgr
 
 
@@ -102,8 +104,7 @@ async def test_allowed_command_executes():
 
     result = await _execute_command_logic(
         command="echo hello",
-        node=None,
-        session_id="s1",
+        node="node1",
         timeout=30,
         confirm_token=None,
         bypass_scope=None,
@@ -128,8 +129,7 @@ async def test_blocked_command_rejected():
 
     result = await _execute_command_logic(
         command="rm -rf /",
-        node=None,
-        session_id="s1",
+        node="node1",
         timeout=30,
         confirm_token=None,
         bypass_scope=None,
@@ -157,8 +157,7 @@ async def test_confirm_returns_token_request():
 
     result = await _execute_command_logic(
         command="shutdown -h now",
-        node=None,
-        session_id="s1",
+        node="node1",
         timeout=30,
         confirm_token=None,
         bypass_scope=None,
@@ -174,3 +173,89 @@ async def test_confirm_returns_token_request():
     assert "tok_abc123" in result
     token_store.create.assert_called_once_with("shutdown -h now", "node1")
     session_mgr.execute.assert_not_awaited()
+
+
+@pytest.mark.asyncio
+async def test_implicit_session_created_when_none_exists():
+    """When no active session exists for the node, one is auto-created."""
+    new_session = SSHSession(session_id="auto-1", node_id="node1")
+    guard = _make_guard(SecurityLevel.ALLOW)
+
+    session_mgr = MagicMock(spec=SessionManager)
+    session_mgr.list_active.return_value = []  # no existing sessions
+    session_mgr.create = AsyncMock(return_value=new_session)
+    session_mgr.execute = AsyncMock(
+        return_value={"stdout": "created", "exit_status": 0, "working_directory": "/"}
+    )
+
+    result = await _execute_command_logic(
+        command="pwd",
+        node="node1",
+        timeout=30,
+        confirm_token=None,
+        bypass_scope=None,
+        pool=MagicMock(),
+        guard=guard,
+        token_store=_make_token_store(),
+        session_mgr=session_mgr,
+        db_session_ctx=_noop_db_session,
+        node_repo_factory=_noop_node_repo_factory,
+    )
+
+    session_mgr.create.assert_awaited_once_with("node1")
+    assert result == "created"
+
+
+@pytest.mark.asyncio
+async def test_implicit_session_reused_across_calls():
+    """When an active session exists for the node, it is reused (working dir preserved)."""
+    session = SSHSession(session_id="reuse-1", node_id="node1")
+    guard = _make_guard(SecurityLevel.ALLOW)
+
+    session_mgr = MagicMock(spec=SessionManager)
+    session_mgr.list_active.return_value = [session]
+    session_mgr.create = AsyncMock()  # should NOT be called
+    session_mgr.execute = AsyncMock(
+        return_value={
+            "stdout": "/workspace",
+            "exit_status": 0,
+            "working_directory": "/workspace",
+        }
+    )
+
+    # First call
+    await _execute_command_logic(
+        command="cd /workspace",
+        node="node1",
+        timeout=30,
+        confirm_token=None,
+        bypass_scope=None,
+        pool=MagicMock(),
+        guard=guard,
+        token_store=_make_token_store(),
+        session_mgr=session_mgr,
+        db_session_ctx=_noop_db_session,
+        node_repo_factory=_noop_node_repo_factory,
+    )
+
+    # Second call — same node, should reuse session
+    result = await _execute_command_logic(
+        command="pwd",
+        node="node1",
+        timeout=30,
+        confirm_token=None,
+        bypass_scope=None,
+        pool=MagicMock(),
+        guard=guard,
+        token_store=_make_token_store(),
+        session_mgr=session_mgr,
+        db_session_ctx=_noop_db_session,
+        node_repo_factory=_noop_node_repo_factory,
+    )
+
+    # session.create should never have been called — session was reused
+    session_mgr.create.assert_not_awaited()
+    # Both calls should use the same session_id
+    calls = session_mgr.execute.call_args_list
+    assert all(c.args[0] == "reuse-1" for c in calls)
+    assert result == "/workspace"

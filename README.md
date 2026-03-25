@@ -107,27 +107,22 @@ AI assistants get these tools automatically:
 
 | Tool | Description |
 |------|-------------|
-| `ssh_execute` | Run a command on a remote node |
+| `ssh_run` | Run a command on a remote node (sessions auto-managed) |
 | `ssh_upload` | Upload a file via SFTP |
 | `ssh_download` | Download a file via SFTP |
 | `ssh_list_nodes` | List all configured nodes |
 | `ssh_add_node` | Add a new SSH node |
-| `ssh_remove_node` | Remove a node |
-| `ssh_session_start` | Start a stateful session (preserves working directory) |
-| `ssh_session_end` | End a session |
-| `ssh_session_list` | List active sessions |
 
 ### Example conversation
 
 ```
 You: Check the GPU usage on my training server
-AI:  → ssh_execute(node="gpu-server", command="nvidia-smi")
+AI:  → ssh_run(node="gpu-server", command="nvidia-smi")
 AI:  Your GPU server has 7x A100-80GB, all idle at 0% utilization.
 
 You: Start a training run
-AI:  → ssh_session_start(node="gpu-server")
-AI:  → ssh_execute(session_id="abc123", command="cd /workspace && python train.py")
-AI:  Training started. Epoch 1/10...
+AI:  → ssh_run(node="gpu-server", command="cd /workspace && python train.py")
+AI:  Training started. Epoch 1/10... (working directory preserved automatically)
 ```
 
 ## Security Rules

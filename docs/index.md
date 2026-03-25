@@ -52,15 +52,11 @@ AI assistants get these tools automatically:
 
 | Tool | Description |
 |------|-------------|
-| `ssh_execute` | Run a command on a remote node |
+| `ssh_run` | Run a command on a remote node (sessions auto-managed) |
 | `ssh_upload` | Upload a file via SFTP |
 | `ssh_download` | Download a file via SFTP |
 | `ssh_list_nodes` | List all configured nodes |
 | `ssh_add_node` | Add a new SSH node |
-| `ssh_remove_node` | Remove a node |
-| `ssh_session_start` | Start a stateful session (preserves working directory) |
-| `ssh_session_end` | End a session |
-| `ssh_session_list` | List active sessions |
 
 ## Architecture
 

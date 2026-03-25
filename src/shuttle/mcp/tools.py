@@ -1,15 +1,15 @@
 """MCP tool registrations for the Shuttle SSH gateway.
 
-Provides ``register_tools()`` which wires up seven tools on a FastMCP instance:
-ssh_execute, ssh_list_nodes, ssh_session_start, ssh_session_end,
-ssh_session_list, ssh_upload, ssh_download.
+Provides ``register_tools()`` which wires up five tools on a FastMCP instance:
+ssh_run, ssh_list_nodes, ssh_upload, ssh_download, ssh_add_node.
+
+Sessions are managed implicitly: ``ssh_run`` auto-creates or reuses a session
+per node so that working directory context is preserved across calls.
 """
 
 from __future__ import annotations
 
-import time
 from collections.abc import AsyncIterator, Callable
-from datetime import UTC
 from typing import Any
 
 from loguru import logger
@@ -39,7 +39,6 @@ async def _execute_command_logic(
     *,
     command: str,
     node: str | None,
-    session_id: str | None,
     timeout: float,
     confirm_token: str | None,
     bypass_scope: str | None,
@@ -52,14 +51,15 @@ async def _execute_command_logic(
 ) -> str:
     """Execute a command with security checks, node resolution, and DB logging.
 
+    Sessions are implicit: if an active session exists for the resolved node it
+    is reused; otherwise a new session is created automatically.
+
     Parameters
     ----------
     command : str
         The shell command to run.
     node : str | None
-        Named node to target. Resolved from session if omitted.
-    session_id : str | None
-        If provided, execute within this session context.
+        Named node to target.  Auto-selected when only one node exists.
     timeout : float
         Command timeout in seconds.
     confirm_token : str | None
@@ -84,18 +84,8 @@ async def _execute_command_logic(
     str
         Command output or a security/error message.
     """
-    from shuttle.db.repository import LogRepo, NodeRepo
-
-    # ── 1. Resolve target node ──────────────────────────────────────
+    # -- 1. Resolve target node -----------------------------------------------
     resolved_node: str | None = node
-    resolved_node_id: str | None = None  # UUID for DB foreign key
-    session_obj = None
-
-    if session_id:
-        session_obj = session_mgr.get(session_id)
-        if session_obj is None:
-            return f"Error: session '{session_id}' not found or already closed."
-        resolved_node = resolved_node or session_obj.node_id
 
     if resolved_node is None:
         # Auto-select: if exactly one node is registered, use it
@@ -104,25 +94,30 @@ async def _execute_command_logic(
             all_nodes = await repo.list_all()
         if len(all_nodes) == 1:
             resolved_node = all_nodes[0].name
-            resolved_node_id = all_nodes[0].id
         else:
             return (
                 "Error: no node specified and cannot auto-select "
                 f"(found {len(all_nodes)} nodes). "
-                "Provide 'node' or 'session_id'."
+                "Provide 'node'."
             )
 
-    # Look up the node UUID if not already resolved
-    if resolved_node_id is None:
-        async with db_session_ctx() as db_sess:
-            repo = node_repo_factory(db_sess)
-            node_obj = await repo.get_by_name(resolved_node)
-        if node_obj is not None:
-            resolved_node_id = node_obj.id
-        else:
-            resolved_node_id = resolved_node  # fallback to name if not found
+    # -- 2. Auto-session: find existing or create ----------------------------
+    active_sessions = session_mgr.list_active()
+    node_session = next(
+        (s for s in active_sessions if s.node_id == resolved_node), None
+    )
+    if node_session:
+        session_id = node_session.session_id
+        session_obj = node_session
+    else:
+        try:
+            new_session = await session_mgr.create(resolved_node)
+            session_id = new_session.session_id
+            session_obj = new_session
+        except Exception as exc:
+            return f"Error: failed to auto-create session — {exc}"
 
-    # ── 2. Security check ───────────────────────────────────────────
+    # -- 3. Security check ----------------------------------------------------
     bypass_patterns = list(session_obj.bypass_patterns) if session_obj else []
     async with db_session_ctx() as db_sess:
         decision = await guard.evaluate(
@@ -140,7 +135,7 @@ async def _execute_command_logic(
                 f"Command requires confirmation.\n"
                 f"Rule: {decision.matched_rule}\n"
                 f"Reason: {decision.message}\n"
-                f'To proceed, re-call ssh_execute with confirm_token="{token}"'
+                f'To proceed, re-call ssh_run with confirm_token="{token}"'
             )
             return msg
 
@@ -166,54 +161,9 @@ async def _execute_command_logic(
             node=resolved_node,
         )
 
-    # ── 3. Execute ──────────────────────────────────────────────────
-    start_ts = time.monotonic()
-
-    if session_obj is not None:
-        # Session-based execution (handles DB logging internally)
-        result = await session_mgr.execute(session_id, command, timeout=timeout)
-        stdout = result["stdout"]
-    else:
-        # Stateless execution via pool
-        try:
-            async with pool.connection(resolved_node) as pc:
-                ssh_result = await pc.conn.run(command, timeout=timeout, check=False)
-                stdout = ssh_result.stdout or ""
-                exit_code = ssh_result.exit_status
-        except Exception as exc:
-            return f"Error: command execution failed — {exc}"
-
-        # Truncate output for caller
-        stdout = _truncate(stdout, MAX_OUTPUT_BYTES)
-
-        # Log to DB (stateless, session_id=None)
-        elapsed_ms = int((time.monotonic() - start_ts) * 1000)
-        db_stdout = _truncate(stdout, MAX_DB_OUTPUT_BYTES)
-        try:
-            async with db_session_ctx() as db_sess:
-                log_repo = LogRepo(db_sess)
-                await log_repo.create(
-                    node_id=resolved_node_id,
-                    command=command,
-                    session_id=None,
-                    exit_code=exit_code,
-                    stdout=db_stdout,
-                    security_level=decision.level.value,
-                    security_rule_id=None,
-                    bypassed=bool(confirm_token),
-                    duration_ms=elapsed_ms,
-                )
-                # Update node last_seen_at on successful execution
-                from datetime import datetime
-
-                node_repo = NodeRepo(db_sess)
-                await node_repo.update(
-                    resolved_node_id,
-                    last_seen_at=datetime.now(UTC),
-                    status="active",
-                )
-        except Exception:
-            logger.exception("Failed to persist command log")
+    # -- 4. Execute via session -----------------------------------------------
+    result = await session_mgr.execute(session_id, command, timeout=timeout)
+    stdout = result["stdout"]
 
     return stdout
 
@@ -255,25 +205,24 @@ def register_tools(
         Credential manager for encrypting node credentials.
     """
 
-    # ── ssh_execute ─────────────────────────────────────────────────
+    # -- ssh_run --------------------------------------------------------------
     @mcp.tool()
-    async def ssh_execute(
+    async def ssh_run(
         command: str,
         node: str | None = None,
-        session_id: str | None = None,
         timeout: float = 30.0,
         confirm_token: str | None = None,
         bypass_scope: str | None = None,
     ) -> str:
         """Execute a shell command on a remote SSH node.
 
-        Supports session-based (stateful) and stateless execution with
-        security checks (BLOCK / CONFIRM / WARN / ALLOW).
+        Sessions are managed automatically: working directory is preserved
+        across calls to the same node. Security checks (BLOCK / CONFIRM /
+        WARN / ALLOW) are applied before execution.
         """
         return await _execute_command_logic(
             command=command,
             node=node,
-            session_id=session_id,
             timeout=timeout,
             confirm_token=confirm_token,
             bypass_scope=bypass_scope,
@@ -285,7 +234,7 @@ def register_tools(
             node_repo_factory=node_repo_factory,
         )
 
-    # ── ssh_list_nodes ──────────────────────────────────────────────
+    # -- ssh_list_nodes -------------------------------------------------------
     @mcp.tool()
     async def ssh_list_nodes() -> str:
         """List all configured SSH nodes with status icons."""
@@ -304,46 +253,7 @@ def register_tools(
             lines.append(f"{icon} {n.name}  ({n.host}:{n.port}, user={n.username})")
         return "\n".join(lines)
 
-    # ── ssh_session_start ───────────────────────────────────────────
-    @mcp.tool()
-    async def ssh_session_start(node: str) -> str:
-        """Start a new SSH session on the named node."""
-        try:
-            session = await session_mgr.create(node)
-        except Exception as exc:
-            return f"Error: failed to start session — {exc}"
-        return (
-            f"Session started.\n"
-            f"  session_id: {session.session_id}\n"
-            f"  node: {session.node_id}\n"
-            f"  cwd: {session.working_directory}"
-        )
-
-    # ── ssh_session_end ─────────────────────────────────────────────
-    @mcp.tool()
-    async def ssh_session_end(session_id: str) -> str:
-        """Close an active SSH session."""
-        session = session_mgr.get(session_id)
-        if session is None:
-            return f"Error: session '{session_id}' not found or already closed."
-        await session_mgr.close(session_id)
-        return f"Session '{session_id}' closed."
-
-    # ── ssh_session_list ────────────────────────────────────────────
-    @mcp.tool()
-    async def ssh_session_list() -> str:
-        """List all active SSH sessions."""
-        sessions = session_mgr.list_active()
-        if not sessions:
-            return "No active sessions."
-        lines = []
-        for s in sessions:
-            lines.append(
-                f"  {s.session_id}  node={s.node_id}  cwd={s.working_directory}"
-            )
-        return "\n".join(lines)
-
-    # ── ssh_upload ──────────────────────────────────────────────────
+    # -- ssh_upload -----------------------------------------------------------
     @mcp.tool()
     async def ssh_upload(
         node: str,
@@ -359,7 +269,7 @@ def register_tools(
         except Exception as exc:
             return f"Error: upload failed — {exc}"
 
-    # ── ssh_download ────────────────────────────────────────────────
+    # -- ssh_download ---------------------------------------------------------
     @mcp.tool()
     async def ssh_download(
         node: str,
@@ -375,7 +285,7 @@ def register_tools(
         except Exception as exc:
             return f"Error: download failed — {exc}"
 
-    # ── ssh_add_node ───────────────────────────────────────────────
+    # -- ssh_add_node ---------------------------------------------------------
     @mcp.tool()
     async def ssh_add_node(
         name: str,
@@ -468,29 +378,3 @@ def register_tools(
         pool.register_node(info)
 
         return f"Node '{name}' added (id={node_obj.id})."
-
-    # ── ssh_remove_node ────────────────────────────────────────────
-    @mcp.tool()
-    async def ssh_remove_node(name: str) -> str:
-        """Remove an SSH node from the Shuttle configuration."""
-        # Look up node by name
-        async with db_session_ctx() as db_sess:
-            repo = node_repo_factory(db_sess)
-            node_obj = await repo.get_by_name(name)
-        if node_obj is None:
-            return f"Error: node '{name}' not found."
-
-        # Delete from DB
-        async with db_session_ctx() as db_sess:
-            repo = node_repo_factory(db_sess)
-            await repo.delete(node_obj.id)
-
-        # Close idle connections
-        try:
-            await pool.close_node(name)
-        except Exception:
-            logger.warning(
-                "Failed to close pool connections for node '{name}'", name=name
-            )
-
-        return f"Node '{name}' removed."

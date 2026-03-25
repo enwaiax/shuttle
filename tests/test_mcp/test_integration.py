@@ -65,7 +65,7 @@ async def test_mcp_server_starts_and_lists_nodes(tmp_path):
     # Verify required tools are registered
     tools = await mcp.get_tools()
     tool_names = set(tools.keys())
-    required_tools = {"ssh_execute", "ssh_list_nodes", "ssh_session_start"}
+    required_tools = {"ssh_run", "ssh_list_nodes", "ssh_add_node"}
     assert required_tools.issubset(tool_names), (
         f"Missing tools: {required_tools - tool_names}"
     )

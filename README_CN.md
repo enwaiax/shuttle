@@ -104,27 +104,22 @@ AI 助手自动获得以下工具：
 
 | 工具 | 说明 |
 |------|------|
-| `ssh_execute` | 在远程节点上执行命令 |
+| `ssh_run` | 在远程节点上执行命令（会话自动管理） |
 | `ssh_upload` | 通过 SFTP 上传文件 |
 | `ssh_download` | 通过 SFTP 下载文件 |
 | `ssh_list_nodes` | 列出所有配置的节点 |
 | `ssh_add_node` | 添加新的 SSH 节点 |
-| `ssh_remove_node` | 删除节点 |
-| `ssh_session_start` | 开始有状态会话（保持工作目录） |
-| `ssh_session_end` | 结束会话 |
-| `ssh_session_list` | 列出活跃会话 |
 
 ### 对话示例
 
 ```
 你：查一下训练服务器的 GPU 使用情况
-AI：→ ssh_execute(node="gpu-server", command="nvidia-smi")
+AI：→ ssh_run(node="gpu-server", command="nvidia-smi")
 AI：你的 GPU 服务器有 7 块 A100-80GB，全部空闲，利用率 0%。
 
 你：开始训练
-AI：→ ssh_session_start(node="gpu-server")
-AI：→ ssh_execute(session_id="abc123", command="cd /workspace && python train.py")
-AI：训练已启动。Epoch 1/10...
+AI：→ ssh_run(node="gpu-server", command="cd /workspace && python train.py")
+AI：训练已启动。Epoch 1/10...（工作目录自动保持）
 ```
 
 ## 安全规则
