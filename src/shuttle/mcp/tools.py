@@ -125,19 +125,19 @@ async def _execute_command_logic(
         )
 
     if decision.level == SecurityLevel.BLOCK:
-        return f"BLOCKED: {decision.message}"
+        return f"⛔ Blocked: {decision.message}"
 
     if decision.level == SecurityLevel.CONFIRM:
         if confirm_token is None:
             # Create a token and ask the caller to confirm
             token = token_store.create(command, resolved_node)
-            msg = (
-                f"Command requires confirmation.\n"
-                f"Rule: {decision.matched_rule}\n"
-                f"Reason: {decision.message}\n"
-                f'To proceed, re-call ssh_run with confirm_token="{token}"'
+            return (
+                f"⚠️ Confirmation required\n"
+                f"Command: {command}\n"
+                f"Rule: {decision.message}\n"
+                f"\n"
+                f'To proceed: ssh_run(command="{command}", node="{resolved_node}", confirm_token="{token}")'
             )
-            return msg
 
         # Validate the provided token
         if not token_store.validate(confirm_token, command, resolved_node):
@@ -297,10 +297,8 @@ def register_tools(
 
         lines = []
         for n in nodes:
-            icon = {"active": "[OK]", "inactive": "[--]", "error": "[!!]"}.get(
-                n.status, "[??]"
-            )
-            lines.append(f"{icon} {n.name}  ({n.host}:{n.port}, user={n.username})")
+            icon = {"active": "●", "inactive": "○", "error": "✗"}.get(n.status, "?")
+            lines.append(f"  {icon} {n.name}  {n.host}:{n.port}  user={n.username}")
         return "\n".join(lines)
 
     # -- ssh_upload -----------------------------------------------------------
@@ -315,9 +313,9 @@ def register_tools(
             async with pool.connection(node) as pc:
                 async with pc.conn.start_sftp_client() as sftp:
                     await sftp.put(local_path, remote_path)
-            return f"Uploaded {local_path} -> {node}:{remote_path}"
+            return f"OK: {local_path} → {node}:{remote_path}"
         except Exception as exc:
-            return f"Error: upload failed — {exc}"
+            return f"Error: {exc}"
 
     # -- ssh_download ---------------------------------------------------------
     @mcp.tool()
@@ -331,9 +329,9 @@ def register_tools(
             async with pool.connection(node) as pc:
                 async with pc.conn.start_sftp_client() as sftp:
                     await sftp.get(remote_path, local_path)
-            return f"Downloaded {node}:{remote_path} -> {local_path}"
+            return f"OK: {node}:{remote_path} → {local_path}"
         except Exception as exc:
-            return f"Error: download failed — {exc}"
+            return f"Error: {exc}"
 
     # -- ssh_add_node ---------------------------------------------------------
     @mcp.tool()
@@ -387,7 +385,7 @@ def register_tools(
         # Create node in DB
         async with db_session_ctx() as db_sess:
             repo = node_repo_factory(db_sess)
-            node_obj = await repo.create(
+            await repo.create(
                 name=name,
                 host=host,
                 port=port,
@@ -427,4 +425,4 @@ def register_tools(
         )
         pool.register_node(info)
 
-        return f"Node '{name}' added (id={node_obj.id})."
+        return f"OK: node '{name}' added ({host}:{port}, user={username})"

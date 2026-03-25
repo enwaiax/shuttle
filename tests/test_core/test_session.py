@@ -20,10 +20,20 @@ from shuttle.core.session import (
 # ---------------------------------------------------------------------------
 
 
+def _make_ssh_result(
+    stdout: str = "", stderr: str = "", exit_status: int = 0
+) -> MagicMock:
+    """Return a mock asyncssh result with the given fields."""
+    r = MagicMock()
+    r.stdout = stdout
+    r.stderr = stderr
+    r.exit_status = exit_status
+    return r
+
+
 def make_mock_pool(initial_pwd: str = "/home/testuser") -> MagicMock:
     """Return a mock ConnectionPool whose connections report *initial_pwd*."""
-    mock_result = MagicMock()
-    mock_result.stdout = initial_pwd
+    mock_result = _make_ssh_result(stdout=initial_pwd)
 
     mock_conn_obj = MagicMock()
     mock_conn_obj.run = AsyncMock(return_value=mock_result)
@@ -40,6 +50,27 @@ def make_mock_pool(initial_pwd: str = "/home/testuser") -> MagicMock:
         )
     )
     return mock_pool
+
+
+def _set_pool_result(
+    pool: MagicMock,
+    stdout: str = "",
+    stderr: str = "",
+    exit_status: int = 0,
+) -> None:
+    """Reconfigure *pool* so subsequent commands return the given result."""
+    mock_result = _make_ssh_result(
+        stdout=stdout, stderr=stderr, exit_status=exit_status
+    )
+    pooled_conn = MagicMock()
+    pooled_conn.conn = MagicMock()
+    pooled_conn.conn.run = AsyncMock(return_value=mock_result)
+    pool.connection = MagicMock(
+        return_value=AsyncMock(
+            __aenter__=AsyncMock(return_value=pooled_conn),
+            __aexit__=AsyncMock(return_value=False),
+        )
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -193,19 +224,7 @@ async def test_execute_updates_working_directory():
 
     session = await manager.create("node-1")
 
-    # Now simulate an execute that changes directory
-    execute_result = MagicMock()
-    execute_result.stdout = f"file.txt\n{PWD_SENTINEL}\n/tmp\n"
-
-    pooled_conn = MagicMock()
-    pooled_conn.conn.run = AsyncMock(return_value=execute_result)
-
-    pool.connection = MagicMock(
-        return_value=AsyncMock(
-            __aenter__=AsyncMock(return_value=pooled_conn),
-            __aexit__=AsyncMock(return_value=False),
-        )
-    )
+    _set_pool_result(pool, stdout=f"file.txt\n{PWD_SENTINEL}\n/tmp\n")
 
     result = await manager.execute(session.session_id, "cd /tmp && ls")
 
@@ -229,18 +248,7 @@ async def test_execute_returns_stdout():
 
     session = await manager.create("node-1")
 
-    execute_result = MagicMock()
-    execute_result.stdout = f"hello\n{PWD_SENTINEL}\n/home/testuser\n"
-
-    pooled_conn = MagicMock()
-    pooled_conn.conn.run = AsyncMock(return_value=execute_result)
-
-    pool.connection = MagicMock(
-        return_value=AsyncMock(
-            __aenter__=AsyncMock(return_value=pooled_conn),
-            __aexit__=AsyncMock(return_value=False),
-        )
-    )
+    _set_pool_result(pool, stdout=f"hello\n{PWD_SENTINEL}\n/home/testuser\n")
 
     result = await manager.execute(session.session_id, "echo hello")
 
@@ -298,17 +306,7 @@ async def test_execute_truncates_huge_stdout(monkeypatch):
     session = await manager.create("node-1")
 
     big = "a" * 20
-    execute_result = MagicMock()
-    execute_result.stdout = f"{big}\n{PWD_SENTINEL}\n/home/x\n"
-
-    pooled_conn = MagicMock()
-    pooled_conn.conn.run = AsyncMock(return_value=execute_result)
-    pool.connection = MagicMock(
-        return_value=AsyncMock(
-            __aenter__=AsyncMock(return_value=pooled_conn),
-            __aexit__=AsyncMock(return_value=False),
-        )
-    )
+    _set_pool_result(pool, stdout=f"{big}\n{PWD_SENTINEL}\n/home/x\n")
 
     result = await manager.execute(session.session_id, "cmd")
     assert len(result["stdout"].encode()) <= 8
@@ -321,17 +319,7 @@ async def test_execute_keeps_working_directory_when_sentinel_has_no_pwd():
     session = await manager.create("node-1")
     prev = session.working_directory
 
-    execute_result = MagicMock()
-    execute_result.stdout = f"out\n{PWD_SENTINEL}\n"
-
-    pooled_conn = MagicMock()
-    pooled_conn.conn.run = AsyncMock(return_value=execute_result)
-    pool.connection = MagicMock(
-        return_value=AsyncMock(
-            __aenter__=AsyncMock(return_value=pooled_conn),
-            __aexit__=AsyncMock(return_value=False),
-        )
-    )
+    _set_pool_result(pool, stdout=f"out\n{PWD_SENTINEL}\n")
 
     await manager.execute(session.session_id, "cmd")
     assert session.working_directory == prev
@@ -342,8 +330,148 @@ async def test_persist_hooks_noop_without_db_factory():
     pool = make_mock_pool()
     manager = SessionManager(pool=pool, db_session_factory=None)
     session = await manager.create("node-1")
-    await manager.execute(
-        session.session_id,
-        "echo",
-    )
+    await manager.execute(session.session_id, "echo")
     await manager.close(session.session_id)
+
+
+# ---------------------------------------------------------------------------
+# exit_status / stderr / _run_on_node contract
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_execute_returns_real_exit_status():
+    """execute() must propagate the real exit_status from asyncssh, not hardcode 0."""
+    pool = make_mock_pool()
+    manager = SessionManager(pool=pool)
+    session = await manager.create("node-1")
+
+    _set_pool_result(
+        pool,
+        stdout=f"not found\n{PWD_SENTINEL}\n/home/testuser\n",
+        exit_status=127,
+    )
+
+    result = await manager.execute(session.session_id, "nonexistent_cmd")
+    assert result["exit_status"] == 127
+
+
+@pytest.mark.asyncio
+async def test_execute_returns_zero_exit_status_on_success():
+    pool = make_mock_pool()
+    manager = SessionManager(pool=pool)
+    session = await manager.create("node-1")
+
+    _set_pool_result(
+        pool,
+        stdout=f"ok\n{PWD_SENTINEL}\n/home/testuser\n",
+        exit_status=0,
+    )
+
+    result = await manager.execute(session.session_id, "echo ok")
+    assert result["exit_status"] == 0
+
+
+@pytest.mark.asyncio
+async def test_execute_returns_stderr():
+    """execute() must include stderr from the remote command."""
+    pool = make_mock_pool()
+    manager = SessionManager(pool=pool)
+    session = await manager.create("node-1")
+
+    _set_pool_result(
+        pool,
+        stdout=f"\n{PWD_SENTINEL}\n/home/testuser\n",
+        stderr="Permission denied",
+        exit_status=1,
+    )
+
+    result = await manager.execute(session.session_id, "cat /etc/shadow")
+    assert result["stderr"] == "Permission denied"
+    assert result["exit_status"] == 1
+
+
+@pytest.mark.asyncio
+async def test_execute_returns_empty_stderr_on_success():
+    pool = make_mock_pool()
+    manager = SessionManager(pool=pool)
+    session = await manager.create("node-1")
+
+    _set_pool_result(
+        pool,
+        stdout=f"hello\n{PWD_SENTINEL}\n/home/testuser\n",
+        stderr="",
+        exit_status=0,
+    )
+
+    result = await manager.execute(session.session_id, "echo hello")
+    assert result["stderr"] == ""
+
+
+@pytest.mark.asyncio
+async def test_run_on_node_returns_dict_contract():
+    """_run_on_node must return a dict with stdout, stderr, exit_status keys."""
+    pool = make_mock_pool()
+    manager = SessionManager(pool=pool)
+
+    _set_pool_result(pool, stdout="out", stderr="err", exit_status=42)
+
+    result = await manager._run_on_node("node-1", "test_cmd")
+    assert isinstance(result, dict)
+    assert set(result.keys()) == {"stdout", "stderr", "exit_status"}
+    assert result["stdout"] == "out"
+    assert result["stderr"] == "err"
+    assert result["exit_status"] == 42
+
+
+@pytest.mark.asyncio
+async def test_run_on_node_defaults_empty_on_none():
+    """_run_on_node returns empty strings when asyncssh gives None."""
+    mock_result = MagicMock()
+    mock_result.stdout = None
+    mock_result.stderr = None
+    mock_result.exit_status = 0
+
+    pooled_conn = MagicMock()
+    pooled_conn.conn = MagicMock()
+    pooled_conn.conn.run = AsyncMock(return_value=mock_result)
+
+    pool = MagicMock()
+    pool.connection = MagicMock(
+        return_value=AsyncMock(
+            __aenter__=AsyncMock(return_value=pooled_conn),
+            __aexit__=AsyncMock(return_value=False),
+        )
+    )
+    manager = SessionManager(pool=pool)
+
+    result = await manager._run_on_node("node-1", "cmd")
+    assert result["stdout"] == ""
+    assert result["stderr"] == ""
+
+
+@pytest.mark.asyncio
+async def test_execute_result_has_all_keys():
+    """execute() return dict must have stdout, stderr, exit_status, working_directory."""
+    pool = make_mock_pool()
+    manager = SessionManager(pool=pool)
+    session = await manager.create("node-1")
+
+    _set_pool_result(
+        pool,
+        stdout=f"data\n{PWD_SENTINEL}\n/home/testuser\n",
+        stderr="warn",
+        exit_status=2,
+    )
+
+    result = await manager.execute(session.session_id, "cmd")
+    assert set(result.keys()) == {
+        "stdout",
+        "stderr",
+        "exit_status",
+        "working_directory",
+    }
+    assert result["stdout"] == "data"
+    assert result["stderr"] == "warn"
+    assert result["exit_status"] == 2
+    assert result["working_directory"] == "/home/testuser"

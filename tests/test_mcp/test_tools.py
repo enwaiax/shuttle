@@ -141,7 +141,7 @@ async def test_blocked_command_rejected():
         node_repo_factory=_noop_node_repo_factory,
     )
 
-    assert result.startswith("BLOCKED:")
+    assert "Blocked:" in result
     assert "rm is forbidden" in result
     session_mgr.execute.assert_not_awaited()
 

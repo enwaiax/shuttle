@@ -2,6 +2,9 @@
 
 These tests exercise the full server creation path with a real in-memory
 SQLite database but no real SSH connections.
+
+Uses ``fastmcp.Client(server)`` (in-memory MCP protocol) instead of
+``tool.fn()`` (raw function bypass), per FastMCP v2 best practices.
 """
 
 from __future__ import annotations
@@ -9,6 +12,7 @@ from __future__ import annotations
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
+from fastmcp import Client
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -36,6 +40,13 @@ def _patched_session_mgr():
     return mock_session_mgr
 
 
+def _result_text(result) -> str:
+    """Extract text from a FastMCP CallToolResult."""
+    if hasattr(result, "content") and result.content:
+        return result.content[0].text
+    return str(result)
+
+
 # ---------------------------------------------------------------------------
 # Tests
 # ---------------------------------------------------------------------------
@@ -57,12 +68,10 @@ async def test_mcp_server_starts_and_lists_nodes(tmp_path):
 
         mcp = await create_mcp_server(shuttle_dir=shuttle_dir, db_url=db_url)
 
-    # Verify it's a FastMCP instance
     from fastmcp import FastMCP
 
     assert isinstance(mcp, FastMCP)
 
-    # Verify required tools are registered
     tools = await mcp.get_tools()
     tool_names = set(tools.keys())
     required_tools = {"ssh_run", "ssh_list_nodes", "ssh_add_node"}
@@ -70,12 +79,12 @@ async def test_mcp_server_starts_and_lists_nodes(tmp_path):
         f"Missing tools: {required_tools - tool_names}"
     )
 
-    # Call ssh_list_nodes — should return onboarding message since no nodes configured
-    # Use the tool's underlying fn directly to avoid needing an active MCP context
-    tool = await mcp.get_tool("ssh_list_nodes")
-    output = await tool.fn()
-    assert isinstance(output, str)
-    assert "No nodes configured" in output
+    async with Client(mcp) as client:
+        result = await client.call_tool("ssh_list_nodes", {})
+
+    text = _result_text(result)
+    assert isinstance(text, str)
+    assert "No nodes configured" in text
 
 
 @pytest.mark.asyncio
@@ -95,7 +104,6 @@ async def test_default_security_rules_seeded(tmp_path):
 
         await create_mcp_server(shuttle_dir=shuttle_dir, db_url=db_url)
 
-    # Open a fresh DB connection to verify rules were seeded
     engine = create_async_engine(db_url)
     async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
@@ -110,10 +118,32 @@ async def test_default_security_rules_seeded(tmp_path):
             f"Expected at least 10 default security rules, got {len(rules)}"
         )
 
-        # Verify we have all three levels
         levels = {r.level for r in rules}
         assert "block" in levels, "Expected at least one 'block' rule"
         assert "confirm" in levels, "Expected at least one 'confirm' rule"
         assert "warn" in levels, "Expected at least one 'warn' rule"
     finally:
         await engine.dispose()
+
+
+@pytest.mark.asyncio
+async def test_client_tool_schema_validation(tmp_path):
+    """Client.call_tool() validates arguments through the MCP protocol layer."""
+    shuttle_dir = tmp_path / ".shuttle"
+    shuttle_dir.mkdir()
+    db_url = f"sqlite+aiosqlite:///{tmp_path / 'schema.db'}"
+
+    with (
+        patch("shuttle.mcp.server.ConnectionPool") as MockPool,
+        patch("shuttle.mcp.server.SessionManager") as MockSessionMgr,
+    ):
+        MockPool.return_value = _patched_pool()
+        MockSessionMgr.return_value = _patched_session_mgr()
+
+        mcp = await create_mcp_server(shuttle_dir=shuttle_dir, db_url=db_url)
+
+    async with Client(mcp) as client:
+        tools = await client.list_tools()
+        ssh_run_tool = next(t for t in tools if t.name == "ssh_run")
+        assert ssh_run_tool.inputSchema is not None
+        assert "command" in ssh_run_tool.inputSchema.get("properties", {})
