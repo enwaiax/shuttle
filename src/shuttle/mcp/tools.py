@@ -162,8 +162,58 @@ async def _execute_command_logic(
         )
 
     # -- 4. Execute via session -----------------------------------------------
-    result = await session_mgr.execute(session_id, command, timeout=timeout)
-    stdout = result["stdout"]
+    import time as _time
+
+    t0 = _time.monotonic()
+    try:
+        result = await session_mgr.execute(session_id, command, timeout=timeout)
+        stdout = result.get("stdout", "")
+        exit_status = result.get("exit_status")
+    except Exception as exc:
+        stdout = f"[ERROR] {exc}"
+        exit_status = -1
+        result = {"stdout": stdout, "exit_status": exit_status}
+    duration_ms = int((_time.monotonic() - t0) * 1000)
+
+    # -- 5. Persist command log to DB -----------------------------------------
+    try:
+        # Resolve node UUID for the FK
+        node_uuid: str | None = None
+        async with db_session_ctx() as db_sess:
+            repo = node_repo_factory(db_sess)
+            node_obj = await repo.get_by_name(resolved_node)
+            if node_obj:
+                node_uuid = node_obj.id
+
+        if node_uuid:
+            db_stdout = _truncate(stdout, MAX_DB_OUTPUT_BYTES) if stdout else None
+            async with db_session_ctx() as db_sess:
+                from shuttle.db.repository import LogRepo
+
+                log_repo = LogRepo(db_sess)
+                await log_repo.create(
+                    node_id=node_uuid,
+                    session_id=session_id,
+                    command=command,
+                    exit_code=exit_status,
+                    stdout=db_stdout,
+                    stderr=None,
+                    security_level=decision.level.value if decision else None,
+                    security_rule_id=decision.matched_rule if decision else None,
+                    bypassed=confirm_token is not None,
+                    duration_ms=duration_ms,
+                )
+
+            # Update node last_seen_at
+            async with db_session_ctx() as db_sess:
+                repo = node_repo_factory(db_sess)
+                from datetime import UTC, datetime
+
+                await repo.update(
+                    node_obj.id, last_seen_at=datetime.now(UTC), status="active"
+                )
+    except Exception:
+        logger.warning("Failed to persist command log for {cmd}", cmd=command[:80])
 
     return stdout
 
