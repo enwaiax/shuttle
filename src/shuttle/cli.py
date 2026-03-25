@@ -558,6 +558,216 @@ def node_remove(
     asyncio.run(_remove())
 
 
+@node_app.command("import-ssh")
+def node_import_ssh(
+    config_path: str = typer.Option(
+        None, "--config", "-c", help="Path to SSH config file (default: ~/.ssh/config)"
+    ),
+    dry_run: bool = typer.Option(
+        False, "--dry-run", "-n", help="Show what would be imported without importing"
+    ),
+) -> None:
+    """Import SSH hosts from ~/.ssh/config as Shuttle nodes."""
+    from rich.console import Console
+
+    from shuttle.core.ssh_config import parse_ssh_config
+
+    console = Console()
+
+    ssh_path = Path(config_path).expanduser() if config_path else None
+    entries = parse_ssh_config(ssh_path)
+
+    if not entries:
+        config_display = config_path or "~/.ssh/config"
+        typer.echo(f"No hosts found in {config_display}.")
+        raise typer.Exit()
+
+    config_display = config_path or "~/.ssh/config"
+    console.print(f"\nFound {len(entries)} hosts in {config_display}:")
+
+    # Resolve keys and classify entries
+    importable: list[tuple] = []  # (entry, key_path)
+    no_key: list = []
+
+    for entry in entries:
+        key_path = entry.resolve_key()
+        if key_path:
+            importable.append((entry, key_path))
+        else:
+            no_key.append(entry)
+
+    # Check for existing nodes
+    existing_names: set[str] = set()
+
+    async def _get_existing() -> set[str]:
+        from shuttle.core.config import ShuttleConfig
+        from shuttle.db.engine import create_db_engine, create_session_factory, init_db
+        from shuttle.db.repository import NodeRepo
+
+        cfg = ShuttleConfig()
+        url = cfg.db_url
+        if ":///" in url and "~" in url:
+            url = url.replace("~", str(Path.home()))
+        eng = create_db_engine(url)
+        await init_db(eng)
+        sf = create_session_factory(eng)
+        async with sf() as s:
+            nodes = await NodeRepo(s).list_all()
+        await eng.dispose()
+        return {n.name for n in nodes}
+
+    if not dry_run:
+        existing_names = asyncio.run(_get_existing())
+
+    to_import: list[tuple] = []
+    skipped_exists: list = []
+
+    for entry, key_path in importable:
+        if entry.alias in existing_names:
+            skipped_exists.append(entry)
+        else:
+            to_import.append((entry, key_path))
+
+    # Display summary
+    for entry, key_path in to_import:
+        key_display = str(key_path).replace(str(Path.home()), "~")
+        jump_info = f", jump: {entry.proxy_jump}" if entry.proxy_jump else ""
+        console.print(
+            f"  [green]\u2713[/green] {entry.alias:<15} {entry.hostname}:{entry.port}"
+            f"  (key: {key_display}{jump_info})"
+        )
+
+    for entry in skipped_exists:
+        console.print(
+            f"  [dim]\u00b7[/dim] {entry.alias:<15} (already exists, skipped)"
+        )
+
+    for entry in no_key:
+        console.print(
+            f"  [red]\u2717[/red] {entry.alias:<15} {entry.hostname}:{entry.port}"
+            f"  (no key found)"
+        )
+
+    if dry_run:
+        console.print(
+            f"\n[dim]Dry run:[/dim] {len(to_import)} would be imported."
+            f" {len(no_key)} skipped (no key)."
+            f" {len(skipped_exists)} skipped (exists)."
+        )
+        return
+
+    if not to_import:
+        console.print("\nNothing to import.")
+        return
+
+    # Import nodes
+    async def _import() -> None:
+        from shuttle.core.config import ShuttleConfig
+        from shuttle.core.credentials import CredentialManager
+        from shuttle.core.proxy import NodeConnectInfo, connect_ssh
+        from shuttle.db.engine import create_db_engine, create_session_factory, init_db
+        from shuttle.db.repository import NodeRepo
+
+        config = ShuttleConfig()
+        config.shuttle_dir.mkdir(parents=True, exist_ok=True)
+
+        db_url = config.db_url
+        if ":///" in db_url and "~" in db_url:
+            db_url = db_url.replace("~", str(Path.home()))
+
+        engine = create_db_engine(db_url)
+        await init_db(engine)
+        session_factory = create_session_factory(engine)
+
+        cred_mgr = CredentialManager(config.shuttle_dir)
+
+        async with session_factory() as session:
+            repo = NodeRepo(session)
+
+            # First pass: create all nodes (without jump host links)
+            created_nodes: dict[str, str] = {}  # alias -> node.id
+            for entry, key_path in to_import:
+                credential = key_path.read_text()
+                encrypted = cred_mgr.encrypt(credential)
+                node = await repo.create(
+                    name=entry.alias,
+                    host=entry.hostname,
+                    port=entry.port,
+                    username=entry.user,
+                    auth_type="key",
+                    encrypted_credential=encrypted,
+                    status="inactive",
+                )
+                created_nodes[entry.alias] = node.id
+
+            # Second pass: resolve proxy_jump references
+            for entry, _ in to_import:
+                if entry.proxy_jump:
+                    # Look up jump host by name (could be newly created or pre-existing)
+                    jump_node = await repo.get_by_name(entry.proxy_jump)
+                    if jump_node:
+                        await repo.update(
+                            created_nodes[entry.alias],
+                            jump_host_id=jump_node.id,
+                        )
+
+            # Third pass: test connections
+            for entry, key_path in to_import:
+                credential = key_path.read_text()
+                node_id = created_nodes[entry.alias]
+
+                # Resolve jump host info if present
+                jump_host_info = None
+                if entry.proxy_jump:
+                    jh_node = await repo.get_by_name(entry.proxy_jump)
+                    if jh_node and jh_node.encrypted_credential:
+                        jh_dec = cred_mgr.decrypt(jh_node.encrypted_credential)
+                        jump_host_info = NodeConnectInfo(
+                            node_id=jh_node.name,
+                            hostname=jh_node.host,
+                            port=jh_node.port,
+                            username=jh_node.username,
+                            password=None,
+                            private_key=jh_dec if jh_node.auth_type == "key" else None,
+                        )
+
+                info = NodeConnectInfo(
+                    node_id=entry.alias,
+                    hostname=entry.hostname,
+                    port=entry.port,
+                    username=entry.user,
+                    password=None,
+                    private_key=credential,
+                    jump_host=jump_host_info,
+                )
+                try:
+                    conn = await connect_ssh(info)
+                    result = await conn.run("echo ok", check=True)
+                    conn.close()
+                    if result.stdout.strip() == "ok":
+                        await repo.update(node_id, status="active")
+                        console.print(f"  [green]\u25cf[/green] {entry.alias} online")
+                    else:
+                        console.print(
+                            f"  [dim]\u25cb[/dim] {entry.alias} added (unexpected output)"
+                        )
+                except Exception as exc:
+                    console.print(
+                        f"  [yellow]\u25cb[/yellow] {entry.alias} added"
+                        f" (offline \u2014 {exc})"
+                    )
+
+        await engine.dispose()
+
+    asyncio.run(_import())
+
+    console.print(
+        f"\nImported {len(to_import)} nodes."
+        f" {len(no_key)} skipped (no key)."
+        f" {len(skipped_exists)} skipped (exists)."
+    )
+
+
 # ── Config commands ───────────────────────────────────────────────────────────
 
 
