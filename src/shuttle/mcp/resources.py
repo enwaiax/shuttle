@@ -32,16 +32,20 @@ def register_resources(
 
         items = []
         for n in nodes:
-            items.append({
-                "name": n.name,
-                "host": n.host,
-                "port": n.port,
-                "username": n.username,
-                "status": n.status,
-                "auth_type": n.auth_type,
-                "tags": n.tags or [],
-                "last_seen_at": n.last_seen_at.isoformat() if n.last_seen_at else None,
-            })
+            items.append(
+                {
+                    "name": n.name,
+                    "host": n.host,
+                    "port": n.port,
+                    "username": n.username,
+                    "status": n.status,
+                    "auth_type": n.auth_type,
+                    "tags": n.tags or [],
+                    "last_seen_at": n.last_seen_at.isoformat()
+                    if n.last_seen_at
+                    else None,
+                }
+            )
         return json.dumps({"nodes": items, "total": len(items)})
 
     @mcp.resource("shuttle://nodes/{name}")
@@ -54,23 +58,27 @@ def register_resources(
         if not node:
             return json.dumps({"error": f"Node '{name}' not found"})
 
-        return json.dumps({
-            "name": node.name,
-            "host": node.host,
-            "port": node.port,
-            "username": node.username,
-            "status": node.status,
-            "auth_type": node.auth_type,
-            "tags": node.tags or [],
-            "pool": {
-                "active_connections": pool._active.get(name, 0),
-                "idle_connections": len(pool._idle.get(name, [])),
-                "registered": name in pool._registry,
-            },
-            "last_seen_at": node.last_seen_at.isoformat() if node.last_seen_at else None,
-            "created_at": node.created_at.isoformat() if node.created_at else None,
-            "updated_at": node.updated_at.isoformat() if node.updated_at else None,
-        })
+        return json.dumps(
+            {
+                "name": node.name,
+                "host": node.host,
+                "port": node.port,
+                "username": node.username,
+                "status": node.status,
+                "auth_type": node.auth_type,
+                "tags": node.tags or [],
+                "pool": {
+                    "active_connections": pool._active.get(name, 0),
+                    "idle_connections": len(pool._idle.get(name, [])),
+                    "registered": name in pool._registry,
+                },
+                "last_seen_at": node.last_seen_at.isoformat()
+                if node.last_seen_at
+                else None,
+                "created_at": node.created_at.isoformat() if node.created_at else None,
+                "updated_at": node.updated_at.isoformat() if node.updated_at else None,
+            }
+        )
 
     @mcp.resource("shuttle://security-rules")
     async def list_security_rules() -> str:
@@ -83,25 +91,29 @@ def register_resources(
 
         items = []
         for r in rules:
-            items.append({
-                "id": r.id,
-                "pattern": r.pattern,
-                "level": r.level,
-                "description": r.description,
-                "priority": r.priority,
-                "enabled": r.enabled,
-                "node_id": r.node_id,
-            })
+            items.append(
+                {
+                    "id": r.id,
+                    "pattern": r.pattern,
+                    "level": r.level,
+                    "description": r.description,
+                    "priority": r.priority,
+                    "enabled": r.enabled,
+                    "node_id": r.node_id,
+                }
+            )
 
         by_level = {}
         for r in items:
             by_level.setdefault(r["level"], []).append(r)
 
-        return json.dumps({
-            "rules": items,
-            "total": len(items),
-            "by_level": {k: len(v) for k, v in by_level.items()},
-        })
+        return json.dumps(
+            {
+                "rules": items,
+                "total": len(items),
+                "by_level": {k: len(v) for k, v in by_level.items()},
+            }
+        )
 
     @mcp.resource("shuttle://sessions")
     async def list_active_sessions() -> str:
@@ -110,13 +122,15 @@ def register_resources(
 
         items = []
         for s in active:
-            items.append({
-                "session_id": s.session_id,
-                "node_id": s.node_id,
-                "working_directory": s.working_directory,
-                "bypass_patterns": list(s.bypass_patterns),
-                "env_vars": s.env_vars,
-            })
+            items.append(
+                {
+                    "session_id": s.session_id,
+                    "node_id": s.node_id,
+                    "working_directory": s.working_directory,
+                    "bypass_patterns": list(s.bypass_patterns),
+                    "env_vars": s.env_vars,
+                }
+            )
         return json.dumps({"sessions": items, "total": len(items)})
 
     @mcp.resource("shuttle://pool-status")
@@ -129,17 +143,19 @@ def register_resources(
                 "idle": len(pool._idle.get(node_id, [])),
             }
 
-        return json.dumps({
-            "config": {
-                "max_per_node": pool._config.max_per_node,
-                "max_total": pool._config.max_total,
-                "idle_timeout_s": pool._config.idle_timeout,
-                "max_lifetime_s": pool._config.max_lifetime,
-            },
-            "global_active": pool._global_active,
-            "registered_nodes": len(pool._registry),
-            "per_node": per_node,
-        })
+        return json.dumps(
+            {
+                "config": {
+                    "max_per_node": pool._config.max_per_node,
+                    "max_total": pool._config.max_total,
+                    "idle_timeout_s": pool._config.idle_timeout,
+                    "max_lifetime_s": pool._config.max_lifetime,
+                },
+                "global_active": pool._global_active,
+                "registered_nodes": len(pool._registry),
+                "per_node": per_node,
+            }
+        )
 
     @mcp.resource("shuttle://logs/{node_name}/recent")
     async def get_recent_logs(node_name: str) -> str:
@@ -159,17 +175,23 @@ def register_resources(
 
         items = []
         for log in logs:
-            items.append({
-                "command": log.command,
-                "exit_code": log.exit_code,
-                "security_level": log.security_level,
-                "bypassed": log.bypassed,
-                "duration_ms": log.duration_ms,
-                "executed_at": log.executed_at.isoformat() if log.executed_at else None,
-            })
+            items.append(
+                {
+                    "command": log.command,
+                    "exit_code": log.exit_code,
+                    "security_level": log.security_level,
+                    "bypassed": log.bypassed,
+                    "duration_ms": log.duration_ms,
+                    "executed_at": log.executed_at.isoformat()
+                    if log.executed_at
+                    else None,
+                }
+            )
 
-        return json.dumps({
-            "node": node_name,
-            "logs": items,
-            "total": len(items),
-        })
+        return json.dumps(
+            {
+                "node": node_name,
+                "logs": items,
+                "total": len(items),
+            }
+        )

@@ -43,7 +43,9 @@ def register_prompts(
                 f"  {icon} {n.name} — {n.host}:{n.port} (user={n.username}, "
                 f"auth={n.auth_type}, tags={n.tags or []})"
             )
-        nodes_section = "\n".join(node_lines) if node_lines else "  (no nodes configured)"
+        nodes_section = (
+            "\n".join(node_lines) if node_lines else "  (no nodes configured)"
+        )
 
         # Sessions
         active = session_mgr.list_active()
@@ -220,16 +222,16 @@ def register_prompts(
         # Recent command logs
         async with db_session_ctx() as db_sess:
             log_repo = LogRepo(db_sess)
-            logs = await log_repo.list_by_node(
-                node_id=node_obj.id, limit=10
-            )
+            logs = await log_repo.list_by_node(node_id=node_obj.id, limit=10)
 
         log_lines = []
         for log in logs:
             icon = "✅" if log.exit_code == 0 else "❌"
             cmd_short = log.command[:60] + ("..." if len(log.command) > 60 else "")
             duration = f"{log.duration_ms}ms" if log.duration_ms else "?"
-            log_lines.append(f"  {icon} `{cmd_short}` (exit={log.exit_code}, {duration})")
+            log_lines.append(
+                f"  {icon} `{cmd_short}` (exit={log.exit_code}, {duration})"
+            )
 
         logs_section = "\n".join(log_lines) if log_lines else "  (no recent commands)"
 
