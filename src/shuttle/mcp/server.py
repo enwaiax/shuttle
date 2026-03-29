@@ -20,6 +20,8 @@ from shuttle.core.security import CommandGuard, ConfirmTokenStore
 from shuttle.core.session import SessionManager
 from shuttle.db.engine import create_db_engine, create_session_factory, init_db
 from shuttle.db.repository import NodeRepo
+from shuttle.mcp.prompts import register_prompts
+from shuttle.mcp.resources import register_resources
 from shuttle.mcp.tools import register_tools
 
 
@@ -185,7 +187,7 @@ async def create_mcp_server(
     # ── 9. FastMCP ──────────────────────────────────────────────────
     mcp = FastMCP(name="shuttle")
 
-    # ── 10-11. Register tools ───────────────────────────────────────
+    # ── 10-11. Register tools, prompts, resources ───────────────────
     register_tools(
         mcp=mcp,
         pool=pool,
@@ -195,6 +197,20 @@ async def create_mcp_server(
         db_session_ctx=db_session_ctx,
         node_repo_factory=NodeRepo,
         cred_mgr=cred_mgr,
+    )
+    register_prompts(
+        mcp=mcp,
+        session_mgr=session_mgr,
+        pool=pool,
+        db_session_ctx=db_session_ctx,
+        node_repo_factory=NodeRepo,
+    )
+    register_resources(
+        mcp=mcp,
+        pool=pool,
+        session_mgr=session_mgr,
+        db_session_ctx=db_session_ctx,
+        node_repo_factory=NodeRepo,
     )
 
     # ── 12. Return ──────────────────────────────────────────────────
@@ -262,7 +278,7 @@ async def create_service_app(
 
     session_mgr = SessionManager(pool=pool, db_session_factory=db_session_ctx)
 
-    # ── FastMCP + tools ──────────────────────────────────────────────
+    # ── FastMCP + tools + prompts + resources ────────────────────────
     mcp = FastMCP(name="shuttle")
     register_tools(
         mcp=mcp,
@@ -273,6 +289,20 @@ async def create_service_app(
         db_session_ctx=db_session_ctx,
         node_repo_factory=NodeRepo,
         cred_mgr=cred_mgr,
+    )
+    register_prompts(
+        mcp=mcp,
+        session_mgr=session_mgr,
+        pool=pool,
+        db_session_ctx=db_session_ctx,
+        node_repo_factory=NodeRepo,
+    )
+    register_resources(
+        mcp=mcp,
+        pool=pool,
+        session_mgr=session_mgr,
+        db_session_ctx=db_session_ctx,
+        node_repo_factory=NodeRepo,
     )
 
     mcp_http = mcp.http_app(path="/")

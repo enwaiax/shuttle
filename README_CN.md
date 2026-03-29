@@ -4,10 +4,11 @@
 
 **面向 AI 助手的安全 SSH 网关**
 
+[![MCP](https://lobehub.com/badge/mcp/enwaiax-shuttle)](https://lobehub.com/mcp/enwaiax-shuttle)
 [![CI](https://img.shields.io/github/actions/workflow/status/enwaiax/shuttle/test.yml?style=flat-square&label=CI)](https://github.com/enwaiax/shuttle/actions/workflows/test.yml)
 [![PyPI](https://img.shields.io/pypi/v/shuttle-mcp?style=flat-square&color=76B900)](https://pypi.org/project/shuttle-mcp)
 [![Python](https://img.shields.io/badge/python-3.12+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
-[![Docs](https://img.shields.io/badge/docs-enwaiax.github.io%2Fshuttle-76B900?style=flat-square)](https://enwaiax.github.io/shuttle/)
+[![Docs](https://img.shields.io/badge/docs-shuttle-76B900?style=flat-square)](https://enwaiax.github.io/shuttle/)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 
 Shuttle 让 AI 助手（Claude Code、Cursor 等）安全地在你的远程 SSH 服务器上执行命令 — 支持连接池、会话隔离、命令安全规则和 Web 审计面板。
