@@ -4,12 +4,13 @@
 
 **Secure SSH gateway for AI assistants**
 
+[![MCP](https://lobehub.com/badge/mcp/enwaiax-shuttle)](https://lobehub.com/mcp/enwaiax-shuttle)
 [![CI](https://img.shields.io/github/actions/workflow/status/enwaiax/shuttle/test.yml?style=flat-square&label=CI)](https://github.com/enwaiax/shuttle/actions/workflows/test.yml)
 [![codecov](https://img.shields.io/codecov/c/github/enwaiax/shuttle?style=flat-square&color=76B900)](https://codecov.io/gh/enwaiax/shuttle)
 [![PyPI](https://img.shields.io/pypi/v/shuttle-mcp?style=flat-square&color=76B900)](https://pypi.org/project/shuttle-mcp)
 [![Downloads](https://img.shields.io/pepy/dt/shuttle-mcp?style=flat-square&color=76B900&label=downloads)](https://pepy.tech/project/shuttle-mcp)
 [![Python](https://img.shields.io/badge/python-3.12+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
-[![Docs](https://img.shields.io/badge/docs-enwaiax.github.io%2Fshuttle-76B900?style=flat-square)](https://enwaiax.github.io/shuttle/)
+[![Docs](https://img.shields.io/badge/docs-shuttle-76B900?style=flat-square)](https://enwaiax.github.io/shuttle/)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 
 Shuttle lets AI assistants (Claude Code, Cursor, etc.) securely execute commands on your remote SSH servers — with connection pooling, session isolation, command safety rules, and a web audit panel.

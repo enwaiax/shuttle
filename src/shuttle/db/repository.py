@@ -292,6 +292,20 @@ class LogRepo:
         )
         return list(result.scalars().all())
 
+    async def list_by_node(
+        self,
+        node_id: str,
+        limit: int = 20,
+    ) -> list[CommandLog]:
+        """List recent command logs for a node, newest first."""
+        result = await self._session.execute(
+            select(CommandLog)
+            .where(CommandLog.node_id == node_id)
+            .order_by(CommandLog.executed_at.desc())
+            .limit(limit)
+        )
+        return list(result.scalars().all())
+
 
 async def cleanup_old_data(
     session: AsyncSession,
