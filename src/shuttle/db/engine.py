@@ -154,3 +154,25 @@ async def init_db(engine: AsyncEngine) -> None:
                         "ALTER TABLE nodes ADD COLUMN last_seen_at TIMESTAMP WITH TIME ZONE"
                     )
                 )
+
+            pg_migrations = {
+                "sessions": {
+                    "actor_id": "VARCHAR(255) NOT NULL DEFAULT 'anonymous'",
+                    "client_id": "VARCHAR(255) NOT NULL DEFAULT 'mcp'",
+                    "conversation_id": "VARCHAR(255) NOT NULL DEFAULT 'default'",
+                },
+                "command_logs": {
+                    "action": "VARCHAR(50) NOT NULL DEFAULT 'command'",
+                    "actor_id": "VARCHAR(255) NOT NULL DEFAULT 'anonymous'",
+                    "client_id": "VARCHAR(255) NOT NULL DEFAULT 'mcp'",
+                    "conversation_id": "VARCHAR(255) NOT NULL DEFAULT 'default'",
+                    "approval_id": "VARCHAR(36)",
+                },
+            }
+            for table, additions in pg_migrations.items():
+                for column, definition in additions.items():
+                    await conn.execute(
+                        text(
+                            f"ALTER TABLE {table} ADD COLUMN IF NOT EXISTS {column} {definition}"
+                        )
+                    )
