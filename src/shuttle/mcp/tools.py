@@ -14,6 +14,7 @@ from collections.abc import AsyncIterator, Callable
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
+from fastmcp import Context
 from loguru import logger
 
 from shuttle.core.security import CommandGuard, ConfirmTokenStore, SecurityLevel
@@ -320,9 +321,7 @@ def register_tools(
         confirm_token: str | None = None,
         bypass_scope: str | None = None,
         approval_id: str | None = None,
-        actor_id: str = "anonymous",
-        client_id: str = "mcp",
-        conversation_id: str = "default",
+        ctx: Context | None = None,
     ) -> str:
         """Execute a shell command on a remote SSH node.
 
@@ -330,6 +329,20 @@ def register_tools(
         across calls to the same node. Security checks (BLOCK / CONFIRM /
         WARN / ALLOW) are applied before execution.
         """
+        actor_id = "local-stdio"
+        client_id = "mcp"
+        conversation_id = "default"
+        if ctx is not None:
+            client_id = ctx.client_id or "mcp"
+            conversation_id = ctx.session_id
+            try:
+                authorization = ctx.get_http_request().headers.get("authorization", "")
+                if authorization.startswith("Bearer "):
+                    actor_id = "agent:" + hashlib.sha256(
+                        authorization[7:].encode()
+                    ).hexdigest()[:16]
+            except RuntimeError:
+                actor_id = "local-stdio"
         return await _execute_command_logic(
             command=command,
             node=node,

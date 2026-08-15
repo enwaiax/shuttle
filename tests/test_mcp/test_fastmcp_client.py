@@ -229,9 +229,6 @@ async def test_run_confirm_flow_via_client(mcp_server_with_session, db_factory):
             {
                 "command": "sudo ls",
                 "node": "test-node",
-                "actor_id": "alice",
-                "client_id": "claude-code",
-                "conversation_id": "conv-1",
             },
         )
         text1 = _result_text(result1)
@@ -262,9 +259,6 @@ async def test_run_confirm_flow_via_client(mcp_server_with_session, db_factory):
                 "command": "sudo ls",
                 "node": "test-node",
                 "approval_id": approval_id,
-                "actor_id": "alice",
-                "client_id": "claude-code",
-                "conversation_id": "conv-1",
             },
         )
         text2 = _result_text(result2)
