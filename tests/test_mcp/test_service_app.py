@@ -41,6 +41,7 @@ async def test_create_service_app_exposes_stats_with_bearer(tmp_path):
             shuttle_dir=shuttle_dir,
             db_url=db_url,
             api_token=token,
+            mcp_token="agent-bearer-token",
             port=19999,
         )
 
@@ -56,7 +57,7 @@ async def test_create_service_app_exposes_stats_with_bearer(tmp_path):
 
             redir = await client.get(
                 "/mcp",
-                headers={"Authorization": f"Bearer {token}"},
+                headers={"Authorization": "Bearer agent-bearer-token"},
                 follow_redirects=False,
             )
             assert redir.status_code == 307
@@ -82,6 +83,7 @@ async def test_create_service_app_rejects_bad_bearer(tmp_path):
             shuttle_dir=shuttle_dir,
             db_url=db_url,
             api_token="good",
+            mcp_token="agent-good",
         )
 
     transport = ASGITransport(app=app)

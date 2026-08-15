@@ -221,6 +221,7 @@ async def create_service_app(
     host: str = "127.0.0.1",
     port: int = 9876,
     api_token: str | None = None,
+    mcp_token: str | None = None,
     shuttle_dir: Path | None = None,
     db_url: str | None = None,
 ) -> FastAPI:
@@ -405,8 +406,8 @@ async def create_service_app(
     init_db_deps(api_token=api_token, engine=engine, session_factory=session_factory)
 
     # ── FastAPI app ──────────────────────────────────────────────────
-    # API and HTTP MCP share one bearer gate. Stdio MCP remains local and does
-    # not pass through this ASGI application.
+    # HTTP MCP uses an agent credential separate from the Web/operator token.
+    # Stdio MCP remains local and does not pass through this ASGI application.
     from shuttle import __version__
 
     app = FastAPI(
@@ -419,7 +420,7 @@ async def create_service_app(
     async def protect_http_mcp(request, call_next):
         if request.url.path == "/mcp" or request.url.path.startswith("/mcp/"):
             authorization = request.headers.get("authorization", "")
-            if not api_token or not authorization.startswith("Bearer "):
+            if not mcp_token or not authorization.startswith("Bearer "):
                 from starlette.responses import JSONResponse
 
                 return JSONResponse(
@@ -427,7 +428,7 @@ async def create_service_app(
                 )
             import secrets
 
-            if not secrets.compare_digest(authorization[7:], api_token):
+            if not secrets.compare_digest(authorization[7:], mcp_token):
                 from starlette.responses import JSONResponse
 
                 return JSONResponse(

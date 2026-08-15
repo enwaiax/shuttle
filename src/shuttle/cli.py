@@ -82,6 +82,14 @@ def serve(
         token_path.write_text(api_token)
         token_path.chmod(0o600)
 
+    agent_token_path = config.shuttle_dir / "agent_token"
+    if agent_token_path.exists():
+        mcp_token = agent_token_path.read_text().strip()
+    else:
+        mcp_token = secrets.token_urlsafe(32)
+        agent_token_path.write_text(mcp_token)
+        agent_token_path.chmod(0o600)
+
     from rich.console import Console
     from rich.panel import Panel
     from rich.text import Text
@@ -94,6 +102,8 @@ def serve(
     info.append(f"http://{host}:{port}\n", style="cyan")
     info.append("  API token     ", style="dim")
     info.append(api_token, style="green bold")
+    info.append("\n  Agent token   ", style="dim")
+    info.append(mcp_token, style="cyan bold")
     console.print(
         Panel(
             info,
@@ -112,6 +122,7 @@ def serve(
             host=host,
             port=port,
             api_token=api_token,
+            mcp_token=mcp_token,
             db_url=db_url,
         )
 
