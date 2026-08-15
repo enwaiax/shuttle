@@ -3,7 +3,7 @@
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from shuttle.db.models import (
@@ -387,23 +387,28 @@ class ApprovalRepo:
         return request
 
     async def consume(self, approval_id: str) -> ApprovalRequest | None:
-        request = await self.get_by_id(approval_id)
         now = datetime.now(UTC)
-        if (
-            request is None
-            or request.status != "approved"
-            or request.consumed_at is not None
-            or self._is_expired(request, now)
-        ):
+        # Compare-and-swap: exactly one concurrent caller can transition this
+        # request from approved to consumed.
+        result = await self._session.execute(
+            update(ApprovalRequest)
+            .where(
+                ApprovalRequest.id == approval_id,
+                ApprovalRequest.status == "approved",
+                ApprovalRequest.consumed_at.is_(None),
+                ApprovalRequest.expires_at > now,
+            )
+            .values(status="consumed", consumed_at=now)
+            .execution_options(synchronize_session=False)
+        )
+        await self._session.commit()
+        if result.rowcount != 1:
+            request = await self.get_by_id(approval_id)
             if request is not None and self._is_expired(request, now):
                 request.status = "expired"
                 await self._session.commit()
             return None
-        request.status = "consumed"
-        request.consumed_at = now
-        await self._session.commit()
-        await self._session.refresh(request)
-        return request
+        return await self.get_by_id(approval_id)
 
 
 async def cleanup_old_data(
