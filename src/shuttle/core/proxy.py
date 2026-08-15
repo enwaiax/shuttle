@@ -7,6 +7,7 @@ asyncssh's tunnel parameter.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from pathlib import Path
 
 import asyncssh
 
@@ -47,7 +48,9 @@ class NodeConnectInfo:
     port: int = 22
     password: str | None = None
     private_key: str | None = None
-    known_hosts: str | None = None
+    known_hosts: str | None = field(
+        default_factory=lambda: str(Path.home() / ".ssh" / "known_hosts")
+    )
     jump_host: NodeConnectInfo | None = None
     connect_timeout: float = 30.0
     extra_options: dict = field(default_factory=dict)
@@ -99,11 +102,11 @@ def _build_connect_kwargs(info: NodeConnectInfo) -> dict:
     if info.private_key is not None:
         kwargs["client_keys"] = [asyncssh.import_private_key(info.private_key)]
 
-    if info.known_hosts is not None:
-        kwargs["known_hosts"] = info.known_hosts
-    else:
-        # Disable host-key verification when no known_hosts is provided.
-        kwargs["known_hosts"] = None
+    if info.known_hosts is None:
+        raise ValueError(
+            "known_hosts is required; configure a trusted file instead of disabling host-key verification"
+        )
+    kwargs["known_hosts"] = info.known_hosts
 
     # Forward any caller-supplied overrides last so they can override defaults.
     kwargs.update(info.extra_options)

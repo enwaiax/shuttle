@@ -6,7 +6,14 @@ from typing import Any
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from shuttle.db.models import AppConfig, CommandLog, Node, SecurityRule, Session
+from shuttle.db.models import (
+    AppConfig,
+    ApprovalRequest,
+    CommandLog,
+    Node,
+    SecurityRule,
+    Session,
+)
 
 
 class NodeRepo:
@@ -194,12 +201,18 @@ class SessionRepo:
         working_directory: str | None = None,
         env_vars: dict | None = None,
         status: str = "active",
+        actor_id: str = "anonymous",
+        client_id: str = "mcp",
+        conversation_id: str = "default",
     ) -> Session:
         sess = Session(
             node_id=node_id,
             working_directory=working_directory,
             env_vars=env_vars,
             status=status,
+            actor_id=actor_id,
+            client_id=client_id,
+            conversation_id=conversation_id,
         )
         self._session.add(sess)
         await self._session.commit()
@@ -258,6 +271,11 @@ class LogRepo:
         security_rule_id: str | None = None,
         bypassed: bool = False,
         duration_ms: int | None = None,
+        action: str = "command",
+        actor_id: str = "anonymous",
+        client_id: str = "mcp",
+        conversation_id: str = "default",
+        approval_id: str | None = None,
     ) -> CommandLog:
         log = CommandLog(
             session_id=session_id,
@@ -270,6 +288,11 @@ class LogRepo:
             security_rule_id=security_rule_id,
             bypassed=bypassed,
             duration_ms=duration_ms,
+            action=action,
+            actor_id=actor_id,
+            client_id=client_id,
+            conversation_id=conversation_id,
+            approval_id=approval_id,
         )
         self._session.add(log)
         await self._session.commit()
@@ -305,6 +328,82 @@ class LogRepo:
             .limit(limit)
         )
         return list(result.scalars().all())
+
+
+class ApprovalRepo:
+    """Persistence and atomic state transitions for human approvals."""
+
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    @staticmethod
+    def _is_expired(request: ApprovalRequest, now: datetime) -> bool:
+        expires_at = request.expires_at
+        if expires_at.tzinfo is None:
+            expires_at = expires_at.replace(tzinfo=UTC)
+        return expires_at <= now
+
+    async def create(self, **kwargs: Any) -> ApprovalRequest:
+        request = ApprovalRequest(**kwargs)
+        self._session.add(request)
+        await self._session.commit()
+        await self._session.refresh(request)
+        return request
+
+    async def get_by_id(self, approval_id: str) -> ApprovalRequest | None:
+        result = await self._session.execute(
+            select(ApprovalRequest).where(ApprovalRequest.id == approval_id)
+        )
+        return result.scalar_one_or_none()
+
+    async def list(self, status: str | None = None) -> list[ApprovalRequest]:
+        stmt = select(ApprovalRequest).order_by(ApprovalRequest.created_at.desc())
+        if status is not None:
+            stmt = stmt.where(ApprovalRequest.status == status)
+        result = await self._session.execute(stmt)
+        return list(result.scalars().all())
+
+    async def decide(
+        self,
+        approval_id: str,
+        *,
+        approve: bool,
+        approver: str,
+        reason: str | None = None,
+    ) -> ApprovalRequest | None:
+        request = await self.get_by_id(approval_id)
+        if request is None or request.status != "pending":
+            return None
+        now = datetime.now(UTC)
+        if self._is_expired(request, now):
+            request.status = "expired"
+        else:
+            request.status = "approved" if approve else "denied"
+            request.approver = approver
+            request.decision_reason = reason
+            request.decided_at = now
+        await self._session.commit()
+        await self._session.refresh(request)
+        return request
+
+    async def consume(self, approval_id: str) -> ApprovalRequest | None:
+        request = await self.get_by_id(approval_id)
+        now = datetime.now(UTC)
+        if (
+            request is None
+            or request.status != "approved"
+            or request.consumed_at is not None
+            or self._is_expired(request, now)
+        ):
+            if request is not None and self._is_expired(request, now):
+                request.status = "expired"
+                await self._session.commit()
+            return None
+        request.status = "consumed"
+        request.consumed_at = now
+        await self._session.commit()
+        await self._session.refresh(request)
+        return request
 
 
 async def cleanup_old_data(

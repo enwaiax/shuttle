@@ -115,6 +115,13 @@ class Session(Base):
     node_id: Mapped[str] = mapped_column(
         String(36), ForeignKey("nodes.id"), nullable=False
     )
+    actor_id: Mapped[str] = mapped_column(
+        String(255), nullable=False, default="anonymous"
+    )
+    client_id: Mapped[str] = mapped_column(String(255), nullable=False, default="mcp")
+    conversation_id: Mapped[str] = mapped_column(
+        String(255), nullable=False, default="default"
+    )
     working_directory: Mapped[str | None] = mapped_column(String(1024), nullable=True)
     env_vars: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     status: Mapped[str] = mapped_column(String(50), nullable=False, default="active")
@@ -154,6 +161,15 @@ class CommandLog(Base):
         String(36), ForeignKey("nodes.id"), nullable=False
     )
     command: Mapped[str] = mapped_column(Text, nullable=False)
+    action: Mapped[str] = mapped_column(String(50), nullable=False, default="command")
+    actor_id: Mapped[str] = mapped_column(
+        String(255), nullable=False, default="anonymous"
+    )
+    client_id: Mapped[str] = mapped_column(String(255), nullable=False, default="mcp")
+    conversation_id: Mapped[str] = mapped_column(
+        String(255), nullable=False, default="default"
+    )
+    approval_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
     exit_code: Mapped[int | None] = mapped_column(Integer, nullable=True)
     stdout: Mapped[str | None] = mapped_column(Text, nullable=True)
     stderr: Mapped[str | None] = mapped_column(Text, nullable=True)
@@ -172,6 +188,49 @@ class CommandLog(Base):
         "Session", back_populates="command_logs"
     )
     node: Mapped["Node"] = relationship("Node", back_populates="command_logs")
+
+
+class ApprovalRequest(Base):
+    """A human decision request for one exact remote action."""
+
+    __tablename__ = "approval_requests"
+    __table_args__ = (
+        Index("ix_approval_status_created", "status", "created_at"),
+        Index("ix_approval_actor", "actor_id", "client_id", "conversation_id"),
+    )
+
+    id: Mapped[str] = mapped_column(
+        String(36), primary_key=True, default=lambda: str(uuid.uuid4())
+    )
+    node_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("nodes.id"), nullable=False
+    )
+    node_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    action: Mapped[str] = mapped_column(String(50), nullable=False, default="command")
+    command: Mapped[str] = mapped_column(Text, nullable=False)
+    command_hash: Mapped[str] = mapped_column(String(64), nullable=False)
+    actor_id: Mapped[str] = mapped_column(String(255), nullable=False)
+    client_id: Mapped[str] = mapped_column(String(255), nullable=False)
+    conversation_id: Mapped[str] = mapped_column(String(255), nullable=False)
+    rule_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
+    reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+    status: Mapped[str] = mapped_column(String(50), nullable=False, default="pending")
+    approver: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    decision_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC)
+    )
+    expires_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False
+    )
+    decided_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    consumed_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+
+    node: Mapped["Node"] = relationship("Node")
 
 
 class AppConfig(Base):

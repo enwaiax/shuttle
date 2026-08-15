@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import secrets
 from pathlib import Path
 
@@ -769,6 +770,53 @@ def node_import_ssh(
 
 
 # ── Config commands ───────────────────────────────────────────────────────────
+
+
+@app.command("approvals")
+def approvals_list(
+    status: str = typer.Option("pending", help="Approval status to list"),
+    json_output: bool = typer.Option(False, "--json", help="Emit stable JSON"),
+) -> None:
+    """List approval requests for agents and operators."""
+    from shuttle.core.config import ShuttleConfig
+    from shuttle.db.engine import create_db_engine, create_session_factory, init_db
+    from shuttle.db.repository import ApprovalRepo
+
+    async def _list() -> list[dict]:
+        config = ShuttleConfig()
+        engine = create_db_engine(config.db_url)
+        await init_db(engine)
+        factory = create_session_factory(engine)
+        try:
+            async with factory() as session:
+                items = await ApprovalRepo(session).list(status)
+                return [
+                    {
+                        "id": item.id,
+                        "status": item.status,
+                        "node": item.node_name,
+                        "command": item.command,
+                        "actor_id": item.actor_id,
+                        "client_id": item.client_id,
+                        "conversation_id": item.conversation_id,
+                        "expires_at": item.expires_at.isoformat(),
+                    }
+                    for item in items
+                ]
+        finally:
+            await engine.dispose()
+
+    items = asyncio.run(_list())
+    if json_output:
+        typer.echo(json.dumps({"items": items}, ensure_ascii=False))
+        return
+    if not items:
+        typer.echo("No approval requests.")
+        return
+    for item in items:
+        typer.echo(
+            f"{item['id']}  {item['status']}  {item['node']}  {item['actor_id']}  {item['command']}"
+        )
 
 
 @config_app.command("show")

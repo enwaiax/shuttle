@@ -405,8 +405,8 @@ async def create_service_app(
     init_db_deps(api_token=api_token, engine=engine, session_factory=session_factory)
 
     # ── FastAPI app ──────────────────────────────────────────────────
-    # Note: verify_token is applied per-router (not globally) so that
-    # /mcp/* endpoints are not gated by the web panel token.
+    # API and HTTP MCP share one bearer gate. Stdio MCP remains local and does
+    # not pass through this ASGI application.
     from shuttle import __version__
 
     app = FastAPI(
@@ -414,6 +414,26 @@ async def create_service_app(
         version=__version__,
         lifespan=combined_lifespan,
     )
+
+    @app.middleware("http")
+    async def protect_http_mcp(request, call_next):
+        if request.url.path == "/mcp" or request.url.path.startswith("/mcp/"):
+            authorization = request.headers.get("authorization", "")
+            if not api_token or not authorization.startswith("Bearer "):
+                from starlette.responses import JSONResponse
+
+                return JSONResponse(
+                    {"detail": "Missing MCP bearer token"}, status_code=401
+                )
+            import secrets
+
+            if not secrets.compare_digest(authorization[7:], api_token):
+                from starlette.responses import JSONResponse
+
+                return JSONResponse(
+                    {"detail": "Invalid MCP bearer token"}, status_code=401
+                )
+        return await call_next(request)
 
     app.add_middleware(
         CORSMiddleware,
@@ -424,7 +444,16 @@ async def create_service_app(
     )
 
     # API routes — token auth applied per-router so /mcp is not gated
-    from shuttle.web.routes import data, logs, nodes, rules, sessions, settings, stats
+    from shuttle.web.routes import (
+        approvals,
+        data,
+        logs,
+        nodes,
+        rules,
+        sessions,
+        settings,
+        stats,
+    )
 
     api_deps = [Depends(verify_token)]
     app.include_router(stats.router, prefix="/api", dependencies=api_deps)
@@ -434,6 +463,7 @@ async def create_service_app(
     app.include_router(logs.router, prefix="/api", dependencies=api_deps)
     app.include_router(settings.router, prefix="/api", dependencies=api_deps)
     app.include_router(data.router, prefix="/api", dependencies=api_deps)
+    app.include_router(approvals.router, prefix="/api", dependencies=api_deps)
 
     # Mount MCP — Starlette mount strips trailing path, so sub-app
     # with path="/" receives requests at /mcp/*. The MCP client posts to

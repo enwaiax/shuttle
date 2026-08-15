@@ -54,9 +54,16 @@ async def test_create_service_app_exposes_stats_with_bearer(tmp_path):
             data = r.json()
             assert "node_count" in data
 
-            redir = await client.get("/mcp", follow_redirects=False)
+            redir = await client.get(
+                "/mcp",
+                headers={"Authorization": f"Bearer {token}"},
+                follow_redirects=False,
+            )
             assert redir.status_code == 307
             assert redir.headers.get("location", "").endswith("/mcp/")
+
+            unauthenticated = await client.get("/mcp", follow_redirects=False)
+            assert unauthenticated.status_code == 401
 
 
 @pytest.mark.asyncio

@@ -89,6 +89,11 @@ export interface CommandLogResponse {
   node_id: string;
   node_name: string | null;
   command: string;
+  action: string;
+  actor_id: string;
+  client_id: string;
+  conversation_id: string;
+  approval_id: string | null;
   exit_code: number | null;
   stdout: string | null;
   stderr: string | null;
@@ -103,6 +108,26 @@ export interface LogListResponse {
   total: number;
   page: number;
   page_size: number;
+}
+
+export interface ApprovalResponse {
+  id: string;
+  node_id: string;
+  node_name: string;
+  action: string;
+  command: string;
+  actor_id: string;
+  client_id: string;
+  conversation_id: string;
+  rule_id: string | null;
+  reason: string | null;
+  status: "pending" | "approved" | "denied" | "consumed" | "expired";
+  approver: string | null;
+  decision_reason: string | null;
+  created_at: string;
+  expires_at: string;
+  decided_at: string | null;
+  consumed_at: string | null;
 }
 
 // ── Settings ───────────────────────────────────────

@@ -9,13 +9,15 @@ per node so that working directory context is preserved across calls.
 
 from __future__ import annotations
 
+import hashlib
 from collections.abc import AsyncIterator, Callable
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from loguru import logger
 
 from shuttle.core.security import CommandGuard, ConfirmTokenStore, SecurityLevel
-from shuttle.core.session import SessionManager
+from shuttle.core.session import SessionManager, SSHSession
 
 # Truncation limits
 MAX_OUTPUT_BYTES = 10 * 1024 * 1024  # 10 MB for caller output
@@ -48,6 +50,10 @@ async def _execute_command_logic(
     session_mgr: SessionManager,
     db_session_ctx: Callable[..., AsyncIterator],
     node_repo_factory: Callable,
+    approval_id: str | None = None,
+    actor_id: str = "anonymous",
+    client_id: str = "mcp",
+    conversation_id: str = "default",
 ) -> str:
     """Execute a command with security checks, node resolution, and DB logging.
 
@@ -101,24 +107,35 @@ async def _execute_command_logic(
                 "Provide 'node'."
             )
 
-    # -- 2. Auto-session: find existing or create ----------------------------
-    active_sessions = session_mgr.list_active()
-    node_session = next(
-        (s for s in active_sessions if s.node_id == resolved_node), None
-    )
-    if node_session:
-        session_id = node_session.session_id
-        session_obj = node_session
-    else:
-        try:
-            new_session = await session_mgr.create(resolved_node)
-            session_id = new_session.session_id
-            session_obj = new_session
-        except Exception as exc:
-            return f"Error: failed to auto-create session — {exc}"
+    # Resolve the persisted node before policy/approval so pending requests do
+    # not open an SSH connection merely to ask a human for permission.
+    async with db_session_ctx() as db_sess:
+        repo = node_repo_factory(db_sess)
+        node_obj = await repo.get_by_name(resolved_node)
+    if node_obj is None:
+        return f"Error: node '{resolved_node}' not found."
 
-    # -- 3. Security check ----------------------------------------------------
-    bypass_patterns = list(session_obj.bypass_patterns) if session_obj else []
+    # -- 2. Security check ----------------------------------------------------
+    node_session = session_mgr.find_active(
+        resolved_node,
+        actor_id=actor_id,
+        client_id=client_id,
+        conversation_id=conversation_id,
+    )
+    # Test doubles and older embedders may not implement find_active yet.
+    if not isinstance(node_session, SSHSession):
+        node_session = next(
+            (
+                session
+                for session in session_mgr.list_active()
+                if session.node_id == resolved_node
+                and getattr(session, "actor_id", "anonymous") == actor_id
+                and getattr(session, "client_id", "mcp") == client_id
+                and getattr(session, "conversation_id", "default") == conversation_id
+            ),
+            None,
+        )
+    bypass_patterns = list(node_session.bypass_patterns) if node_session else []
     async with db_session_ctx() as db_sess:
         decision = await guard.evaluate(
             command, resolved_node, db_sess, bypass_patterns
@@ -128,30 +145,71 @@ async def _execute_command_logic(
         return f"⛔ Blocked: {decision.message}"
 
     if decision.level == SecurityLevel.CONFIRM:
-        if confirm_token is None:
-            # Create a token and ask the caller to confirm
-            token = token_store.create(command, resolved_node)
+        from shuttle.db.repository import ApprovalRepo
+
+        if confirm_token is not None:
+            return "Error: confirm_token is no longer accepted; use a human-approved approval_id."
+        command_hash = hashlib.sha256(command.encode()).hexdigest()
+        if approval_id is None:
+            async with db_session_ctx() as db_sess:
+                approval = await ApprovalRepo(db_sess).create(
+                    node_id=node_obj.id,
+                    node_name=resolved_node,
+                    command=command,
+                    command_hash=command_hash,
+                    actor_id=actor_id,
+                    client_id=client_id,
+                    conversation_id=conversation_id,
+                    rule_id=decision.matched_rule,
+                    reason=decision.message,
+                    expires_at=datetime.now(UTC) + timedelta(minutes=5),
+                )
             return (
-                f"⚠️ Confirmation required\n"
+                f"PENDING_APPROVAL id={approval.id}\n"
                 f"Command: {command}\n"
                 f"Rule: {decision.message}\n"
-                f"\n"
-                f'To proceed: ssh_run(command="{command}", node="{resolved_node}", confirm_token="{token}")'
+                "A human must approve this request in the Shuttle Web panel. "
+                "Then retry with the same command and approval_id."
             )
+        async with db_session_ctx() as db_sess:
+            approval_repo = ApprovalRepo(db_sess)
+            approval = await approval_repo.get_by_id(approval_id)
+            if (
+                approval is None
+                or approval.node_id != node_obj.id
+                or approval.command_hash != command_hash
+                or approval.actor_id != actor_id
+                or approval.client_id != client_id
+                or approval.conversation_id != conversation_id
+            ):
+                return "Error: approval does not match this actor, conversation, node, and command."
+            consumed = await approval_repo.consume(approval_id)
+        if consumed is None:
+            status = approval.status if approval is not None else "missing"
+            return f"PENDING_APPROVAL id={approval_id} status={status}"
 
-        # Validate the provided token
-        if not token_store.validate(confirm_token, command, resolved_node):
-            return "Error: invalid or expired confirmation token."
-
-        # Token valid — optionally add bypass for this session
-        if bypass_scope == "session" and session_obj and decision.matched_rule:
-            async with db_session_ctx() as db_sess:
-                from shuttle.db.repository import RuleRepo
-
-                rule_repo = RuleRepo(db_sess)
-                matched = await rule_repo.get_by_id(decision.matched_rule)
-                if matched:
-                    session_obj.bypass_patterns.add(matched.pattern)
+    # -- 3. Caller-isolated auto-session --------------------------------------
+    if node_session:
+        session_id = node_session.session_id
+        session_obj = node_session
+    else:
+        try:
+            if (actor_id, client_id, conversation_id) == (
+                "anonymous",
+                "mcp",
+                "default",
+            ):
+                session_obj = await session_mgr.create(resolved_node)
+            else:
+                session_obj = await session_mgr.create(
+                    resolved_node,
+                    actor_id=actor_id,
+                    client_id=client_id,
+                    conversation_id=conversation_id,
+                )
+            session_id = session_obj.session_id
+        except Exception as exc:
+            return f"Error: failed to auto-create session — {exc}"
 
     if decision.level == SecurityLevel.WARN:
         logger.warning(
@@ -177,22 +235,14 @@ async def _execute_command_logic(
 
     # -- 5. Persist command log to DB -----------------------------------------
     try:
-        # Resolve node UUID for the FK
-        node_uuid: str | None = None
-        async with db_session_ctx() as db_sess:
-            repo = node_repo_factory(db_sess)
-            node_obj = await repo.get_by_name(resolved_node)
-            if node_obj:
-                node_uuid = node_obj.id
-
-        if node_uuid:
+        if node_obj.id:
             db_stdout = _truncate(stdout, MAX_DB_OUTPUT_BYTES) if stdout else None
             async with db_session_ctx() as db_sess:
                 from shuttle.db.repository import LogRepo
 
                 log_repo = LogRepo(db_sess)
                 await log_repo.create(
-                    node_id=node_uuid,
+                    node_id=node_obj.id,
                     session_id=session_id,
                     command=command,
                     exit_code=exit_status,
@@ -200,20 +250,26 @@ async def _execute_command_logic(
                     stderr=None,
                     security_level=decision.level.value if decision else None,
                     security_rule_id=decision.matched_rule if decision else None,
-                    bypassed=confirm_token is not None,
+                    bypassed=approval_id is not None,
                     duration_ms=duration_ms,
+                    actor_id=actor_id,
+                    client_id=client_id,
+                    conversation_id=conversation_id,
+                    approval_id=approval_id,
                 )
 
             # Update node last_seen_at
             async with db_session_ctx() as db_sess:
                 repo = node_repo_factory(db_sess)
-                from datetime import UTC, datetime
-
                 await repo.update(
                     node_obj.id, last_seen_at=datetime.now(UTC), status="active"
                 )
-    except Exception:
-        logger.warning("Failed to persist command log for {cmd}", cmd=command[:80])
+    except Exception as exc:
+        logger.warning(
+            "Failed to persist command log for {cmd}: {error}",
+            cmd=command[:80],
+            error=exc,
+        )
 
     return stdout
 
@@ -263,6 +319,10 @@ def register_tools(
         timeout: float = 30.0,
         confirm_token: str | None = None,
         bypass_scope: str | None = None,
+        approval_id: str | None = None,
+        actor_id: str = "anonymous",
+        client_id: str = "mcp",
+        conversation_id: str = "default",
     ) -> str:
         """Execute a shell command on a remote SSH node.
 
@@ -276,6 +336,10 @@ def register_tools(
             timeout=timeout,
             confirm_token=confirm_token,
             bypass_scope=bypass_scope,
+            approval_id=approval_id,
+            actor_id=actor_id,
+            client_id=client_id,
+            conversation_id=conversation_id,
             pool=pool,
             guard=guard,
             token_store=token_store,

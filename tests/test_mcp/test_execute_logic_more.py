@@ -138,7 +138,7 @@ async def test_execute_confirm_invalid_token() -> None:
         db_session_ctx=_noop_db_ctx,
         node_repo_factory=_node_repo_factory,
     )
-    assert "invalid" in out.lower()
+    assert "no longer accepted" in out.lower()
 
 
 @pytest.mark.asyncio
@@ -244,39 +244,28 @@ async def test_execute_persists_command_log_to_db() -> None:
 
 
 @pytest.mark.asyncio
-async def test_execute_persists_log_with_confirm_bypassed() -> None:
-    """When confirm_token is provided, bypassed=True in the log entry."""
+async def test_execute_rejects_legacy_confirm_token() -> None:
+    """An agent-provided confirmation token can no longer authorize execution."""
     session = SSHSession(session_id="s1", node_id="n1")
     guard = _make_guard(SecurityLevel.CONFIRM, message="sudo", rule="r1")
-
-    ts = MagicMock(spec=ConfirmTokenStore)
-    ts.validate.return_value = True
-
     mgr = _sm_with_session(session, stdout="root")
 
-    mock_log_repo = MagicMock()
-    mock_log_repo.create = AsyncMock()
+    out = await _execute_command_logic(
+        command="sudo whoami",
+        node="n1",
+        timeout=10,
+        confirm_token="valid-token",
+        bypass_scope=None,
+        pool=MagicMock(),
+        guard=guard,
+        token_store=MagicMock(spec=ConfirmTokenStore),
+        session_mgr=mgr,
+        db_session_ctx=_noop_db_ctx,
+        node_repo_factory=_node_repo_factory,
+    )
 
-    with patch("shuttle.db.repository.LogRepo", return_value=mock_log_repo):
-        out = await _execute_command_logic(
-            command="sudo whoami",
-            node="n1",
-            timeout=10,
-            confirm_token="valid-token",
-            bypass_scope=None,
-            pool=MagicMock(),
-            guard=guard,
-            token_store=ts,
-            session_mgr=mgr,
-            db_session_ctx=_noop_db_ctx,
-            node_repo_factory=_node_repo_factory,
-        )
-
-    assert out == "root"
-    mock_log_repo.create.assert_awaited_once()
-    kwargs = mock_log_repo.create.call_args.kwargs
-    assert kwargs["bypassed"] is True
-    assert kwargs["security_level"] == "confirm"
+    assert "no longer accepted" in out
+    mgr.execute.assert_not_awaited()
 
 
 @pytest.mark.asyncio
@@ -360,8 +349,8 @@ async def test_execute_updates_node_last_seen_at() -> None:
 
 
 @pytest.mark.asyncio
-async def test_execute_still_returns_stdout_when_db_logging_fails() -> None:
-    """If DB logging raises, the command output must still be returned."""
+async def test_execute_returns_error_when_node_lookup_fails() -> None:
+    """A failed node lookup must fail closed before remote execution."""
     session = SSHSession(session_id="s1", node_id="n1")
     guard = _make_guard(SecurityLevel.ALLOW)
     mgr = _sm_with_session(session, stdout="important output")
@@ -372,20 +361,21 @@ async def test_execute_still_returns_stdout_when_db_logging_fails() -> None:
         repo.list_all = AsyncMock(return_value=[])
         return repo
 
-    out = await _execute_command_logic(
-        command="echo test",
-        node="n1",
-        timeout=10,
-        confirm_token=None,
-        bypass_scope=None,
-        pool=MagicMock(),
-        guard=guard,
-        token_store=MagicMock(spec=ConfirmTokenStore),
-        session_mgr=mgr,
-        db_session_ctx=_noop_db_ctx,
-        node_repo_factory=_broken_repo_factory,
-    )
-    assert out == "important output"
+    with pytest.raises(RuntimeError, match="DB down"):
+        await _execute_command_logic(
+            command="echo test",
+            node="n1",
+            timeout=10,
+            confirm_token=None,
+            bypass_scope=None,
+            pool=MagicMock(),
+            guard=guard,
+            token_store=MagicMock(spec=ConfirmTokenStore),
+            session_mgr=mgr,
+            db_session_ctx=_noop_db_ctx,
+            node_repo_factory=_broken_repo_factory,
+        )
+    mgr.execute.assert_not_awaited()
 
 
 @pytest.mark.asyncio
