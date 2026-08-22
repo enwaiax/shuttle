@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -10,6 +11,18 @@ DEFAULT_KEY_PATHS = [
     "~/.ssh/id_rsa",
     "~/.ssh/id_ecdsa",
 ]
+
+# Keyword and value are separated by whitespace or `=` (optionally spaced).
+# The value captures the rest of the line so quoted paths with spaces survive.
+_LINE_RE = re.compile(r"^(\S+?)(?:\s*=\s*|\s+)(.*)$")
+
+
+def _unquote(value: str) -> str:
+    """Strip a single pair of matching outer quotes, as ssh(1) does."""
+    value = value.strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in ('"', "'"):
+        return value[1:-1]
+    return value
 
 
 @dataclass
@@ -54,14 +67,13 @@ def parse_ssh_config(path: Path | None = None) -> list[SSHConfigEntry]:
         if not line or line.startswith("#"):
             continue
 
-        # Split on first whitespace or =
-        parts = line.split(None, 1)
-        if len(parts) != 2:
-            parts = line.split("=", 1)
-        if len(parts) != 2:
+        match = _LINE_RE.match(line)
+        if not match:
             continue
 
-        key, value = parts[0].strip(), parts[1].strip()
+        key, value = match.group(1), _unquote(match.group(2))
+        if not value:
+            continue
 
         if key.lower() == "host":
             # Save previous entry

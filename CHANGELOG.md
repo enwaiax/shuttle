@@ -2,6 +2,13 @@
 
 All notable changes to Shuttle are documented here.
 
+## [Unreleased]
+
+### Fixed
+
+- **SSH config parser: quoted values** ([#7](https://github.com/enwaiax/shuttle/issues/7)) — `IdentityFile "~/.ssh/id_rsa"` kept its surrounding quotes, so `resolve_key()` failed to find the key and `shuttle node import` silently skipped the host. Single quotes and quoted paths containing spaces are handled too.
+- **SSH config parser: `Key = Value` separator** — a spaced `=` left the `=` inside the value, e.g. `Port = 2222` raised `ValueError` and aborted the entire parse, so no hosts could be imported.
+
 ## [0.2.2] - 2026-03-22
 
 ### Added
