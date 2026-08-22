@@ -137,6 +137,79 @@ class TestParseSSHConfig:
         assert entries[0].user == "testuser"
         assert entries[0].port == 3022
 
+    def test_equals_separator_with_spaces(self, tmp_path: Path) -> None:
+        """`Key = Value` is valid ssh_config syntax; the `=` must not leak into the value."""
+        config_file = tmp_path / "config"
+        config_file.write_text(
+            "Host eqhost\n"
+            "    HostName = 10.0.0.10\n"
+            "    User = testuser\n"
+            "    Port = 3022\n"
+        )
+        entries = parse_ssh_config(config_file)
+        assert len(entries) == 1
+        assert entries[0].hostname == "10.0.0.10"
+        assert entries[0].user == "testuser"
+        assert entries[0].port == 3022
+
+    def test_double_quotes_stripped(self, tmp_path: Path) -> None:
+        config_file = tmp_path / "config"
+        config_file.write_text(
+            "Host quoted\n"
+            '    HostName "10.0.0.1"\n'
+            '    User "admin"\n'
+            '    IdentityFile "~/.ssh/id_rsa"\n'
+        )
+        entries = parse_ssh_config(config_file)
+        assert len(entries) == 1
+        assert entries[0].hostname == "10.0.0.1"
+        assert entries[0].user == "admin"
+        assert entries[0].identity_file == "~/.ssh/id_rsa"
+
+    def test_single_quotes_stripped(self, tmp_path: Path) -> None:
+        config_file = tmp_path / "config"
+        config_file.write_text(
+            "Host quoted\n    HostName '10.0.0.1'\n    IdentityFile '~/.ssh/id_rsa'\n"
+        )
+        entries = parse_ssh_config(config_file)
+        assert len(entries) == 1
+        assert entries[0].hostname == "10.0.0.1"
+        assert entries[0].identity_file == "~/.ssh/id_rsa"
+
+    def test_quoted_path_with_spaces_preserved(self, tmp_path: Path) -> None:
+        config_file = tmp_path / "config"
+        config_file.write_text('Host spaced\n    IdentityFile "~/.ssh/my key"\n')
+        entries = parse_ssh_config(config_file)
+        assert len(entries) == 1
+        assert entries[0].identity_file == "~/.ssh/my key"
+
+    def test_quoted_equals_separator(self, tmp_path: Path) -> None:
+        config_file = tmp_path / "config"
+        config_file.write_text('Host q\n    IdentityFile = "~/.ssh/id_rsa"\n')
+        entries = parse_ssh_config(config_file)
+        assert len(entries) == 1
+        assert entries[0].identity_file == "~/.ssh/id_rsa"
+
+    def test_inner_quotes_preserved(self, tmp_path: Path) -> None:
+        """Only one matching outer pair is stripped; quotes inside stay put."""
+        config_file = tmp_path / "config"
+        config_file.write_text('Host q\n    IdentityFile ~/.ssh/we"ird\n')
+        entries = parse_ssh_config(config_file)
+        assert len(entries) == 1
+        assert entries[0].identity_file == '~/.ssh/we"ird'
+
+    def test_key_without_value_skipped(self, tmp_path: Path) -> None:
+        """A bare keyword or an empty quoted value must not become an entry field."""
+        config_file = tmp_path / "config"
+        config_file.write_text(
+            'Host bare\n    HostName 10.0.0.1\n    IdentityFile\n    User ""\n'
+        )
+        entries = parse_ssh_config(config_file)
+        assert len(entries) == 1
+        assert entries[0].hostname == "10.0.0.1"
+        assert entries[0].identity_file is None
+        assert entries[0].user == "root"
+
 
 class TestSSHConfigEntry:
     """Test SSHConfigEntry.resolve_key method."""
@@ -199,3 +272,39 @@ class TestSSHConfigEntry:
         )
         resolved = entry.resolve_key()
         assert resolved is None
+
+    def test_resolve_quoted_key_from_config(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """A quoted IdentityFile parsed from config resolves to the real key."""
+        ssh_dir = tmp_path / ".ssh"
+        ssh_dir.mkdir()
+        key_file = ssh_dir / "quoted_key"
+        key_file.write_text("KEY_CONTENT")
+        monkeypatch.setenv("HOME", str(tmp_path))
+
+        config_file = tmp_path / "config"
+        config_file.write_text(
+            'Host myserver\n    HostName 10.0.0.1\n    IdentityFile "~/.ssh/quoted_key"\n'
+        )
+
+        entries = parse_ssh_config(config_file)
+        assert entries[0].resolve_key() == key_file
+
+    def test_resolve_quoted_key_with_spaces_from_config(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """A quoted IdentityFile containing spaces resolves to the real key."""
+        ssh_dir = tmp_path / ".ssh"
+        ssh_dir.mkdir()
+        key_file = ssh_dir / "my key"
+        key_file.write_text("KEY_CONTENT")
+        monkeypatch.setenv("HOME", str(tmp_path))
+
+        config_file = tmp_path / "config"
+        config_file.write_text(
+            'Host myserver\n    HostName 10.0.0.1\n    IdentityFile "~/.ssh/my key"\n'
+        )
+
+        entries = parse_ssh_config(config_file)
+        assert entries[0].resolve_key() == key_file
