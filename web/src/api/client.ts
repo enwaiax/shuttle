@@ -16,6 +16,7 @@ import type {
   StatsResponse,
   SettingsResponse,
   SettingsUpdate,
+  ApprovalResponse,
 } from "../types";
 
 // ── Fetch wrapper ──────────────────────────────────
@@ -73,6 +74,7 @@ const keys = {
     status ? (["sessions", status] as const) : (["sessions"] as const),
   logs: (params?: LogParams) => ["logs", params] as const,
   settings: ["settings"] as const,
+  approvals: (status?: string) => ["approvals", status ?? "all"] as const,
 };
 
 // ── Stats ──────────────────────────────────────────
@@ -222,6 +224,41 @@ export function useCloseSession() {
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ["sessions"] });
       void qc.invalidateQueries({ queryKey: keys.stats });
+    },
+  });
+}
+
+// ── Human approvals ────────────────────────────────
+
+export function useApprovals(status = "pending") {
+  return useQuery<ApprovalResponse[]>({
+    queryKey: keys.approvals(status),
+    queryFn: () => apiFetch(`/approvals?status=${encodeURIComponent(status)}`),
+    refetchInterval: 3000,
+  });
+}
+
+export function useDecideApproval() {
+  const qc = useQueryClient();
+  return useMutation<
+    ApprovalResponse,
+    Error,
+    { id: string; approve: boolean; approver: string; reason?: string }
+  >({
+    mutationFn: (input: {
+      id: string;
+      approve: boolean;
+      approver: string;
+      reason?: string;
+    }) => {
+      const { id, ...body } = input;
+      return apiFetch(`/approvals/${id}/decision`, {
+        method: "POST",
+        body: JSON.stringify(body),
+      });
+    },
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ["approvals"] });
     },
   });
 }

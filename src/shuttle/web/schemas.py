@@ -102,6 +102,9 @@ class SessionResponse(BaseModel):
     id: str
     node_id: str
     node_name: str | None = None
+    actor_id: str = "anonymous"
+    client_id: str = "mcp"
+    conversation_id: str = "default"
     working_directory: str | None
     status: str
     created_at: datetime
@@ -119,6 +122,11 @@ class CommandLogResponse(BaseModel):
     node_id: str
     node_name: str | None = None
     command: str
+    action: str = "command"
+    actor_id: str = "anonymous"
+    client_id: str = "mcp"
+    conversation_id: str = "default"
+    approval_id: str | None = None
     exit_code: int | None
     stdout: str | None
     stderr: str | None
@@ -135,6 +143,37 @@ class LogListResponse(BaseModel):
     total: int
     page: int
     page_size: int
+
+
+# ── Human Approvals ────────────────────────────────
+
+
+class ApprovalResponse(BaseModel):
+    id: str
+    node_id: str
+    node_name: str
+    action: str
+    command: str
+    actor_id: str
+    client_id: str
+    conversation_id: str
+    rule_id: str | None
+    reason: str | None
+    status: str
+    approver: str | None
+    decision_reason: str | None
+    created_at: datetime
+    expires_at: datetime
+    decided_at: datetime | None
+    consumed_at: datetime | None
+
+    model_config = {"from_attributes": True}
+
+
+class ApprovalDecision(BaseModel):
+    approve: bool
+    approver: str = Field(..., min_length=1, max_length=255)
+    reason: str | None = Field(None, max_length=2000)
 
 
 # ── Settings ───────────────────────────────────────

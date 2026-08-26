@@ -16,7 +16,7 @@ def test_build_connect_kwargs_minimal() -> None:
     assert kw["port"] == 22
     assert kw["username"] == "u"
     assert kw["connect_timeout"] == 30.0
-    assert kw["known_hosts"] is None
+    assert kw["known_hosts"].endswith("/.ssh/known_hosts")
 
 
 def test_build_connect_kwargs_password_and_known_hosts() -> None:
@@ -64,6 +64,17 @@ def test_build_connect_kwargs_extra_options_override() -> None:
     kw = _build_connect_kwargs(info)
     assert kw["port"] == 99
     assert kw["compression_algs"] == ()
+
+
+def test_build_connect_kwargs_rejects_disabled_host_key_checking() -> None:
+    info = NodeConnectInfo(
+        node_id="n1",
+        hostname="h",
+        username="u",
+        known_hosts=None,
+    )
+    with pytest.raises(ValueError, match="known_hosts is required"):
+        _build_connect_kwargs(info)
 
 
 @pytest.mark.asyncio

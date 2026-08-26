@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import secrets
 from pathlib import Path
 
@@ -81,6 +82,14 @@ def serve(
         token_path.write_text(api_token)
         token_path.chmod(0o600)
 
+    agent_token_path = config.shuttle_dir / "agent_token"
+    if agent_token_path.exists():
+        mcp_token = agent_token_path.read_text().strip()
+    else:
+        mcp_token = secrets.token_urlsafe(32)
+        agent_token_path.write_text(mcp_token)
+        agent_token_path.chmod(0o600)
+
     from rich.console import Console
     from rich.panel import Panel
     from rich.text import Text
@@ -93,6 +102,8 @@ def serve(
     info.append(f"http://{host}:{port}\n", style="cyan")
     info.append("  API token     ", style="dim")
     info.append(api_token, style="green bold")
+    info.append("\n  Agent token   ", style="dim")
+    info.append(mcp_token, style="cyan bold")
     console.print(
         Panel(
             info,
@@ -111,6 +122,7 @@ def serve(
             host=host,
             port=port,
             api_token=api_token,
+            mcp_token=mcp_token,
             db_url=db_url,
         )
 
@@ -769,6 +781,53 @@ def node_import_ssh(
 
 
 # ── Config commands ───────────────────────────────────────────────────────────
+
+
+@app.command("approvals")
+def approvals_list(
+    status: str = typer.Option("pending", help="Approval status to list"),
+    json_output: bool = typer.Option(False, "--json", help="Emit stable JSON"),
+) -> None:
+    """List approval requests for agents and operators."""
+    from shuttle.core.config import ShuttleConfig
+    from shuttle.db.engine import create_db_engine, create_session_factory, init_db
+    from shuttle.db.repository import ApprovalRepo
+
+    async def _list() -> list[dict]:
+        config = ShuttleConfig()
+        engine = create_db_engine(config.db_url)
+        await init_db(engine)
+        factory = create_session_factory(engine)
+        try:
+            async with factory() as session:
+                items = await ApprovalRepo(session).list(status)
+                return [
+                    {
+                        "id": item.id,
+                        "status": item.status,
+                        "node": item.node_name,
+                        "command": item.command,
+                        "actor_id": item.actor_id,
+                        "client_id": item.client_id,
+                        "conversation_id": item.conversation_id,
+                        "expires_at": item.expires_at.isoformat(),
+                    }
+                    for item in items
+                ]
+        finally:
+            await engine.dispose()
+
+    items = asyncio.run(_list())
+    if json_output:
+        typer.echo(json.dumps({"items": items}, ensure_ascii=False))
+        return
+    if not items:
+        typer.echo("No approval requests.")
+        return
+    for item in items:
+        typer.echo(
+            f"{item['id']}  {item['status']}  {item['node']}  {item['actor_id']}  {item['command']}"
+        )
 
 
 @config_app.command("show")

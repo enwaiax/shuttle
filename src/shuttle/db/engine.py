@@ -69,6 +69,8 @@ async def init_db(engine: AsyncEngine) -> None:
             "CREATE INDEX IF NOT EXISTS ix_command_logs_session ON command_logs (session_id)",
             "CREATE INDEX IF NOT EXISTS ix_security_rules_node ON security_rules (node_id)",
             "CREATE INDEX IF NOT EXISTS ix_sessions_node_status ON sessions (node_id, status)",
+            "CREATE INDEX IF NOT EXISTS ix_approval_status_created ON approval_requests (status, created_at)",
+            "CREATE INDEX IF NOT EXISTS ix_approval_actor ON approval_requests (actor_id, client_id, conversation_id)",
         ]:
             try:
                 await conn.execute(text(idx_sql))
@@ -97,6 +99,31 @@ async def init_db(engine: AsyncEngine) -> None:
                 await conn.execute(
                     text("ALTER TABLE nodes ADD COLUMN last_seen_at DATETIME")
                 )
+
+            migrations = {
+                "sessions": {
+                    "actor_id": "VARCHAR(255) NOT NULL DEFAULT 'anonymous'",
+                    "client_id": "VARCHAR(255) NOT NULL DEFAULT 'mcp'",
+                    "conversation_id": "VARCHAR(255) NOT NULL DEFAULT 'default'",
+                },
+                "command_logs": {
+                    "action": "VARCHAR(50) NOT NULL DEFAULT 'command'",
+                    "actor_id": "VARCHAR(255) NOT NULL DEFAULT 'anonymous'",
+                    "client_id": "VARCHAR(255) NOT NULL DEFAULT 'mcp'",
+                    "conversation_id": "VARCHAR(255) NOT NULL DEFAULT 'default'",
+                    "approval_id": "VARCHAR(36)",
+                },
+            }
+            for table, additions in migrations.items():
+                result = await conn.execute(text(f"PRAGMA table_info({table})"))
+                existing = {row[1] for row in result}
+                for column, definition in additions.items():
+                    if column not in existing:
+                        await conn.execute(
+                            text(
+                                f"ALTER TABLE {table} ADD COLUMN {column} {definition}"
+                            )
+                        )
         else:
             result = await conn.execute(
                 text(
@@ -127,3 +154,25 @@ async def init_db(engine: AsyncEngine) -> None:
                         "ALTER TABLE nodes ADD COLUMN last_seen_at TIMESTAMP WITH TIME ZONE"
                     )
                 )
+
+            pg_migrations = {
+                "sessions": {
+                    "actor_id": "VARCHAR(255) NOT NULL DEFAULT 'anonymous'",
+                    "client_id": "VARCHAR(255) NOT NULL DEFAULT 'mcp'",
+                    "conversation_id": "VARCHAR(255) NOT NULL DEFAULT 'default'",
+                },
+                "command_logs": {
+                    "action": "VARCHAR(50) NOT NULL DEFAULT 'command'",
+                    "actor_id": "VARCHAR(255) NOT NULL DEFAULT 'anonymous'",
+                    "client_id": "VARCHAR(255) NOT NULL DEFAULT 'mcp'",
+                    "conversation_id": "VARCHAR(255) NOT NULL DEFAULT 'default'",
+                    "approval_id": "VARCHAR(36)",
+                },
+            }
+            for table, additions in pg_migrations.items():
+                for column, definition in additions.items():
+                    await conn.execute(
+                        text(
+                            f"ALTER TABLE {table} ADD COLUMN IF NOT EXISTS {column} {definition}"
+                        )
+                    )

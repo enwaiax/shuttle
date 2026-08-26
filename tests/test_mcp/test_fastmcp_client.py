@@ -213,7 +213,7 @@ async def test_run_blocked_command_via_client(mcp_server_with_session, db_factor
 
 @pytest.mark.asyncio
 async def test_run_confirm_flow_via_client(mcp_server_with_session, db_factory):
-    """CONFIRM-level command returns token request, re-call with token executes."""
+    """CONFIRM-level command requires a separate persisted human decision."""
     async with db_factory() as sess:
         rule_repo = RuleRepo(sess)
         await rule_repo.create(
@@ -225,20 +225,41 @@ async def test_run_confirm_flow_via_client(mcp_server_with_session, db_factory):
 
     async with Client(mcp_server_with_session) as client:
         result1 = await client.call_tool(
-            "ssh_run", {"command": "sudo ls", "node": "test-node"}
+            "ssh_run",
+            {
+                "command": "sudo ls",
+                "node": "test-node",
+            },
         )
         text1 = _result_text(result1)
-        assert "confirm_token" in text1
+        assert "PENDING_APPROVAL" in text1
+        assert "confirm_token" not in text1
 
         import re
 
-        match = re.search(r'confirm_token="([^"]+)"', text1)
-        assert match, f"Could not find confirm_token in: {text1}"
-        token = match.group(1)
+        match = re.search(r"id=([0-9a-f-]{36})", text1)
+        assert match, f"Could not find approval id in: {text1}"
+        approval_id = match.group(1)
+
+        from shuttle.db.repository import ApprovalRepo
+
+        async with db_factory() as sess:
+            approved = await ApprovalRepo(sess).decide(
+                approval_id,
+                approve=True,
+                approver="human@example.com",
+                reason="Reviewed in Web",
+            )
+            assert approved is not None
+            assert approved.status == "approved"
 
         result2 = await client.call_tool(
             "ssh_run",
-            {"command": "sudo ls", "node": "test-node", "confirm_token": token},
+            {
+                "command": "sudo ls",
+                "node": "test-node",
+                "approval_id": approval_id,
+            },
         )
         text2 = _result_text(result2)
         assert "mocked output" in text2

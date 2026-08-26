@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { Shield, Settings, Server, Sun, Moon } from "lucide-react";
+import { Shield, Settings, Server, Sun, Moon, CircleCheckBig } from "lucide-react";
 import clsx from "clsx";
 import { useApp } from "../hooks/AppContext";
 
@@ -102,6 +102,10 @@ export default function Sidebar() {
           <Shield size={14} strokeWidth={1.8} />
           Rules
         </NavLink>
+        <NavLink to="/approvals" className={({ isActive }) => navItemCls(isActive)}>
+          <CircleCheckBig size={14} strokeWidth={1.8} />
+          Approvals
+        </NavLink>
         <NavLink to="/settings" className={({ isActive }) => navItemCls(isActive)}>
           <Settings size={14} strokeWidth={1.8} />
           Settings
@@ -110,7 +114,7 @@ export default function Sidebar() {
 
       {/* Footer */}
       <div className="border-t border-[var(--border-subtle)] px-5 py-3">
-        <p className="text-[10px] text-[var(--text-muted)]">Shuttle MCP v2</p>
+        <p className="text-[10px] text-[var(--text-muted)]">Shuttle approval plane</p>
       </div>
     </aside>
   );

@@ -147,31 +147,37 @@ async def test_blocked_command_rejected():
 
 
 @pytest.mark.asyncio
-async def test_confirm_returns_token_request():
-    """When guard returns CONFIRM without a token, a confirmation message with token is returned."""
+async def test_confirm_requires_persisted_human_approval() -> None:
+    """CONFIRM never returns a secret which the calling agent can replay."""
     session = SSHSession(session_id="s1", node_id="node1")
     guard = _make_guard(SecurityLevel.CONFIRM, message="Needs approval")
-    token_store = _make_token_store()
-    token_store.create.return_value = "tok_abc123"
     session_mgr = _make_session_mgr(session=session)
 
-    result = await _execute_command_logic(
-        command="shutdown -h now",
-        node="node1",
-        timeout=30,
-        confirm_token=None,
-        bypass_scope=None,
-        pool=MagicMock(),
-        guard=guard,
-        token_store=token_store,
-        session_mgr=session_mgr,
-        db_session_ctx=_noop_db_session,
-        node_repo_factory=_noop_node_repo_factory,
-    )
+    class FakeApproval:
+        id = "approval-123"
 
-    assert "confirm_token" in result
-    assert "tok_abc123" in result
-    token_store.create.assert_called_once_with("shutdown -h now", "node1")
+    fake_repo = MagicMock()
+    fake_repo.create = AsyncMock(return_value=FakeApproval())
+
+    from unittest.mock import patch
+
+    with patch("shuttle.db.repository.ApprovalRepo", return_value=fake_repo):
+        result = await _execute_command_logic(
+            command="shutdown -h now",
+            node="node1",
+            timeout=30,
+            confirm_token=None,
+            bypass_scope=None,
+            pool=MagicMock(),
+            guard=guard,
+            token_store=_make_token_store(),
+            session_mgr=session_mgr,
+            db_session_ctx=_noop_db_session,
+            node_repo_factory=_noop_node_repo_factory,
+        )
+
+    assert "PENDING_APPROVAL id=approval-123" in result
+    assert "confirm_token" not in result
     session_mgr.execute.assert_not_awaited()
 
 

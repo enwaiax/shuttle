@@ -9,6 +9,7 @@ import Overview from "./pages/Overview";
 import Activity from "./pages/Activity";
 import Rules from "./pages/Rules";
 import Settings from "./pages/Settings";
+import Approvals from "./pages/Approvals";
 
 export default function App() {
   const [authed, setAuthed] = useState(!!getToken());
@@ -34,6 +35,7 @@ export default function App() {
           <Route path="/nodes/:nodeId" element={<Activity />} />
           <Route path="/rules" element={<Rules />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/approvals" element={<Approvals />} />
         </Route>
       </Routes>
     </AppProvider>

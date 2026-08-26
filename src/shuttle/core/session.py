@@ -63,6 +63,9 @@ class SSHSession:
 
     session_id: str
     node_id: str
+    actor_id: str = "anonymous"
+    client_id: str = "mcp"
+    conversation_id: str = "default"
     working_directory: str = "~"
     bypass_patterns: set[str] = field(default_factory=set)
     status: SessionStatus = SessionStatus.ACTIVE
@@ -100,7 +103,14 @@ class SessionManager:
     # CRUD
     # ------------------------------------------------------------------
 
-    async def create(self, node_id: str) -> SSHSession:
+    async def create(
+        self,
+        node_id: str,
+        *,
+        actor_id: str = "anonymous",
+        client_id: str = "mcp",
+        conversation_id: str = "default",
+    ) -> SSHSession:
         """Create a new session for *node_id*.
 
         Runs ``pwd`` on the remote host to obtain the initial working
@@ -123,6 +133,9 @@ class SessionManager:
         session = SSHSession(
             session_id=str(uuid.uuid4()),
             node_id=node_id,
+            actor_id=actor_id,
+            client_id=client_id,
+            conversation_id=conversation_id,
             working_directory=working_directory,
         )
         self._sessions[session.session_id] = session
@@ -145,6 +158,27 @@ class SessionManager:
     def list_active(self) -> list[SSHSession]:
         """Return all currently active sessions."""
         return list(self._sessions.values())
+
+    def find_active(
+        self,
+        node_id: str,
+        *,
+        actor_id: str,
+        client_id: str,
+        conversation_id: str,
+    ) -> SSHSession | None:
+        """Return a session only when the complete caller boundary matches."""
+        return next(
+            (
+                session
+                for session in self._sessions.values()
+                if session.node_id == node_id
+                and session.actor_id == actor_id
+                and session.client_id == client_id
+                and session.conversation_id == conversation_id
+            ),
+            None,
+        )
 
     # ------------------------------------------------------------------
     # Command execution
